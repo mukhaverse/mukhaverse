@@ -1,6 +1,6 @@
 ## Hi there! 
 
-I'm **Shumokh Alsharif**, a passionate Junior Software Engineering student at the University of Jeddah. I love and building fun and unique front-end projects with intentional UI and great UX.
+I'm **Shumokh Alsharif**, a passionate Junior Software Engineering student at the University of Jeddah. I enjoy building fun and unique front-end projects with intentional UI and great UX.
 
 ## About Me
 
