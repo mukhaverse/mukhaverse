@@ -1,0 +1,96 @@
+*{
+   margin: 0;
+    padding: 0;
+}
+:root {
+    --dark: #000;
+    --light: #f9f4eb;
+    --light2: #f0ece5;
+    --accent-1: #e5d9f6;
+    --accent-2: #ffd2f3;
+    --accent-3: #fcdca6;
+}
+
+ h1{
+    font-size: 1.5rem;
+    font-weight: 500;
+ }
+
+ p{
+    font-size: 1.1rem;
+    font-weight: 500;
+ }
+
+ span{
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+ }
+
+ .about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--dark);
+    color: var(--light);
+    height: 100svh;
+    margin: 0;
+ }
+
+ .hero-cards{
+   /* position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%,-50%); */
+   
+   display: flex;
+   justify-content: center;
+   gap: 1rem;
+
+ }
+
+ .hero-cards .card{
+
+   flex: 1;
+   position: relative;
+   aspect-ratio: 5/7;
+   padding: 0.75rem;
+   border-radius: 0.5rem;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+ 
+ }
+
+ .card-title{
+   width: 100%;
+   display: flex;
+   justify-content: space-between;
+ }
+
+ .hero-cards .card span{
+   font-size: 0.7rem;
+
+ }
+
+ .hero-cards .card#hero-card-1{
+   background-color: var(--accent-1);
+   transform-origin: top right;
+   z-index: 2;
+
+ }
+
+  .hero-cards .card#hero-card-2{
+   background-color: var(--accent-2);
+   z-index: 1;
+
+ }
+
+  .hero-cards .card#hero-card-3{
+   background-color: var(--accent-3);
+   transform-origin: top left;
+   z-index: 0;
+
+ }
+
+ 
