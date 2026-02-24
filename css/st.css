@@ -79,10 +79,10 @@ body {
     /* font-size: 32px; */
 }
 
-div {
-    /* border: solid; */
+/* div {
+    border: solid; 
 }
-
+ */
  
 
 .navbar {
@@ -161,7 +161,7 @@ div {
   flex-direction: column;
   padding: 2rem 2rem;
   padding-top: 0px;
-  
+  height: 100svh;
 
 }
 
