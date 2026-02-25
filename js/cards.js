@@ -1,6 +1,7 @@
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Lenis from "Lenis"
+// At the top of cards.js, replace your current imports with:
+import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
+import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js"
+import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs"
 
 document.addEventListener("DOMContentLoaded", () =>{
 
@@ -18,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () =>{
 
     ScrollTrigger.create({
 
-        trigger: " .hero",
-        start: " top top",
+        trigger: ".hero",
+        start: "top top",
         end: "75% top",
         scrub: 1,
     onUpdate: (self) =>{
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () =>{
             0.5,
             smoothStep(progress)
         )
-        gsap.set(".hero-cardd", {
+        gsap.set(".hero-cards", {
             opacity: heroCardContainerOpacity
         })
 
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () =>{
                     (progress - delay * 0.1) / (1 - delay * 0.1)
                 )
                 
-                const y = gsap.update.interpolate(
+                const y = gsap.utils.interpolate(
                     "0%",
                     "250%",
                     smoothStep(cardProgress)
@@ -86,10 +87,10 @@ document.addEventListener("DOMContentLoaded", () =>{
 
 
     ScrollTrigger.create({
-        trigger: " .skills",
+        trigger: ".skills",
         start: "top top",
         end: `+=${window.innerHeight * 4}px`,
-        pin: " .skills",
+        pin: ".skills",
         pinSpacing: true
     })
 
@@ -98,11 +99,11 @@ document.addEventListener("DOMContentLoaded", () =>{
         start: "top top",
         end: `+=${window.innerHeight * 4}px`,
         onLeave: () => {
-            const skillsSection = document.querySelector(" .skills")
+            const skillsSection = document.querySelector(".skills")
             const skillsRect = skillsSection.getBoundingClientRect()
             const skillsTop = window.pageYOffset + skillsRect.top
 
-            gsap.set(" .cards", {
+            gsap.set(".cards", {
                 position: "absolute",
                 top: skillsTop,
                 left: 0,
@@ -113,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () =>{
         },
 
         onEnterBack: () => {
-             gsap.set(" .cards", {
+             gsap.set(".cards", {
                 position: "fixed",
                 top: 0,
                 left: 0,
@@ -130,14 +131,14 @@ document.addEventListener("DOMContentLoaded", () =>{
 
 
     ScrollTrigger.create({
-        trigger:" .skills",
+        trigger:".skills",
         start: "top bottom",
         end: `+=${window.innerHeight * 4}px`,
         scrub: 1,
         onUpdate: (self) => {
-            const progres = self.progres
+            const progress = self.progress
 
-            const headerProgress = gsap.utils.clamp(0, 1, progres / 0.9)
+            const headerProgress = gsap.utils.clamp(0, 1, progress / 0.9)
             const headerY = gsap.utils.interpolate(
                 "400%",
                 "0%",
@@ -153,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () =>{
                 const cardProgress = gsap.utils.clamp(
                     0,
                     1,
-                    (progres - delay * 0.1) / (0.9 - delay * 0.1)
+                    (progress - delay * 0.1) / (0.9 - delay * 0.1)
                 )
 
                 const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
