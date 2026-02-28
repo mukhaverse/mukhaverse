@@ -16,8 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const smoothStep = (p) => p * p * (3 - 2 * p)
 
+    // Set initial states immediately 
+    // This prevents the flash/wrong-position on first load
+    gsap.set("#card-1", { opacity: 0, x: "100%",  y: "-100%", rotate: -5, scale: 0.25 })
+    gsap.set("#card-2", { opacity: 0, x: "0%",    y: "-100%", rotate: 0,  scale: 0.25 })
+    gsap.set("#card-3", { opacity: 0, x: "-100%", y: "-100%", rotate: 5,  scale: 0.25 })
+    gsap.set(".cards",  { opacity: 0, zIndex: -1 })
+
     // ─── HERO CARDS ───────────────────────────────────────────────
-    // Cards fade, scale down, converge toward center, then drop down
+    // Cards fade, scale down, converge into the same stacked pile
+    // layout as the skills cards (card1 on top, slight offsets), then drop
+
+    // Mirror of the skills card final stacked positions (before they spread):
+    // index 0: x "100%", rotate -5  → converges to these, then drops
+    // index 1: x "0%",   rotate  0
+    // index 2: x "-100%", rotate 5
+    // But since hero cards start spread OUT in a row, we animate from
+    // their natural flex positions toward the stacked pile center.
 
     ScrollTrigger.create({
         trigger: ".hero",
@@ -30,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Fade the whole hero-cards container
             const heroCardContainerOpacity = gsap.utils.interpolate(
                 1,
-                0.5,
+                0,
                 smoothStep(progress)
             )
             gsap.set(".hero-cards", {
@@ -39,55 +54,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ["#hero-card-1", "#hero-card-2", "#hero-card-3"].forEach(
                 (cardId, index) => {
-                    const delay = index * 0.9
+                    const delay = index * 0.15
                     const cardProgress = gsap.utils.clamp(
                         0,
                         1,
-                        (progress - delay * 0.1) / (1 - delay * 0.1)
+                        (progress - delay) / (1 - delay)
                     )
 
-                    // Phase 1 (0 → 0.5): converge inward + scale down
-                    // Phase 2 (0.5 → 1): drop down
-                    let xProgress, yProgress
-                    if (cardProgress < 0.5) {
-                        xProgress = cardProgress / 0.5
-                        yProgress = 0
+                    // Phase 1 (0 → 0.6): converge into stacked pile + scale down
+                    // Phase 2 (0.6 → 1): drop down together
+                    let stackProgress, dropProgress
+                    if (cardProgress < 0.6) {
+                        stackProgress = cardProgress / 0.6
+                        dropProgress = 0
                     } else {
-                        xProgress = 1
-                        yProgress = (cardProgress - 0.5) / 0.5
+                        stackProgress = 1
+                        dropProgress = (cardProgress - 0.6) / 0.4
                     }
 
-                    const y = gsap.utils.interpolate(
-                        "0%",
-                        "300%",
-                        smoothStep(yProgress)
-                    )
+                    // Target x/rotation mirrors skills cards initial stacked positions
+                    const targetX = index === 0 ? "100%" : index === 1 ? "0%" : "-100%"
+                    const targetRotate = index === 0 ? -5 : index === 1 ? 0 : 5
 
-                    const scale = gsap.utils.interpolate(
-                        1,
-                        0.6,
-                        smoothStep(cardProgress)
-                    )
+                    const x = gsap.utils.interpolate("0%", targetX, smoothStep(stackProgress))
+                    const rotation = gsap.utils.interpolate(0, targetRotate, smoothStep(stackProgress))
 
-                    let x = "0%"
-                    let rotation = 0
+                    const scale = gsap.utils.interpolate(1, 0.25, smoothStep(stackProgress))
 
-                    if (index === 0) {
-                        // Left card moves right toward center
-                        x = gsap.utils.interpolate("0%", "55%", smoothStep(xProgress))
-                        rotation = gsap.utils.interpolate(0, 5, smoothStep(xProgress))
-                    } else if (index === 2) {
-                        // Right card moves left toward center
-                        x = gsap.utils.interpolate("0%", "-55%", smoothStep(xProgress))
-                        rotation = gsap.utils.interpolate(0, -5, smoothStep(xProgress))
-                    }
+                    const y = gsap.utils.interpolate("0%", "300%", smoothStep(dropProgress))
 
-                    gsap.set(cardId, {
-                        y: y,
-                        x: x,
-                        rotation: rotation,
-                        scale: scale
-                    })
+                    gsap.set(cardId, { y, x, rotation, scale })
                 }
             )
         }
@@ -104,12 +100,17 @@ document.addEventListener("DOMContentLoaded", () => {
         pinSpacing: true
     })
 
-    // Make .cards visible when skills enters viewport, hide it before
+    // Smoothly fade .cards in as skills scrolls into view, and back out going up
     ScrollTrigger.create({
         trigger: ".skills",
         start: "top bottom",
+        end: "top top",
+        scrub: 1,
         onEnter: () => gsap.set(".cards", { zIndex: 1 }),
-        onLeaveBack: () => gsap.set(".cards", { zIndex: -1 })
+        onLeaveBack: () => gsap.set(".cards", { zIndex: -1 }),
+        onUpdate: (self) => {
+            gsap.set(".cards", { opacity: smoothStep(self.progress) })
+        }
     })
 
     ScrollTrigger.create({

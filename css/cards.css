@@ -97,11 +97,12 @@
    position: fixed;
    top: 0;
    left: 0;
+   width: 100vw;
    height: 100svh;
    display: flex;
    justify-content: center;
    z-index: -1;
-   background-color: var(--light);
+   opacity: 0;
  }
 
 .cards-container{
@@ -224,20 +225,17 @@
 }
 
 #card-1{
-   transform: translateX(100%) translateY(-100%) rotate(-5deg) scale(0.25);
    z-index: 2;
 }
 
 #card-2{
-   transform: translateX(0%) translateY(-100%) rotate(0deg) scale(0.25);
    z-index: 1;
 }
 
 #card-3{
-   transform: translateX(-100%) translateY(-100%) rotate(5deg) scale(0.25);
    z-index: 0;
 }
 
 .cards-container .card{
    opacity: 0;
-} 
+}
