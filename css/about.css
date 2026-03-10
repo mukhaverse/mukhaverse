@@ -1,0 +1,103 @@
+
+.about {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    background-color: var(--dark);
+    color: var(--light);
+    min-height: 100svh;
+    padding: 2rem 2rem;
+    overflow: hidden; 
+}
+
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 2;
+}
+
+.about-label {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+}
+
+.about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.about-text p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--light);
+}
+
+.about-text p.about-highlight {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+
+
+.about-text .keyword {
+    position: relative;
+    cursor: default;
+    transition: color 0.2s ease;
+}
+
+.about-text .keyword::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background-color: var(--accent-1);
+    transition: width 0.3s ease;
+}
+
+.about-text .keyword:hover {
+    color: var(--accent-1);
+}
+
+.about-text .keyword:hover::after {
+    width: 100%;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .about {
+        padding: 4rem 2rem 12rem;
+    }
+
+    .about-text p.about-highlight {
+        font-size: 1.25rem;
+    }
+
+    .about-card-wrapper {
+        right: 2rem;
+        width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about {
+        padding: 3rem 1.5rem 10rem;
+    }
+
+    .about-card-wrapper {
+        right: 1.5rem;
+        width: 100px;
+    }
+}
