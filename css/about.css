@@ -1,66 +1,179 @@
 
-/* .about {
+.pip {
+    position: absolute;
+    font-size: 3rem;
+    padding: 2rem;
+    user-select: none;
+    opacity: 0.3;
+}
+
+.top-left     { top: 0; left: 0; }
+.top-right    { top: 0; right: 0; }
+.bottom-left  { bottom: 0; left: 0; }
+.bottom-right { bottom: 0; right: 0; }
+
+.bottom-left,
+.bottom-right {
+    transform: rotate(180deg);
+}
+
+
+.about-section {
     position: relative;
+    background-color: var(--red);
+    color: var(--light);
+    padding: 8rem 3rem 6rem;
+    /* display: flex;
+    justify-content: center;
+    align-items: flex-start; */
+}
+
+.about-inner {
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.about-section .section-tag {
+    background-color: rgba(249, 244, 235, 0.18);
+    color: var(--light);
+    border: 1px solid rgba(249, 244, 235, 0.3);
+    /* display:block; */
+}
+
+.about-tag{
+    display: inline-block;
+
+}
+
+.about-statement {
+    font-size: clamp(1.6rem, 4vw, 2.75rem);
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    color: var(--light);
+    font-family: var(--font-body);
+}
+
+.about-statement em {
+    font-style: normal;
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    opacity: 0.9;
+}
+
+.about-body {
+    font-size: 1.05rem;
+    font-weight: 300;
+    opacity: 0.72;
+    max-width: 600px;
+    line-height: 1.8;
+}
+
+.about-suits {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 3.5rem;
+    font-size: 2.25rem;
+    opacity: 0.3;
+}
+
+
+
+
+.edu-facts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
-    background-color: var(--dark);
-    color: var(--light);
-    min-height: 100svh;
-    padding: 2rem 2rem;
-    overflow: hidden; 
-} */
+    gap: 0 4rem;
+    border-top: 1px solid rgba(249, 244, 235, 0.25);
+    padding-top: 2.5rem;
+}
 
-.about {
-    position: relative;
+.edu-col {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background-color: var(--dark); */
-    background-color: rgb(102, 32, 32);
-    color: var(--light);
-    min-height: 100svh;
-    padding: 2rem 2rem;
-    overflow: hidden; 
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
+.edu-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(249, 244, 235, 0.4);
+}
 
-
-
-.about-text p {
-    font-size: 3rem;
+.edu-degree {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
     font-weight: 400;
-    opacity: 0.9;
-    /* line-height: 1.7; */
     color: var(--light);
-    text-align: center;
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.1;
 }
 
 
 
 
-
-
-@media (max-width: 768px) {
-    .about {
-        padding: 2rem 3rem 2rem;
-    }
-
-    .about-text  p{
-        font-size: 2.25rem;
-    }
-
-
+.edu-years {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
 }
 
-@media (max-width: 480px) {
-    .about {
-        padding: 1rem 2rem 1rem;
-    }
-    .about-text  p{
-        font-size: 2rem;
-    }
+.edu-year-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.edu-year-num {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--light);
+    line-height: 1;
+    opacity: 0.9;
+}
+
+.edu-year-note {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(249, 244, 235, 0.45);
+}
+
+.edu-year-sep {
+    font-size: 1.25rem;
+    color: rgba(249, 244, 235, 0.25);
+    margin-top: -0.5rem;
+}
 
 
+
+.edu-uni-facts {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 0.5rem;
+    padding: 0;
+}
+
+.edu-uni-facts li {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(249, 244, 235, 0.65);
+    line-height: 1.5;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.edu-uni-facts li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: rgba(249, 244, 235, 0.25);
+    font-size: 0.8rem;
 }

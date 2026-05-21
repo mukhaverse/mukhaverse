@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/cards.css">
     <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/contact.css">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/responsive.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Gravitas+One&family=Odibee+Sans&family=Roboto:ital,wght@0,100..900;1,100..900&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
@@ -88,23 +93,68 @@
     </section>
 
 
-    <section class="about">
-
-    
-    <div class="about-content">
-
-       
-
-        <div class="about-text">
-            <p>Working across frontend and backend, mostly interested in the messy middle where they meet. Curiosity tends to shape most of the work.</p>
-        </div>
-
-    </div>
 
 
-    
 
-</section>
+
+<section class="about-section" id="about" aria-labelledby="about-heading">
+            <span class="section-tag about-tag">About &amp; Education</span>
+            <div class="about-inner">
+
+                <div class="corner-pips">
+                    <span class="pip top-left">♠</span>
+                    <span class="pip top-right">♦</span>
+                    <span class="pip bottom-left">♥</span>
+                    <span class="pip bottom-right">♣</span>
+                </div>
+
+                
+                <h2 class="about-statement" id="about-heading">
+                    Working across frontend and backend, mostly interested in the
+                    <em>messy middle</em> where they meet.
+                </h2>
+                <p class="about-body">
+                I build for the web, paying close attention to how interfaces respond and feel in use. I'm always drawn to exploring new conepts, and lately I've been diving more and more into computer vision.
+                </p>
+
+
+                <div class="edu-facts" role="region" aria-label="Education details">
+
+                    <div class="edu-col">
+                        <span class="edu-label">Degree</span>
+                        <p class="edu-degree">B.Sc. Software Engineering</p>
+                        <div class="edu-years">
+                            <span class="edu-year-block">
+                                <span class="edu-year-num">2022</span>
+                                <span class="edu-year-note">Started</span>
+                            </span>
+                            <span class="edu-year-sep" aria-hidden="true">→</span>
+                            <span class="edu-year-block">
+                                <span class="edu-year-num">2026</span>
+                                <span class="edu-year-note">Graduating</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="edu-col">
+                        <span class="edu-label">Institution</span>
+                        <p class="edu-degree">University of Jeddah</p>
+                        <ul class="edu-uni-facts" aria-label="University facts">
+                            <li>Founded 2014 · Jeddah, Saudi Arabia</li>
+                            <li>College of Computer Science &amp; Engineering</li>
+                            <li>Emphasis on technical depth and design awareness</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+
+
+
 
 
     <section class="skills">
@@ -244,98 +294,248 @@
 
 
 
-    <section class="projects-section">
+    <section class="projects-section" id="projects" aria-labelledby="projects-heading">
+
+            <div class="section-header">
+                <span class="section-tag">Projects</span>
+                <h2 class="section-title" id="projects-heading">My Deck of Work</h2>
+            </div>
+
+            <article class="project" aria-label="Project: Atelier Platform">
+                <div class="project-visual" aria-hidden="true">
+                    <img src="assets/atelier-mockup.png" alt="atelier project mockup">
+                </div>
+                <div class="project-content">
+                    <p class="project-label">Full-Stack Development</p>
+                    <h3>Atelier</h3>
+                    <div class="project-tech-stack">
+                        <span class="project-tech">Node.js</span>
+                        <span class="project-tech">Express</span>
+                        <span class="project-tech">MongoDB</span>
+                        <span class="project-tech">NodeMailer </span>
+                        <span class="project-tech">WebAR</span>
+                        <span class="project-tech">GSAP</span>
+                    </div>
+                    <p class="project-description">
+                        A full-stack web platform connecting artists and buyers, enabling users to browse,
+                        purchase, and request custom artwork. Features include authentication, wishlist,
+                        and a commission system with server-side email handling using NodeMailer, along
+                        with a WebAR feature for visualizing products in real space.
+                    </p>
+                    <a class="project-link" href="https://github.com/mukhaverse/Atelier">GitHub</a>
+                    <a class="project-link" href="https://mukhaverse.github.io/Atelier/">Visit Website</a>
+                </div>
+            </article>
+
+
+
+            <article class="project" aria-label="Project: SeedSync App">
+                <div class="project-visual" aria-hidden="true">
+                    <img src="assets/seed-mockup.png" alt="atelier project mockup">
+                </div>
+                <div class="project-content">
+                    <p class="project-label">UX / System Design</p>
+                    <h3>SeedSync</h3>
+                    <div class="project-tech-stack">
+                        <span class="project-tech">Figma</span>
+                        <span class="project-tech">IoT Concepts</span>
+                        <span class="project-tech">User Research</span>
+                    </div>
+                    <p class="project-description">
+                        An IoT-based greenhouse management system designed to monitor and control environmental
+                        conditions such as temperature, humidity, and soil moisture. The project focused on
+                        user research, data-driven design decisions, and building an intuitive interface for
+                        real-time monitoring and automation.
+                    </p>
+                    <a class="project-link" href="https://www.figma.com/design/coRQ80n2HJ1Midos33r95y/SeedSync?node-id=0-1&t=3B1EqentwZcM4kq3-1">View Prototype</a>
+                </div>
+            </article>
+
+
+
+            <article class="project" aria-label="Project: IoT Exhibition Website">
+                <div class="project-visual" aria-hidden="true"><img src="assets/iot-mockup.png" alt="IoT project mockup"></div>
+                <div class="project-content">
+                    <p class="project-label">Frontend Development</p>
+                    <h3>IoT Exhibition Archive</h3>
+                    <div class="project-tech-stack">
+                        <span class="project-tech">JavaScript</span>
+                        <span class="project-tech">HTML</span>
+                        <span class="project-tech">CSS</span>
+                        <span class="project-tech">Three.js</span>
+                        <span class="project-tech">GSAP</span>
+                    </div>
+                    <p class="project-description">
+                        A digital exhibition platform designed to showcase student projects, combining
+                        interactive sections, behind-the-scenes content, and user comments. Built with
+                        a focus on animation and spatial interaction using Three.js and GSAP.
+                    </p>
+                    <a class="project-link" href="https://github.com/mukhaverse/IoT">GitHub</a>
+                    <a class="project-link" href="https://mukhaverse.github.io/IoT/">Visit Website</a>
+                </div>
+            </article>
+
+
+
+            <article class="project" aria-label="Project: Gesture Control System">
+                <div class="project-visual" aria-hidden="true"><img src="assets/pyHill-mockup.png" alt="computer vision project mockup"></div>
+                <div class="project-content">
+                    <p class="project-label">Computer Vision</p>
+                    <h3>Hand Gesture Game Control</h3>
+                    <div class="project-tech-stack">
+                        <span class="project-tech">Python</span>
+                        <span class="project-tech">OpenCV</span>
+                        <span class="project-tech">MediaPipe</span>
+                    </div>
+                    <p class="project-description">
+                        A computer vision experiment that uses hand tracking to control gameplay actions
+                        in real time. Built using MediaPipe for gesture detection, exploring how physical
+                        movement can be translated into interactive digital input.
+                    </p>
+                    <a class="project-link" href="https://github.com/mukhaverse/compvision">GitHub</a>
+                </div>
+            </article>
+
+
+        </section>
+
+
+
+
+
         
-        <div class="project">
-            <div class="project-visual">
-                <div>♠</div>
-            </div>
-            <div class="project-content">
-                <div class="project-label">Featured Work</div>
-                <h3>Task Manager Platform</h3>
-                <div class="project-tech-stack">
-                    <span class="project-tech">React</span>
-                    <span class="project-tech">Node.js</span>
-                    <span class="project-tech">MongoDB</span>
-                    <span class="project-tech">WebSockets</span>
-                </div>
-                <p class="project-description">
-                    A collaborative task management platform with real-time updates and team workspaces. 
-                    Features include drag-and-drop task organization, deadline tracking, comment threads, 
-                    and instant notifications across all devices.
-                </p>
-            </div>
-        </div>
-
         
-        <div class="project">
-            <div class="project-visual">
-                <div>♥</div>
-            </div>
-            <div class="project-content">
-                <div class="project-label">Data Visualization</div>
-                <h3>Weather Dashboard</h3>
-                <div class="project-tech-stack">
-                    <span class="project-tech">Vue.js</span>
-                    <span class="project-tech">D3.js</span>
-                    <span class="project-tech">Weather API</span>
+        <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+            <div class="contact-inner">
+
+               
+                <div class="contact-left">
+                    <span class="section-tag">Contact</span>
+                    <h2 class="contact-title" id="contact-heading">Deal Me In.</h2>
+                    <p class="contact-body">
+                        Have a project in mind, want to collaborate, or just want to say hi?
+                        Pick a card to reach me.
+                    </p>
+
                 </div>
-                <p class="project-description">
-                    Interactive weather visualization featuring 7-day forecasts, historical data analysis, 
-                    and location-based alerts. Custom D3.js visualizations display temperature trends, 
-                    precipitation patterns, and wind data.
-                </p>
-            </div>
-        </div>
 
-        
-        <div class="project">
-            <div class="project-visual">
-                <div>♣</div>
-            </div>
-            <div class="project-content">
-                <div class="project-label">Full-Stack Development</div>
-                <h3>E-commerce Platform</h3>
-                <div class="project-tech-stack">
-                    <span class="project-tech">Next.js</span>
-                    <span class="project-tech">Stripe</span>
-                    <span class="project-tech">PostgreSQL</span>
+                
+                <div class="fan-stage" id="fanStage" role="region" aria-label="Contact links as interactive cards">
+
+                    
+                    <div class="fan-card" data-card-index="0" role="presentation" aria-hidden="true">
+                        <img class="card-img" src="assets/back2.jpg" alt="Card 1">
+                    </div>
+
+                    
+                    <a class="fan-card" data-card-index="1"
+                       href="mailto:shumokhalsharif@gmail.com"
+                       aria-label="Send email to Shumokh">
+                        <div class="fan-card-corner">
+                            <span class="fan-card-corner-val">E</span>
+                            <span class="fan-card-corner-suit">✉</span>
+                        </div>
+                        <div class="fan-card-center">
+                            <span class="fan-card-icon"><img src="assets/email.png" alt="mail-icon"></span>
+                            <span class="fan-card-label">Email</span>
+                            <span class="fan-card-url">shumokhalsharif@gmail.com</span>
+                        </div>
+                        <div class="fan-card-bottom">
+                            <div class="fan-card-corner fan-card-corner--flipped">
+                                <span class="fan-card-corner-val">E</span>
+                                <span class="fan-card-corner-suit">✉</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    
+                    <a class="fan-card" data-card-index="2"
+                       href="https://www.linkedin.com/in/shumokh-alsharif-903361364?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+                       target="_blank" rel="noopener noreferrer"
+                       aria-label="LinkedIn profile, opens in new tab">
+                        <div class="fan-card-corner">
+                            <span class="fan-card-corner-val">in</span>
+                            <span class="fan-card-corner-suit">◈</span>
+                        </div>
+                        <div class="fan-card-center">
+                            <span class="fan-card-icon"><img src="assets/linkedin.png" alt="LinkedIn-icon"></span>
+                            <span class="fan-card-label">LinkedIn</span>
+                            <span class="fan-card-url">linkedin.com/in/shumokh-alsharif</span>
+                        </div>
+                        <div class="fan-card-bottom">
+                            <div class="fan-card-corner fan-card-corner--flipped">
+                                <span class="fan-card-corner-val">in</span>
+                                <span class="fan-card-corner-suit">◈</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    
+                    <a class="fan-card" data-card-index="3"
+                       href="https://github.com/mukhaverse"
+                       target="_blank" rel="noopener noreferrer"
+                       aria-label="GitHub profile, opens in new tab">
+                        <div class="fan-card-corner">
+                            <span class="fan-card-corner-val">GH</span>
+                            <span class="fan-card-corner-suit">◆</span>
+                        </div>
+                        <div class="fan-card-center">
+                            <span class="fan-card-icon"><img src="assets/github-sign.png" alt="github-icon"></span>
+                            <span class="fan-card-label">GitHub</span>
+                            <span class="fan-card-url">@mukhaverse</span>
+                        </div>
+                        <div class="fan-card-bottom">
+                            <div class="fan-card-corner fan-card-corner--flipped">
+                                <span class="fan-card-corner-val">GH</span>
+                                <span class="fan-card-corner-suit">◆</span>
+                            </div>
+                        </div>
+                    </a>
+
+                   
+                    <a class="fan-card" data-card-index="4"
+                       href="https://x.com/mukhaverse?s=11&t=cLGY--Sk4hzx8Tss_sf66w"
+                       target="_blank" rel="noopener noreferrer"
+                       aria-label="Twitter profile, opens in new tab">
+                        <div class="fan-card-corner">
+                            <span class="fan-card-corner-val">𝕏</span>
+                            <span class="fan-card-corner-suit">♠</span>
+                        </div>
+                        <div class="fan-card-center">
+                            <span class="fan-card-icon"><img src="assets/twitter.png" alt="Twitter-icon"></span>
+                            <span class="fan-card-label">Twitter / X</span>
+                            <span class="fan-card-url">@mukhaverse</span>
+                        </div>
+                        <div class="fan-card-bottom">
+                            <div class="fan-card-corner fan-card-corner--flipped">
+                                <span class="fan-card-corner-val">𝕏</span>
+                                <span class="fan-card-corner-suit">♠</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    
+
                 </div>
-                <p class="project-description">
-                    Full-stack online store with secure payment processing through Stripe, comprehensive 
-                    inventory management system, and detailed analytics dashboard. Optimized with Next.js 
-                    server-side rendering for exceptional performance.
-                </p>
-            </div>
-        </div>
 
-         
-        <div class="project">
-            <div class="project-visual">
-                <div>♦</div>
             </div>
-            <div class="project-content">
-                <div class="project-label">Web Application</div>
-                <h3>Portfolio Generator</h3>
-                <div class="project-tech-stack">
-                    <span class="project-tech">Python</span>
-                    <span class="project-tech">Flask</span>
-                    <span class="project-tech">Jinja2</span>
-                </div>
-                <p class="project-description">
-                    Template-based portfolio website generator with customizable themes, color schemes, 
-                    and typography pairings. Users can preview changes in real-time and export static 
-                    HTML/CSS for easy deployment.
-                </p>
-            </div>
-        </div>
-    </section>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        &nbsp; Shumokh Alsharif &nbsp; @ &nbsp; 2026
+    </footer>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 
     <script type="module" src="js/cards.js"></script>
-    <script type="module" src="js/about.js"></script>
+
+      <script src="js/links.js"></script>
+
 
 </body>
 </html> 
