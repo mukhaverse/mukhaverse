@@ -1,0 +1,148 @@
+
+
+.hero {
+    position: relative;
+    height: 100svh;
+    padding: 1rem 2rem;
+    overflow: hidden;
+}
+
+.hero-divider {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 2rem;
+    font-weight: 800;
+    align-items: center;
+    word-spacing: 10px;
+    margin-bottom: 25vh;
+}
+
+.hero-divider-right-text,
+.hero-divider-left-text {
+    font-size: 0.8rem;
+    align-items: center;
+    opacity: 60%;
+    font-weight: 400;
+}
+
+.hero-title-cont {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.hero-title {
+    font-size: 13vw;
+    font-weight: 400;
+    text-align: center;
+    margin: auto;
+    font-family: var(--font-display);
+}
+
+
+
+
+
+.hero-cards {
+    height: 35svh;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+
+.hero-card-float {
+    will-change: transform;
+}
+
+
+.hero-cards .card {
+    width: 180px;
+    position: relative;
+    aspect-ratio: 5 / 7;
+    /* padding: 0.75rem; */
+    border: 2rem solid white;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-cards {
+    transform: scale(0.85);
+    margin-top: -30px;
+}
+
+.card-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hero-cards .card span {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+#hero-card-1 {
+    /* background-color: var(--accent-1); */
+    transform-origin: top right;
+    z-index: 2;
+}
+
+#hero-card-2 {
+    /* background-color: var(--accent-2); */
+    z-index: 1;
+}
+
+#hero-card-3 {
+    /* background-color: var(--accent-3); */
+    transform-origin: top left;
+    z-index: 0;
+}
+
+
+
+.hero-cards .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.35rem;
+    display: block;
+    outline:0.4rem solid white;
+}
+
+
+
+
+
+
+
+.hero-description {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    max-width: 60%;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.hero-description p {
+    padding-top: 10px;
+    font-weight: 300;
+}
+
+.hero-tag {
+    background-color: var(--mid);
+    color: var(--cream);
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+}

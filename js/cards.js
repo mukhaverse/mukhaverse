@@ -6,245 +6,214 @@ document.addEventListener("DOMContentLoaded", () => {
 
     gsap.registerPlugin(ScrollTrigger)
 
-    const lenis = new Lenis()
+    const lenis = new Lenis({ lerp: 0.1 })
     lenis.on("scroll", ScrollTrigger.update)
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000)
-    })
-
+    gsap.ticker.add((time) => { lenis.raf(time * 1000) })
     gsap.ticker.lagSmoothing(0)
 
     const smoothStep = (p) => p * p * (3 - 2 * p)
 
-    // Set initial states immediately 
-    // This prevents the flash/wrong-position on first load
-    gsap.set("#card-1", { opacity: 0, x: "100%",  y: "-100%", rotate: -5, scale: 0.25 })
-    gsap.set("#card-2", { opacity: 0, x: "0%",    y: "-100%", rotate: 0,  scale: 0.25 })
-    gsap.set("#card-3", { opacity: 0, x: "-100%", y: "-100%", rotate: 5,  scale: 0.25 })
-    gsap.set(".cards",  { opacity: 0, zIndex: -1 })
 
-    // ─── HERO CARDS ───────────────────────────────────────────────
-    // Cards fade, scale down, converge into the same stacked pile
-    // layout as the skills cards (card1 on top, slight offsets), then drop
+    // ─── INITIAL STATES ───────────────────────────────────────────
+    gsap.set("#card-1", { opacity: 0, x: "100%",  y: "-120%", rotate: -5, scale: 0.25 })
+    gsap.set("#card-2", { opacity: 0, x: "0%",    y: "-120%", rotate: 0,  scale: 0.25 })
+    gsap.set("#card-3", { opacity: 0, x: "-100%", y: "-120%", rotate: 5,  scale: 0.25 })
+    gsap.set(".cards",  { opacity: 0 })
 
-    // Mirror of the skills card final stacked positions (before they spread):
-    // index 0: x "100%", rotate -5  → converges to these, then drops
-    // index 1: x "0%",   rotate  0
-    // index 2: x "-100%", rotate 5
-    // But since hero cards start spread OUT in a row, we animate from
-    // their natural flex positions toward the stacked pile center.
 
-    ScrollTrigger.create({
-        trigger: ".hero",
-        start: "top top",
-        end: "75% top",
-        scrub: 1,
-        onUpdate: (self) => {
-            const progress = self.progress
+   // ─── HERO CARDS: collapse downward into stack ─────────────────
+//
+// Cards:
+// - slightly converge inward
+// - drop downward
+// - shrink
+// - fade out
+//
+// Motion mirrors the skills entrance animation.
 
-            // Fade the whole hero-cards container
-            const heroCardContainerOpacity = gsap.utils.interpolate(
+ScrollTrigger.create({
+    trigger: ".hero",
+    start: "top top",
+    end: "bottom top",
+    scrub: 1,
+
+    onUpdate: (self) => {
+
+        const progress = self.progress
+
+        // Fade entire container gradually
+        gsap.set(".hero-cards", {
+            opacity: gsap.utils.interpolate(
                 1,
                 0,
-                smoothStep(progress)
-            )
-            gsap.set(".hero-cards", {
-                opacity: heroCardContainerOpacity
-            });
-
-            ["#hero-card-1", "#hero-card-2", "#hero-card-3"].forEach(
-                (cardId, index) => {
-                    const delay = index * 0.15
-                    const cardProgress = gsap.utils.clamp(
+                smoothStep(
+                    gsap.utils.clamp(
                         0,
                         1,
-                        (progress - delay) / (1 - delay)
+                        (progress - 0.45) / 0.35
                     )
-
-                    // Phase 1 (0 → 0.6): converge into stacked pile + scale down
-                    // Phase 2 (0.6 → 1): drop down together
-                    let stackProgress, dropProgress
-                    if (cardProgress < 0.6) {
-                        stackProgress = cardProgress / 0.6
-                        dropProgress = 0
-                    } else {
-                        stackProgress = 1
-                        dropProgress = (cardProgress - 0.6) / 0.4
-                    }
-
-                    // Target x/rotation mirrors skills cards initial stacked positions
-                    const targetX = index === 0 ? "100%" : index === 1 ? "0%" : "-100%"
-                    const targetRotate = index === 0 ? -5 : index === 1 ? 0 : 5
-
-                    const x = gsap.utils.interpolate("0%", targetX, smoothStep(stackProgress))
-                    const rotation = gsap.utils.interpolate(0, targetRotate, smoothStep(stackProgress))
-
-                    const scale = gsap.utils.interpolate(1, 0.25, smoothStep(stackProgress))
-
-                    const y = gsap.utils.interpolate("0%", "300%", smoothStep(dropProgress))
-
-                    gsap.set(cardId, { y, x, rotation, scale })
-                }
+                )
             )
-        }
-    })
+        })
+
+        // Softer target positions
+        const targetX = ["0%", "0%", "0%"]
+        const targetR = [-0.5, 0, 0.5]
+
+        // Slight stagger
+        const delays = [0, 0.08, 0.16]
+
+        ;["#hero-card-1", "#hero-card-2", "#hero-card-3"].forEach((cardId, i) => {
+
+            const delay = delays[i]
+
+            const cardP = gsap.utils.clamp(
+                0,
+                1,
+                (progress - delay) / (0.75 - delay)
+            )
+
+            const p = smoothStep(cardP)
+
+            gsap.set(cardId, {
+
+                // MAIN MOTION: DOWNWARD
+                y: gsap.utils.interpolate(
+                    "0px",
+                    "900px",
+                    p
+                ),
+
+                // slight inward convergence
+                x: gsap.utils.interpolate(
+                    "0%",
+                    targetX[i],
+                    p
+                ),
+
+                // subtle tilt
+                rotate: gsap.utils.interpolate(
+                    0,
+                    targetR[i],
+                    p
+                ),
+
+                // shrink into stack
+                scale: gsap.utils.interpolate(
+                    1,
+                    0.25,
+                    p
+                ),
+
+                // fade
+                opacity: gsap.utils.interpolate(
+                    1,
+                    0,
+                    smoothStep(
+                        gsap.utils.clamp(
+                            0,
+                            1,
+                            cardP * 0.85
+                        )
+                    )
+                ),
+
+                force3D: true
+            })
+        })
+    }
+})
 
 
     // ─── SKILLS SECTION: pin ──────────────────────────────────────
+    //
+    // .cards is position:fixed so it covers the viewport during the
+    // pin. The moment the pin ends we hide it with display:none —
+    // this is the only reliable way to stop a fixed element from
+    // floating over subsequent sections.
+    //
+    // Pin duration = 4.5× viewport height:
+    //   First 70% → card animation
+    //   Last  30% → silent hold so user can read flipped cards
+
+    const SKILLS_SCROLL_DIST = window.innerHeight * 4.5
+    const ANIM_DIST          = SKILLS_SCROLL_DIST * 0.70
 
     ScrollTrigger.create({
         trigger: ".skills",
         start: "top top",
-        end: `+=${window.innerHeight * 4}px`,
-        pin: ".skills",
-        pinSpacing: true
+        end: `+=${SKILLS_SCROLL_DIST}px`,
+        pin: true,
+        pinSpacing: true,
+        onLeave:     () => gsap.set(".cards", { display: "none"  }),
+        onEnterBack: () => gsap.set(".cards", { display: "flex", opacity: 1 }),
     })
 
-    // Smoothly fade .cards in as skills scrolls into view, and back out going up
+    // Fade .cards in as .skills scrolls into view
     ScrollTrigger.create({
         trigger: ".skills",
         start: "top bottom",
         end: "top top",
         scrub: 1,
-        onEnter: () => gsap.set(".cards", { zIndex: 1 }),
-        onLeaveBack: () => gsap.set(".cards", { zIndex: -1 }),
         onUpdate: (self) => {
             gsap.set(".cards", { opacity: smoothStep(self.progress) })
         }
     })
 
-    ScrollTrigger.create({
-        trigger: ".skills",
-        start: "top top",
-        end: `+=${window.innerHeight * 4}px`,
-        onLeave: () => {
-            const skillsSection = document.querySelector(".skills")
-            const skillsRect = skillsSection.getBoundingClientRect()
-            const skillsTop = window.pageYOffset + skillsRect.top
 
-            gsap.set(".cards", {
-                position: "absolute",
-                top: skillsTop,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                zIndex: 1
-            })
-        },
-        onEnterBack: () => {
-            gsap.set(".cards", {
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                zIndex: 1
-            })
-        }
-    })
-
-
-    // ─── SKILLS CARDS: come down, fade in, scale up, align, flip ──
+    // ─── SKILLS CARDS ANIMATION ───────────────────────────────────
+    //
+    // Runs for the first 70% of the pin.
+    //
+    // Per-card (0 → 1):
+    //   0.00–0.50  Drop in from -120%, scale 0.25→1, fade in.
+    //              X and rotate held at spread values.
+    //   0.50–1.00  Slide to center (x→0%), de-tilt, flip (rotationY→180).
 
     ScrollTrigger.create({
         trigger: ".skills",
         start: "top top",
-        end: `+=${window.innerHeight * 4}px`,
+        end: `+=${ANIM_DIST}px`,
         scrub: 1,
         onUpdate: (self) => {
             const progress = self.progress
 
-            // Skills header slides up from below
-            const headerProgress = gsap.utils.clamp(0, 1, progress / 0.9)
-            const headerY = gsap.utils.interpolate(
-                "400%",
-                "0%",
-                smoothStep(headerProgress)
-            )
+            const headerP = gsap.utils.clamp(0, 1, progress / 0.9)
             gsap.set(".skills-header", {
-                y: headerY
-            });
+                y: gsap.utils.interpolate("400%", "0%", smoothStep(headerP))
+            })
 
-            ["#card-1", "#card-2", "#card-3"].forEach((cardId, index) => {
+            const spreadX = ["100%", "0%", "-100%"]
+            const spreadR = [-5, 0, 5]
+            const delays  = [0, 0.06, 0.12]
 
-                const delay = index * 0.5
-                const cardProgress = gsap.utils.clamp(
-                    0,
-                    1,
-                    (progress - delay * 0.1) / (0.9 - delay * 0.1)
-                )
-
+            ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {
+                const delay     = delays[i]
+                const cardP     = gsap.utils.clamp(0, 1, (progress - delay) / (1 - delay))
                 const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
 
-                // ── Y: drop in from above, settle to center ──
-                let y
-                if (cardProgress < 0.4) {
-                    const np = cardProgress / 0.4
-                    y = gsap.utils.interpolate("-100%", "50%", smoothStep(np))
-                } else if (cardProgress < 0.6) {
-                    const np = (cardProgress - 0.4) / 0.2
-                    y = gsap.utils.interpolate("50%", "0%", smoothStep(np))
-                } else {
-                    y = "0%"
-                }
+                let y, scale, opacity, x, rotate, rotationY
 
-                // ── Scale: small → full ──
-                let scale
-                if (cardProgress < 0.4) {
-                    const np = cardProgress / 0.4
-                    scale = gsap.utils.interpolate(0.25, 0.75, smoothStep(np))
-                } else if (cardProgress < 0.6) {
-                    const np = (cardProgress - 0.4) / 0.2
-                    scale = gsap.utils.interpolate(0.75, 1, smoothStep(np))
-                } else {
-                    scale = 1
-                }
-
-                // ── Opacity: fade in ──
-                let opacity
-                if (cardProgress < 0.2) {
-                    const np = cardProgress / 0.2
-                    opacity = smoothStep(np)
-                } else {
-                    opacity = 1
-                }
-
-                // ── X / rotate: spread out then align, then flip ──
-                let x, rotate, rotationY
-                if (cardProgress < 0.6) {
-                    x = index == 0 ? "100%" : index == 1 ? "0%" : "-100%"
-                    rotate = index == 0 ? -5 : index == 1 ? 0 : 5
+                if (cardP < 0.50) {
+                    const np  = cardP / 0.50
+                    y         = gsap.utils.interpolate("-120%", "0%", smoothStep(np))
+                    scale     = gsap.utils.interpolate(0.25, 1, smoothStep(np))
+                    opacity   = np < 0.4 ? smoothStep(np / 0.4) : 1
+                    x         = spreadX[i]
+                    rotate    = spreadR[i]
                     rotationY = 0
-                } else if (cardProgress < 1) {
-                    const np = (cardProgress - 0.6) / 0.4
-                    x = gsap.utils.interpolate(
-                        index == 0 ? "100%" : index == 1 ? "0%" : "-100%",
-                        "0%",
-                        smoothStep(np)
-                    )
-                    rotate = gsap.utils.interpolate(
-                        index == 0 ? -5 : index == 1 ? 0 : 5,
-                        0,
-                        smoothStep(np)
-                    )
-                    rotationY = smoothStep(np) * 180
                 } else {
-                    x = "0%"
-                    rotate = 0
-                    rotationY = 180
+                    const np  = (cardP - 0.50) / 0.50
+                    y         = "0%"
+                    scale     = 1
+                    opacity   = 1
+                    x         = gsap.utils.interpolate(spreadX[i], "0%", smoothStep(np))
+                    rotate    = gsap.utils.interpolate(spreadR[i], 0,    smoothStep(np))
+                    rotationY = smoothStep(np) * 180
                 }
 
-                gsap.set(cardId, {
-                    opacity: opacity,
-                    y: y,
-                    x: x,
-                    rotate: rotate,
-                    scale: scale
-                })
-
-                gsap.set(innerCard, {
-                    rotationY: rotationY
-                })
+                gsap.set(cardId,    { opacity, y, x, rotate, scale })
+                gsap.set(innerCard, { rotationY })
             })
         }
     })
