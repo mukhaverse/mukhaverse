@@ -1,179 +1,261 @@
-
-.pip {
-    position: absolute;
-    font-size: 3rem;
-    padding: 2rem;
-    user-select: none;
-    opacity: 0.3;
-}
-
-.top-left     { top: 0; left: 0; }
-.top-right    { top: 0; right: 0; }
-.bottom-left  { bottom: 0; left: 0; }
-.bottom-right { bottom: 0; right: 0; }
-
-.bottom-left,
-.bottom-right {
-    transform: rotate(180deg);
-}
-
-
+/* ─── Section ─────────────────────────────────────────────── */
 .about-section {
     position: relative;
     background-color: var(--dark);
     color: var(--light);
-    padding: 8rem 3rem 6rem;
-    /* display: flex;
+    min-height: 110dvh;
+    padding: 0 5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start; */
 }
 
 .about-inner {
-    max-width: 860px;
+    max-width: 1000px;
     width: 100%;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
 }
 
+
+/* ─── Watermark ───────────────────────────────────────────── */
+.about-watermark {
+    position: absolute;
+    bottom: -6%;
+    right: 3%;
+    font-size: clamp(220px, 30vw, 380px);
+    color: rgba(249, 244, 235, 0.03);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ─── Tag ─────────────────────────────────────────────────── */
 .about-section .section-tag {
-    background-color: rgba(249, 244, 235, 0.18);
-    color: var(--light);
-    border: 1px solid rgba(249, 244, 235, 0.3);
-    /* display:block; */
-}
-
-.about-tag{
+    background-color: transparent;
+    color: rgba(249, 244, 235, 0.3);
+    border: 1px solid rgba(249, 244, 235, 0.12);
+    letter-spacing: 3px;
     display: inline-block;
-
 }
 
-.about-statement {
-    font-size: clamp(1.6rem, 4vw, 2.75rem);
+
+/* ─── Layout ──────────────────────────────────────────────── */
+.about-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4.5rem;
+    align-items: center;
+}
+
+
+/* ─── Year column ─────────────────────────────────────────── */
+.about-years {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.6s ease 0s, transform 0.6s ease 0s;
+}
+
+.about-years.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.about-yr {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+    font-weight: 400;
+    color: rgba(249, 244, 235, 0.88);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.about-yr-note {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(249, 244, 235, 0.22);
+    text-align: center;
+    margin: 0.35rem 0;
+}
+
+
+/* ─── Animated track ──────────────────────────────────────── */
+.about-track {
+    width: 1px;
+    height: clamp(60px, 10vw, 110px);
+    background: rgba(249, 244, 235, 0.08);
+    margin: 0.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-track-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(249, 244, 235, 0.5);
+    animation: track-fill 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes track-fill {
+    0%   { height: 8%;  top: 0%; }
+    50%  { height: 80%; top: 0%; }
+    100% { height: 8%;  top: 88%; }
+}
+
+
+/* ─── Degree (anchored under graduating) ──────────────────── */
+.about-degree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    margin-top: 0.6rem;
+
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+}
+
+.about-degree.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-degree-name {
+    font-size: clamp(0.65rem, 1vw, 0.78rem);
+    font-weight: 400;
+    color: rgba(249, 244, 235, 0.38);
+    letter-spacing: 0.3px;
+    text-align: center;
+}
+
+.about-degree-uni {
+    font-size: clamp(0.6rem, 0.9vw, 0.7rem);
     font-weight: 300;
-    line-height: 1.4;
-    margin-bottom: 2rem;
-    color: var(--light);
-    font-family: var(--font-body);
+    color: rgba(249, 244, 235, 0.18);
+    letter-spacing: 0.3px;
+    text-align: center;
 }
 
+
+/* ─── Right column ────────────────────────────────────────── */
+.about-right {
+    border-left: 1px solid rgba(249, 244, 235, 0.08);
+    padding-left: 4.5rem;
+}
+
+
+/* ─── Heading ─────────────────────────────────────────────── */
+.about-statement {
+    font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.45;
+    color: rgba(249, 244, 235, 0.88);
+    font-family: var(--font-body);
+
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+
+.about-statement.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ink sweep on "messy middle" */
 .about-statement em {
     font-style: normal;
     font-family: var(--font-display);
-    font-size: 1.05em;
-    opacity: 0.9;
+    font-size: 1.04em;
+    background-image: linear-gradient(rgba(249,244,235,0.8), rgba(249,244,235,0.8));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    padding-bottom: 2px;
+    transition: background-size 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.about-body {
-    font-size: 1.05rem;
-    font-weight: 300;
-    opacity: 0.72;
-    max-width: 600px;
-    line-height: 1.8;
-}
-
-.about-suits {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 3rem;
-    margin-bottom: 3.5rem;
-    font-size: 2.25rem;
-    opacity: 0.3;
+.about-statement.is-visible em {
+    background-size: 100% 1px;
+    transition-delay: 0.65s;
 }
 
 
-
-
-.edu-facts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 4rem;
-    border-top: 1px solid rgba(249, 244, 235, 0.25);
-    padding-top: 2.5rem;
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .about-section  { padding: 0 3rem; }
+    .about-layout   { gap: 3rem; }
+    .about-right    { padding-left: 3rem; }
 }
 
-.edu-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+@media (max-width: 768px) {
+    .about-section {
+        padding: 6rem 1.5rem;
+        justify-content: flex-start;
+    }
+
+    .about-layout {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .about-years {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem 1rem;
+    }
+
+    .about-yr-note { margin: 0; }
+
+    .about-track {
+        width: clamp(40px, 12vw, 80px);
+        height: 1px;
+        margin: 0 0.25rem;
+    }
+
+    .about-track-fill {
+        height: 100%;
+        top: 0;
+        animation: track-fill-h 2.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes track-fill-h {
+        0%   { width: 8%;  left: 0%; }
+        50%  { width: 80%; left: 0%; }
+        100% { width: 8%;  left: 88%; }
+    }
+
+    .about-degree {
+        width: 100%;
+        margin-top: 0.25rem;
+    }
+
+    .about-right {
+        border-left: none;
+        border-top: 1px solid rgba(249, 244, 235, 0.08);
+        padding-left: 0;
+        padding-top: 2rem;
+    }
 }
 
-.edu-label {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(249, 244, 235, 0.4);
-}
-
-.edu-degree {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--light);
-    line-height: 1.1;
-}
-
-
-
-
-.edu-years {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-top: 0.5rem;
-}
-
-.edu-year-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.edu-year-num {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    font-weight: 400;
-    color: var(--light);
-    line-height: 1;
-    opacity: 0.9;
-}
-
-.edu-year-note {
-    font-size: 0.7rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(249, 244, 235, 0.45);
-}
-
-.edu-year-sep {
-    font-size: 1.25rem;
-    color: rgba(249, 244, 235, 0.25);
-    margin-top: -0.5rem;
-}
-
-
-
-.edu-uni-facts {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    margin-top: 0.5rem;
-    padding: 0;
-}
-
-.edu-uni-facts li {
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: rgba(249, 244, 235, 0.65);
-    line-height: 1.5;
-    padding-left: 1rem;
-    position: relative;
-}
-
-.edu-uni-facts li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: rgba(249, 244, 235, 0.25);
-    font-size: 0.8rem;
+@media (max-width: 480px) {
+    .about-yr { font-size: clamp(2rem, 9vw, 2.8rem); }
 }

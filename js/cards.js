@@ -172,7 +172,7 @@ ScrollTrigger.create({
 
     ScrollTrigger.create({
         trigger: ".skills",
-        start: "top top",
+        start: "top 80%",
         end: `+=${ANIM_DIST}px`,
         scrub: 1,
         onUpdate: (self) => {

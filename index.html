@@ -87,52 +87,34 @@
 
 
 <section class="about-section" id="about" aria-labelledby="about-heading">
-            <span class="section-tag about-tag">About &amp; Education</span>
+
+            <div class="about-watermark" aria-hidden="true">♠</div>
+
             <div class="about-inner">
 
-                <div class="corner-pips">
-                    <span class="pip top-left">♠</span>
-                    <span class="pip top-right">♦</span>
-                    <span class="pip bottom-left">♥</span>
-                    <span class="pip bottom-right">♣</span>
-                </div>
-
                 
-                <h2 class="about-statement" id="about-heading">
-                    Working across frontend and backend, mostly interested in the
-                    <em>messy middle</em> where they meet.
-                </h2>
-                <p class="about-body">
-                I build for the web, paying close attention to how interfaces respond and feel in use. I'm always drawn to exploring new conepts, and lately I've been diving more and more into computer vision.
-                </p>
 
+                <div class="about-layout">
 
-                <div class="edu-facts" role="region" aria-label="Education details">
-
-                    <div class="edu-col">
-                        <span class="edu-label">Degree</span>
-                        <p class="edu-degree">B.Sc. Software Engineering</p>
-                        <div class="edu-years">
-                            <span class="edu-year-block">
-                                <span class="edu-year-num">2022</span>
-                                <span class="edu-year-note">Started</span>
-                            </span>
-                            <span class="edu-year-sep" aria-hidden="true">→</span>
-                            <span class="edu-year-block">
-                                <span class="edu-year-num">2026</span>
-                                <span class="edu-year-note">Graduating</span>
-                            </span>
+                    <div class="about-years" aria-label="2022 to 2026">
+                        <span class="about-yr-note">Started</span>
+                        <span class="about-yr">2022</span>
+                        <div class="about-track" aria-hidden="true">
+                            <div class="about-track-fill"></div>
+                        </div>
+                        <span class="about-yr">2026</span>
+                        <span class="about-yr-note">Graduating</span>
+                        <div class="about-degree">
+                            <p class="about-degree-name">B.Sc. Software Engineering</p>
+                            <p class="about-degree-uni">University of Jeddah</p>
                         </div>
                     </div>
 
-                    <div class="edu-col">
-                        <span class="edu-label">Institution</span>
-                        <p class="edu-degree">University of Jeddah</p>
-                        <ul class="edu-uni-facts" aria-label="University facts">
-                            <li>Founded 2014 · Jeddah, Saudi Arabia</li>
-                            <li>College of Computer Science &amp; Engineering</li>
-                            <li>Emphasis on technical depth and design awareness</li>
-                        </ul>
+                    <div class="about-right">
+                        <h2 class="about-statement" id="about-heading">
+                            Working across frontend and backend, mostly interested in the
+                            <em>messy middle</em> where they meet.
+                        </h2>
                     </div>
 
                 </div>
@@ -521,11 +503,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <script src="js/hero.js"></script>
-
-
     <script type="module" src="js/cards.js"></script>
+    <script src="js/links.js"></script>
 
-      <script src="js/links.js"></script>
+    <script>
+        (function () {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.15 }
+            );
+
+            document
+                .querySelectorAll('.about-years, .about-statement, .about-degree')
+                .forEach((el) => observer.observe(el));
+        })();
+    </script>
 
 
 </body>
