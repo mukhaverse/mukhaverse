@@ -206,53 +206,66 @@
 
 @media (max-width: 768px) {
     .about-section {
-        padding: 6rem 1.5rem;
-        justify-content: flex-start;
+        padding: 3rem 1.5rem;
+        min-height: 100svh;
+        justify-content: center;
     }
 
     .about-layout {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
+        grid-template-columns: auto 1fr;
+        gap: 1.5rem;
+        height: calc(100svh - 6rem);
+        align-items: stretch;
     }
 
+    /* reset years back to vertical column */
     .about-years {
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-direction: column;
+        flex-wrap: nowrap;
         align-items: center;
-        justify-content: center;
-        gap: 0.5rem 1rem;
-    }
-
-    .about-yr-note { margin: 0; }
-
-    .about-track {
-        width: clamp(40px, 12vw, 80px);
-        height: 1px;
-        margin: 0 0.25rem;
-    }
-
-    .about-track-fill {
+        justify-content: flex-start;
         height: 100%;
-        top: 0;
-        animation: track-fill-h 2.4s ease-in-out infinite alternate;
+        gap: 0;
     }
 
-    @keyframes track-fill-h {
-        0%   { width: 8%;  left: 0%; }
-        50%  { width: 80%; left: 0%; }
-        100% { width: 8%;  left: 88%; }
+    .about-yr-note { margin: 0.35rem 0; }
+
+    /* track stretches to fill the space between 2022 and 2026 */
+    .about-track {
+        flex: 1;
+        width: 1px;
+        height: auto;
+        min-height: 40px;
+        margin: 0.5rem 0;
+    }
+
+    /* reset back to vertical fill animation */
+    .about-track-fill {
+        width: 100%;
+        height: 8%;
+        top: 0;
+        left: 0;
+        animation: track-fill 2.4s ease-in-out infinite alternate;
     }
 
     .about-degree {
-        width: 100%;
-        margin-top: 0.25rem;
+        width: auto;
+        margin-top: 0.6rem;
+        align-items: center;
     }
 
+    /* statement sits beside the track, centered vertically */
     .about-right {
-        border-left: none;
-        border-top: 1px solid rgba(249, 244, 235, 0.08);
-        padding-left: 0;
-        padding-top: 2rem;
+        border-top: none;
+        border-left: 1px solid rgba(249, 244, 235, 0.08);
+        padding-top: 0;
+        padding-left: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .about-statement {
+        font-size: clamp(1.2rem, 5vw, 1.6rem);
     }
 }
 

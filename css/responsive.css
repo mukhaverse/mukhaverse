@@ -54,6 +54,22 @@
 
 @media (max-width: 768px) {
 
+    .cards-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cards-container .card {
+        flex: none;
+        width: 50vw;
+    }
+
+    .flip-card-back {
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+
 
     .site-nav {
         padding: 1rem 1.25rem;

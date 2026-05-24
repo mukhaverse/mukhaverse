@@ -13,11 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const smoothStep = (p) => p * p * (3 - 2 * p)
 
+    const isMobile = window.matchMedia("(max-width: 768px)").matches
 
     // ─── INITIAL STATES ───────────────────────────────────────────
-    gsap.set("#card-1", { opacity: 0, x: "100%",  y: "-120%", rotate: -5, scale: 0.25 })
-    gsap.set("#card-2", { opacity: 0, x: "0%",    y: "-120%", rotate: 0,  scale: 0.25 })
-    gsap.set("#card-3", { opacity: 0, x: "-100%", y: "-120%", rotate: 5,  scale: 0.25 })
+    if (isMobile) {
+        gsap.set("#card-1", { opacity: 0, x: "0%", y: "-130%", rotate: -3, scale: 0.25 })
+        gsap.set("#card-2", { opacity: 0, x: "0%", y: "-190%", rotate: 0,  scale: 0.25 })
+        gsap.set("#card-3", { opacity: 0, x: "0%", y: "-250%", rotate: 3,  scale: 0.25 })
+    } else {
+        gsap.set("#card-1", { opacity: 0, x: "100%",  y: "-120%", rotate: -5, scale: 0.25 })
+        gsap.set("#card-2", { opacity: 0, x: "0%",    y: "-120%", rotate: 0,  scale: 0.25 })
+        gsap.set("#card-3", { opacity: 0, x: "-100%", y: "-120%", rotate: 5,  scale: 0.25 })
+    }
     gsap.set(".cards",  { opacity: 0 })
 
 
@@ -183,38 +190,76 @@ ScrollTrigger.create({
                 y: gsap.utils.interpolate("400%", "0%", smoothStep(headerP))
             })
 
-            const spreadX = ["100%", "0%", "-100%"]
-            const spreadR = [-5, 0, 5]
-            const delays  = [0, 0.06, 0.12]
+            if (isMobile) {
+                // ─── MOBILE: cascade drop from above, then flip ───────────
+                const spreadY = ["-130%", "-190%", "-250%"]
+                const spreadR = [-3, 0, 3]
+                const delays  = [0, 0.06, 0.12]
 
-            ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {
-                const delay     = delays[i]
-                const cardP     = gsap.utils.clamp(0, 1, (progress - delay) / (1 - delay))
-                const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
+                ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {
+                    const delay     = delays[i]
+                    const cardP     = gsap.utils.clamp(0, 1, (progress - delay) / (1 - delay))
+                    const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
 
-                let y, scale, opacity, x, rotate, rotationY
+                    let y, scale, opacity, x, rotate, rotationY
 
-                if (cardP < 0.50) {
-                    const np  = cardP / 0.50
-                    y         = gsap.utils.interpolate("-120%", "0%", smoothStep(np))
-                    scale     = gsap.utils.interpolate(0.25, 1, smoothStep(np))
-                    opacity   = np < 0.4 ? smoothStep(np / 0.4) : 1
-                    x         = spreadX[i]
-                    rotate    = spreadR[i]
-                    rotationY = 0
-                } else {
-                    const np  = (cardP - 0.50) / 0.50
-                    y         = "0%"
-                    scale     = 1
-                    opacity   = 1
-                    x         = gsap.utils.interpolate(spreadX[i], "0%", smoothStep(np))
-                    rotate    = gsap.utils.interpolate(spreadR[i], 0,    smoothStep(np))
-                    rotationY = smoothStep(np) * 180
-                }
+                    if (cardP < 0.50) {
+                        const np  = cardP / 0.50
+                        y         = gsap.utils.interpolate(spreadY[i], "0%", smoothStep(np))
+                        scale     = gsap.utils.interpolate(0.25, 1, smoothStep(np))
+                        opacity   = np < 0.4 ? smoothStep(np / 0.4) : 1
+                        x         = "0%"
+                        rotate    = gsap.utils.interpolate(spreadR[i], 0, smoothStep(np))
+                        rotationY = 0
+                    } else {
+                        const np  = (cardP - 0.50) / 0.50
+                        y         = "0%"
+                        scale     = 1
+                        opacity   = 1
+                        x         = "0%"
+                        rotate    = 0
+                        rotationY = smoothStep(np) * 180
+                    }
 
-                gsap.set(cardId,    { opacity, y, x, rotate, scale })
-                gsap.set(innerCard, { rotationY })
-            })
+                    gsap.set(cardId,    { opacity, y, x, rotate, scale })
+                    gsap.set(innerCard, { rotationY })
+                })
+
+            } else {
+                // ─── DESKTOP: original animation (untouched) ─────────────
+                const spreadX = ["100%", "0%", "-100%"]
+                const spreadR = [-5, 0, 5]
+                const delays  = [0, 0.06, 0.12]
+
+                ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {
+                    const delay     = delays[i]
+                    const cardP     = gsap.utils.clamp(0, 1, (progress - delay) / (1 - delay))
+                    const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
+
+                    let y, scale, opacity, x, rotate, rotationY
+
+                    if (cardP < 0.50) {
+                        const np  = cardP / 0.50
+                        y         = gsap.utils.interpolate("-120%", "0%", smoothStep(np))
+                        scale     = gsap.utils.interpolate(0.25, 1, smoothStep(np))
+                        opacity   = np < 0.4 ? smoothStep(np / 0.4) : 1
+                        x         = spreadX[i]
+                        rotate    = spreadR[i]
+                        rotationY = 0
+                    } else {
+                        const np  = (cardP - 0.50) / 0.50
+                        y         = "0%"
+                        scale     = 1
+                        opacity   = 1
+                        x         = gsap.utils.interpolate(spreadX[i], "0%", smoothStep(np))
+                        rotate    = gsap.utils.interpolate(spreadR[i], 0,    smoothStep(np))
+                        rotationY = smoothStep(np) * 180
+                    }
+
+                    gsap.set(cardId,    { opacity, y, x, rotate, scale })
+                    gsap.set(innerCard, { rotationY })
+                })
+            }
         }
     })
 
