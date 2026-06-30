@@ -1,4 +1,13 @@
 
+/* hidden before JS entrance animation runs — prevents flash on load */
+.navbar,
+.hero-title,
+.hero-divider,
+.hero-description,
+.hero-cards .card {
+    opacity: 0;
+}
+
 
 .hero {
     position: relative;

@@ -3,7 +3,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 gsap.set(".hero-title", { opacity: 0, y: 150, scale:1.5});
 gsap.set(".hero-divider", { opacity: 0, y: -20 });
-gsap.set(".site-nav", { opacity: 0, y: -20 });
+gsap.set(".navbar", { opacity: 0, y: -20 });
 const w = window.innerWidth;
 // gsap.set(".hero-cards .card", { x: 70, opacity: 0 });
 gsap.set(".hero-description", { opacity: 0, x: -20,  y: () => {    
@@ -50,7 +50,7 @@ tl.to(".hero-divider", {
     duration: 0.6
 }, "-=0.2");
 
-tl.to(".site-nav", {
+tl.to(".navbar", {
     opacity: 1,
     y: 0,
     duration: 0.6
