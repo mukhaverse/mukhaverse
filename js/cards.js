@@ -28,6 +28,49 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.set(".cards",  { opacity: 0 })
 
 
+    // ─── GHOST ICONS SETUP ───────────────────────────────────────
+    const iconDefs = [
+        // top — spread left → right, y zigzags so they're not on one line
+        { icon: 'devicon-figma-plain',       x: '14%', y: '10%', size: '3.2rem', alpha: 0.08 },
+        { icon: 'devicon-javascript-plain',  x: '48%', y: '5%',  size: '3.4rem', alpha: 0.10 },
+        { icon: 'devicon-threejs-original',  x: '80%', y: '13%', size: '3.0rem', alpha: 0.07 },
+
+        // bottom — spread left → right, y zigzags
+        { icon: 'devicon-nodejs-plain',      x: '16%', y: '88%', size: '3.2rem', alpha: 0.09 },
+        { icon: 'devicon-mongodb-plain',     x: '50%', y: '93%', size: '3.0rem', alpha: 0.11 },
+        { icon: 'devicon-mysql-plain',       x: '78%', y: '86%', size: '3.1rem', alpha: 0.08 },
+
+        // left — go top → bottom, x zigzags so they're not on one line
+        { icon: 'devicon-opencv-plain',      x: '4%',  y: '28%', size: '3.1rem', alpha: 0.10 },
+        { icon: 'devicon-postman-plain',     x: '8%',  y: '52%', size: '3.3rem', alpha: 0.09 },
+        { icon: 'devicon-vitest-plain',      x: '3%',  y: '72%', size: '3.0rem', alpha: 0.07 },
+
+        // right — go top → bottom, x zigzags
+        { icon: 'devicon-figma-plain',       x: '90%', y: '24%', size: '3.1rem', alpha: 0.08 },
+        { icon: 'devicon-javascript-plain',  x: '93%', y: '48%', size: '3.2rem', alpha: 0.06 },
+        { icon: 'devicon-threejs-original',  x: '88%', y: '68%', size: '3.3rem', alpha: 0.07 },
+    ]
+
+    const ghostWrap = document.createElement('div')
+    ghostWrap.className = 'skills-ghost-icons'
+    document.querySelector('.cards').appendChild(ghostWrap)
+
+    iconDefs.forEach(({ icon, x, y, size }) => {
+        const el = document.createElement('i')
+        el.className = `${icon} skills-ghost-icon`
+        el.style.left = x
+        el.style.top = y
+        el.style.fontSize = size
+        ghostWrap.appendChild(el)
+    })
+
+    const ghostEls = Array.from(ghostWrap.querySelectorAll('.skills-ghost-icon'))
+    gsap.set(ghostEls, { opacity: 0, scale: 0 })
+
+    const ghostFwd = new Array(ghostEls.length).fill(false)
+    const ghostBwd = new Array(ghostEls.length).fill(false)
+
+
    // ─── HERO CARDS: collapse downward into stack ─────────────────
 //
 // Cards:
@@ -260,6 +303,40 @@ ScrollTrigger.create({
                     gsap.set(innerCard, { rotationY })
                 })
             }
+        }
+    })
+
+
+    // ─── GHOST ICONS ANIMATION ───────────────────────────────────
+    //
+    // Icons pop in one-by-one during the second half of the skills
+    // animation (progress 0.25 → 0.90), each with a bouncy back.out
+    // ease for the "pop" feel. Stagger is purely threshold-based so
+    // reversing the scroll fades them back out in reverse order.
+
+    ScrollTrigger.create({
+        trigger: ".skills",
+        start: "top 80%",
+        end: `+=${ANIM_DIST}px`,
+        scrub: 1,
+        onUpdate: (self) => {
+            const progress = self.progress
+            ghostEls.forEach((el, i) => {
+                const t     = 0.25 + (i / (ghostEls.length - 1)) * 0.65
+                const alpha = iconDefs[i].alpha
+
+                if (progress >= t && !ghostFwd[i]) {
+                    ghostFwd[i] = true
+                    ghostBwd[i] = false
+                    gsap.killTweensOf(el)
+                    gsap.to(el, { opacity: alpha, scale: 1, duration: 0.5, ease: 'back.out(2.5)' })
+                } else if (progress < t - 0.02 && !ghostBwd[i]) {
+                    ghostBwd[i] = true
+                    ghostFwd[i] = false
+                    gsap.killTweensOf(el)
+                    gsap.to(el, { opacity: 0, scale: 0, duration: 0.3, ease: 'power2.in' })
+                }
+            })
         }
     })
 
