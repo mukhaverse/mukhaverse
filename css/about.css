@@ -86,7 +86,7 @@
     font-size: 0.58rem;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    color: rgba(249, 244, 235, 0.22);
+    color: rgba(249, 244, 235, 0.444);
     text-align: center;
     margin: 0.35rem 0;
 }
@@ -139,7 +139,7 @@
 .about-degree-name {
     font-size: clamp(0.65rem, 1vw, 0.78rem);
     font-weight: 400;
-    color: rgba(249, 244, 235, 0.38);
+    color: rgba(249, 244, 235, 0.703);
     letter-spacing: 0.3px;
     text-align: center;
 }
@@ -147,7 +147,7 @@
 .about-degree-uni {
     font-size: clamp(0.6rem, 0.9vw, 0.7rem);
     font-weight: 300;
-    color: rgba(249, 244, 235, 0.18);
+    color: rgba(249, 244, 235, 0.555);
     letter-spacing: 0.3px;
     text-align: center;
 }
