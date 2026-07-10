@@ -46,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
         { icon: 'devicon-vitest-plain',      x: '3%',  y: '72%', size: '3.0rem', alpha: 0.07 },
 
         // right — go top → bottom, x zigzags
-        { icon: 'devicon-figma-plain',       x: '90%', y: '24%', size: '3.1rem', alpha: 0.08 },
-        { icon: 'devicon-javascript-plain',  x: '93%', y: '48%', size: '3.2rem', alpha: 0.06 },
-        { icon: 'devicon-threejs-original',  x: '88%', y: '68%', size: '3.3rem', alpha: 0.07 },
+        { icon: 'devicon-python-plain',      x: '90%', y: '24%', size: '3.1rem', alpha: 0.08 },
+        { icon: 'devicon-express-original',  x: '93%', y: '48%', size: '3.2rem', alpha: 0.06 },
+        { icon: 'devicon-socketio-original', x: '88%', y: '68%', size: '3.3rem', alpha: 0.07 },
     ]
 
     const ghostWrap = document.createElement('div')
