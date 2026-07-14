@@ -70,9 +70,33 @@
         height: 26svh;
     }
 
+    #card-1,
+    #card-2 {
+        height: 24.5svh;
+    }
+
+    #card-3 {
+        height: 29svh;
+    }
+
     .flip-card-back {
-        gap: 0.5rem;
-        padding: 0.75rem;
+        gap: 0.3rem;
+        padding: 0.6rem;
+    }
+
+    .card-title span {
+        font-size: 0.6rem;
+    }
+
+    .card-copy {
+        gap: 0.25rem;
+    }
+
+    .card-copy p {
+        font-size: 0.62rem;
+        line-height: 1.15;
+        letter-spacing: 0.1px;
+        overflow-wrap: break-word;
     }
 
 
@@ -177,6 +201,10 @@
 
     .fan-card-icon {
         font-size: 2.2rem;
+    }
+
+    .fan-card-center {
+        gap: 0.4rem;
     }
 
      .fan-card[data-card-index="0"] {
@@ -301,6 +329,10 @@
         font-size: 0.6rem;
     }
 
+    .fan-card-center {
+        gap: 0.3rem;
+    }
+
     .fan-intro-tagline {
         font-size: 1rem;
     }
@@ -350,5 +382,13 @@
 
     .fan-card-label {
         font-size: 0.75rem;
+    }
+
+    .fan-card-url {
+        font-size: 0.55rem;
+    }
+
+    .fan-card-center {
+        gap: 0.25rem;
     }
 }
