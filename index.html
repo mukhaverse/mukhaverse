@@ -78,7 +78,7 @@
 
             <div class="hero-description">
                 <div class="hero-tag">Software Eng.</div>
-                <p>A jack of all trades is a master of none,<br> but oftentimes better than a master of one.</p>
+                <p>Working across frontend and backend, mostly interested in the <em>messy middle</em> where they meet.</p>
             </div>
 
         </section>
@@ -112,10 +112,11 @@
                         </div>
                     </div>
 
+
                     <div class="about-right">
                         <h2 class="about-statement" id="about-heading">
-                            Working across frontend and backend, mostly interested in the
-                            <em>messy middle</em> where they meet.
+                           I've never found much satisfaction in stopping at "it works." The interesting part is refining what doesn't feel right and paying attention to the details that shape the final experience. Learning something new has never felt like stepping outside my comfort zone.
+                            <span class="about-emphasis">It is my comfort zone.</span>
                         </h2>
                     </div>
 
@@ -511,6 +512,7 @@
 
     <script src="js/hero.js"></script>
     <script type="module" src="js/cards.js"></script>
+    <script type="module" src="js/about.js"></script>
     <script src="js/links.js"></script>
 
     <script>
@@ -528,7 +530,7 @@
             );
 
             document
-                .querySelectorAll('.about-years, .about-statement, .about-degree')
+                .querySelectorAll('.about-years, .about-degree')
                 .forEach((el) => observer.observe(el));
         })();
     </script>

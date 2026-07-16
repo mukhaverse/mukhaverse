@@ -62,7 +62,8 @@ tl.to(".navbar", {
 tl.to(".hero-description", {
     opacity: 1,
     x: 0,
-    duration: 0.6
+    duration: 0.6,
+    onStart: () => document.querySelector(".hero-description").classList.add("is-visible")
 }, "-=0.3");
 
 

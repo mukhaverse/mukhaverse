@@ -162,11 +162,16 @@
 
 /* ─── Heading ─────────────────────────────────────────────── */
 .about-statement {
-    font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+    font-size: clamp(1.4rem, 1.7vw, 2.3rem);
     font-weight: 300;
     line-height: 1.45;
-    color: rgba(249, 244, 235, 0.88);
+    color: rgba(249, 244, 235, 0.4);
     font-family: var(--font-body);
+
+    background-image: radial-gradient(200px circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.35) 60%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 
     opacity: 0;
     transform: translateY(8px);
@@ -178,22 +183,29 @@
     transform: translateY(0);
 }
 
-/* ink sweep on "messy middle" */
-.about-statement em {
-    font-style: normal;
-    font-family: var(--font-display);
-    font-size: 1.04em;
-    background-image: linear-gradient(rgba(249,244,235,0.8), rgba(249,244,235,0.8));
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1px;
-    padding-bottom: 2px;
-    transition: background-size 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+/* "It is my comfort zone." — own line, soft italic, with a spotlight that follows the cursor */
+.about-emphasis {
+    display: block;
+    margin-top: 1.75rem;
+    text-align: right;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.8em;
+    color: rgba(249, 244, 235, 0.35);
+    background-image: radial-gradient(150px circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.3) 60%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-.about-statement.is-visible em {
-    background-size: 100% 1px;
-    transition-delay: 0.65s;
+.about-statement.is-visible .about-emphasis {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.55s;
 }
 
 
