@@ -4,7 +4,7 @@
 
     
     .hero-description {
-        max-width: 65%;
+        /* max-width: 65%; */
     }
 
     .hero-cards .card {
@@ -156,8 +156,8 @@
     }
 
     .hero-description {
-        max-width: 90%;
-        font-size: 3.2rem;
+        /* max-width: 55%;
+        font-size: 4.2rem; */
     }
 
     
@@ -211,6 +211,10 @@
 
     width: 170px
 }
+
+    .footer-quote {
+        max-width: 100%;
+    }
 }
 
 
@@ -258,8 +262,8 @@
     }
 
     .hero-description {
-        max-width: 100%;
-        font-size: 2.5rem;
+        /* max-width: 100%;
+        font-size: 2.5rem; */
     }
 
     .hero-tag {
@@ -340,6 +344,28 @@
 
     width: 135px
 }
+
+    .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .footer-quote {
+        flex: none;
+        max-width: 100%;
+    }
+
+    .footer-divider {
+        justify-content: space-around;
+        font-size: 0.7rem;
+        word-spacing: 3px;
+    }
+
+    .footer-divider-dots {
+        display: none;
+    }
+
 }
 
 
@@ -358,7 +384,7 @@
     }
 
     .hero-description {
-        font-size: 1.8rem;
+        /* font-size: 1.8rem; */
     }
 
     .hero-cards .card {

@@ -1,10 +1,112 @@
 
+.page-wrapper {
+    position: relative;
+    z-index: 1;
+    background-color: var(--cream);
+}
 
 .site-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
     background-color: var(--red);
-    color: #f9f4eba4;
+    color: var(--cream);
+    overflow: hidden;
+    padding: 2rem 2.5rem 2rem;
+    box-shadow: inset 0 26px 34px -26px rgba(0, 0, 0, 0.6);
+}
+
+.footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.footer-brand-card {
+    width: 17%;
+    aspect-ratio: 5 / 7;
+    object-fit: cover;
+    border-radius: 0.6rem;
+    transform: rotate(-15deg);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: -2rem;
+}
+
+.footer-top-link {
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    color: var(--cream);
+    opacity: 0.75;
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    background-color: rgba(249, 244, 235, 0.08);
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.footer-top-link:hover {
+    opacity: 1;
+    background-color: rgba(249, 244, 235, 0.16);
+}
+
+.footer-quote {
+    flex: none;
+    /* max-width: 390px; */
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 2.6;
+    color: rgba(249, 244, 235, 0.65);
+    margin-right: 16%;
+    margin-bottom: 10%;
+}
+
+.footer-divider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    word-spacing: 6px;
+    opacity: 0.35;
+    margin-bottom: 1.75rem;
+}
+
+.footer-divider-code {
+    font-size: 0.7rem;
+}
+
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+     margin-right: 5%;
+}
+
+.footer-nav a {
+    opacity: 0.7;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s ease;
+}
+
+.footer-nav a:hover {
+    opacity: 1;
+}
+
+.footer-credit {
     text-align: center;
-    padding: 1.5rem;
-    font-size: 0.90rem;
+    font-size: 0.78rem;
+    opacity: 0.55;
     font-weight: 300;
 }

@@ -137,10 +137,10 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    max-width: 100%;
-    font-size: clamp(3.7rem, 4.2vw, 5.8rem);
+    max-width: 55%;
+    font-size: clamp(1.7rem, 2.2vw, 2.8rem);
     margin-top: 1rem;
-    color: red;
+    /* color: red; */
 }
 
 .hero-description p {

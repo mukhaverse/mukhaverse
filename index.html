@@ -23,6 +23,8 @@
 </head>
 <body>
 
+    <div class="page-wrapper">
+
     <nav class="navbar">
         <div class="nav-logo">SA</div>
         <ul class="nav-links">
@@ -500,10 +502,35 @@
             </div>
         </section>
 
-    </main>
+    </div>
 
-    <footer class="site-footer">
-        &nbsp; Shumokh Alsharif &nbsp; @ &nbsp; 2026
+    <footer class="site-footer" id="site-footer">
+
+        <div class="footer-top">
+            <img src="assets/jack-of-dimond.jpeg" alt="" class="footer-brand-card" aria-hidden="true">
+
+            <p class="footer-quote">A jack of all trades is a master of none,<br>but oftentimes better than a master of one.</p>
+
+            <nav class="footer-nav">
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <a href="#hero" class="footer-top-link">Back to top ↑</a>
+        </div>
+
+        <div class="footer-divider">
+            <span class="footer-divider-dots">∷ ∷ ∷ ∷ ∷ ∷</span>
+            <span class="footer-divider-code">221B</span>
+            ∷ &nbsp; &nbsp; &nbsp; ∷ &nbsp; &nbsp; &nbsp; ∷
+            <span class="footer-divider-code">A113</span>
+            <span class="footer-divider-dots">∷ ∷ ∷ ∷ ∷ ∷</span>
+        </div>
+
+        <p class="footer-credit">&copy; 2026 &nbsp;Shumokh Alsharif</p>
+
     </footer>
 
 
@@ -535,6 +562,24 @@
         })();
     </script>
 
+    <script>
+        (function () {
+            const footer = document.getElementById('site-footer');
+            const wrapper = document.querySelector('.page-wrapper');
+            if (!footer || !wrapper) return;
+
+            const setFooterSpace = () => {
+                wrapper.style.marginBottom = footer.offsetHeight + 'px';
+            };
+
+            if ('ResizeObserver' in window) {
+                new ResizeObserver(setFooterSpace).observe(footer);
+            } else {
+                window.addEventListener('resize', setFooterSpace);
+            }
+            setFooterSpace();
+        })();
+    </script>
 
 </body>
 </html> 
