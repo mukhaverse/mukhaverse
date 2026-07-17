@@ -55,28 +55,25 @@
 @media (max-width: 768px) {
 
     .cards {
-        padding-top: 9.5rem;
+        padding-top: 3rem;
         box-sizing: border-box;
     }
 
     .cards-container {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 1.1rem;
     }
 
     .cards-container .card {
         flex: none;
         width: auto;
-        height: 26svh;
+        height: 28svh;
     }
 
     #card-1,
-    #card-2 {
-        height: 24.5svh;
-    }
-
+    #card-2,
     #card-3 {
-        height: 29svh;
+        height: 28svh;
     }
 
     .flip-card-back {
@@ -156,8 +153,8 @@
     }
 
     .hero-description {
-        /* max-width: 55%;
-        font-size: 4.2rem; */
+        max-width: 70%;
+        font-size: clamp(2.2rem, 5vw, 2.7rem);
     }
 
     
@@ -188,7 +185,8 @@
 }
 
     .contact-section {
-        padding: 5rem 1.5rem;
+        padding: 6rem 1.5rem;
+        padding-bottom: 13rem;
     }
 
     .fan-stage {
@@ -262,8 +260,8 @@
     }
 
     .hero-description {
-        /* max-width: 100%;
-        font-size: 2.5rem; */
+        max-width: 70%;
+        font-size: clamp(1.4rem, 5vw, 1.7rem);
     }
 
     .hero-tag {
@@ -291,7 +289,8 @@
 
 
     .contact-section {
-        padding: 4rem 1rem;
+        padding: 6rem 1rem;
+        padding-bottom: 13rem;
     }
 
     .contact-title {
@@ -346,14 +345,32 @@
 }
 
     .footer-top {
+        position: relative;
         flex-direction: column;
         align-items: flex-start;
         gap: 1.5rem;
     }
 
+    .footer-brand-card {
+        position: absolute;
+        top: 50%;
+        right: -5rem;
+        width: 130px;
+        margin-top: 0;
+        transform: translateY(-30%) rotate(-15deg);
+    }
+
     .footer-quote {
         flex: none;
         max-width: 100%;
+        margin-right: 0;
+        margin-bottom: 0;
+        font-size: 1.05rem;
+        line-height: 1.5;
+    }
+
+    .footer-nav {
+        margin-right: 0;
     }
 
     .footer-divider {
@@ -384,7 +401,7 @@
     }
 
     .hero-description {
-        /* font-size: 1.8rem; */
+        font-size: clamp(0.95rem, 5vw, 1.2rem);
     }
 
     .hero-cards .card {

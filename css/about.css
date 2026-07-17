@@ -220,14 +220,26 @@
     .about-section {
         padding: 3rem 1.5rem;
         min-height: 100svh;
+        overflow: visible;
         justify-content: center;
     }
 
     .about-layout {
         grid-template-columns: auto 1fr;
         gap: 1.5rem;
-        height: calc(100svh - 6rem);
+        min-height: calc(100svh - 6rem);
         align-items: stretch;
+    }
+
+    .about-yr {
+        font-size: clamp(2.2rem, 7vw, 2.6rem);
+    }
+
+    /* cap these so their text width doesn't stretch the auto column
+       and starve the paragraph of horizontal space */
+    .about-degree-name,
+    .about-degree-uni {
+        max-width: 90px;
     }
 
     /* reset years back to vertical column */
@@ -278,6 +290,7 @@
 
     .about-statement {
         font-size: clamp(1.2rem, 5vw, 1.6rem);
+        line-height: 1.3;
     }
 }
 

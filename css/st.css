@@ -70,6 +70,10 @@ h2 {
     margin-top: 1rem;
 } */
 
+* {
+scroll-behavior: smooth;
+}
+
 body {
     font-family: "SN Pro", sans-serif;
      /* font-family: "Roboto", sans-serif; */
