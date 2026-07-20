@@ -230,7 +230,7 @@
         flex-wrap: wrap;
         align-items: flex-start;
         justify-content: space-between;
-        row-gap: 1.5rem;
+        row-gap: 1.9rem;
         column-gap: 1rem;
         margin-bottom: 1.75rem;
     }
@@ -240,7 +240,7 @@
         width: 46%;
         max-height: 200px;
         margin-bottom: 0;
-        margin-left: -3rem;
+        margin-left: -11rem;
     }
 
     .footer-quote {
