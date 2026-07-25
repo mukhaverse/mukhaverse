@@ -78,14 +78,14 @@
 
     .cards-container .card {
         flex: none;
-        width: 44vw;
+        width: 40vw;
         height: auto;
     }
 
     #card-1,
     #card-2,
     #card-3 {
-        width: 44vw;
+        width: 40vw;
         height: auto;
     }
 
