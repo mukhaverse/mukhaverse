@@ -162,13 +162,13 @@
 
 /* ─── Heading ─────────────────────────────────────────────── */
 .about-statement {
-    font-size: clamp(1.4rem, 1.7vw, 2.3rem);
+    font-size: clamp(1.8rem, 2.3vw, 3rem);
     font-weight: 300;
     line-height: 1.45;
     color: rgba(249, 244, 235, 0.4);
     font-family: var(--font-body);
 
-    background-image: radial-gradient(200px circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.35) 60%);
+    background-image: radial-gradient(calc(200px + var(--spot-boost, 0) * 130px) circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.35) 60%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -183,17 +183,40 @@
     transform: translateY(0);
 }
 
-/* "It is my comfort zone." — own line, soft italic, with a spotlight that follows the cursor */
+.about-line {
+    display: block;
+    text-wrap: balance;
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: none;
+}
+
+.about-line-lead {
+    max-width: 54ch;
+    margin-bottom: 1.5rem;
+}
+
+.about-line-main {
+    max-width: 50ch;
+    margin-left: auto;
+    text-align: right;
+}
+
+/* "It is my comfort zone." — own line, soft italic, lit by the same drifting spotlight */
 .about-emphasis {
     display: block;
+    width: fit-content;
+    max-width: 55%;
     margin-top: 1.75rem;
+    margin-left: auto;
+    margin-right: -1.5rem;
     text-align: right;
-    font-family: var(--font-body);
+    /* font-family: var(--font-body); */
     font-style: italic;
     font-weight: 300;
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: rgba(249, 244, 235, 0.35);
-    background-image: radial-gradient(150px circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.3) 60%);
+    background-image: radial-gradient(calc(150px + var(--spot-boost, 0) * 100px) circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.3) 60%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -218,7 +241,7 @@
 
 @media (max-width: 768px) {
     .about-section {
-        padding: 3rem 1.5rem;
+        padding: 5rem 1.5rem 4rem;
         min-height: 100svh;
         overflow: visible;
         justify-content: center;
@@ -289,8 +312,31 @@
     }
 
     .about-statement {
-        font-size: clamp(1.2rem, 5vw, 1.6rem);
-        line-height: 1.3;
+        font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+        line-height: 1.35;
+    }
+
+    /* the desktop zigzag (narrow columns, right-aligned, negative
+       offset margins) needs real width to breathe — this column
+       doesn't have it, so drop back to a plain stacked block */
+    .about-line-lead,
+    .about-line-main {
+        max-width: none;
+        margin-left: 0;
+        text-align: left;
+    }
+
+    .about-line-lead {
+        margin-bottom: 2.7rem;
+    }
+
+    .about-emphasis {
+        width: auto;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 2rem;
+        text-align: left;
     }
 }
 

@@ -171,9 +171,6 @@
     }
 
     
-    .about-section {
-        padding: 5rem 1.5rem 4rem;
-    }
         .pip {
 
     font-size: 2.7rem;
@@ -316,11 +313,6 @@
     .hero-tag {
         font-size: 0.7rem;
         padding: 4px 8px;
-    }
-
-    
-    .about-statement {
-        font-size: 1.5rem;
     }
 
     .edu-year-num {
