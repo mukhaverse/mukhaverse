@@ -33,6 +33,24 @@
     min-height: unset;
 }
 
+    .certifications-section {
+        padding: 4.5rem 2rem 3rem;
+    }
+
+    .cert-track {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .cert-strip::before,
+    .cert-strip::after {
+        width: 2rem;
+    }
+
+    .cert-tile {
+        width: calc(100vw - 6.5rem);
+    }
+
 
 
     .contact-inner {
@@ -191,8 +209,26 @@
     .project-visual {
     height: auto;
     min-height: unset;
-    font-size: 5rem; 
+    font-size: 5rem;
 }
+
+    .certifications-section {
+        padding: 4rem 1.5rem 2.5rem;
+    }
+
+    .cert-tile {
+        width: calc(100vw - 5.5rem);
+    }
+
+    .cert-track {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .cert-strip::before,
+    .cert-strip::after {
+        width: 1.5rem;
+    }
 
     .contact-section {
         padding: 6rem 1.5rem;
@@ -327,6 +363,32 @@
     height: auto;
     min-height: unset;
 }
+
+    .certifications-section {
+        padding: 3.5rem 1rem 2rem;
+    }
+
+    .cert-tile {
+        width: calc(100vw - 4.5rem);
+    }
+
+    .cert-track {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .cert-strip::before,
+    .cert-strip::after {
+        width: 1rem;
+    }
+
+    .cert-lightbox {
+        padding: 1rem;
+    }
+
+    .cert-lightbox-panel {
+        padding: 2.25rem 1.25rem 1.5rem;
+    }
 
 
     .contact-section {

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/cards.css">
     <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/certifications.css">
     <link rel="stylesheet" href="css/contact.css">
 
      <link rel="stylesheet" href="css/hero.css">
@@ -393,6 +394,104 @@
 
         
         
+        <section class="certifications-section" id="certifications" aria-labelledby="certifications-heading">
+
+            <div class="section-header">
+                <span class="section-tag">Credentials</span>
+                <h2 class="section-title" id="certifications-heading">Certifications</h2>
+            </div>
+
+            <div class="cert-strip">
+
+                <ul class="cert-track" id="certTrack" tabindex="0" aria-label="Certifications — scroll horizontally to browse, select a certificate to enlarge it">
+
+                    <li class="cert-tile">
+                        <button class="cert-tile-btn" type="button" data-cert-name="Introduction to DevOps" data-cert-meta="IBM · Coursera · 2026">
+                            <img src="assets/cert-devops.png" alt="Introduction to DevOps — IBM course certificate via Coursera, 2026">
+                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
+                                <path d="M2 17 V2 H17"/>
+                                <path d="M98 17 V2 H83"/>
+                                <path d="M98 58 V73 H83"/>
+                                <path d="M2 58 V73 H17"/>
+                            </svg>
+                        </button>
+                        <p class="cert-caption">
+                            <span class="cert-name">Introduction to DevOps</span>
+                            <span class="cert-meta">IBM · Coursera · 2026</span>
+                        </p>
+                    </li>
+
+                    <li class="cert-tile">
+                        <button class="cert-tile-btn" type="button" data-cert-name="Introduction to Agile Development and Scrum" data-cert-meta="IBM · Coursera · 2026">
+                            <img src="assets/cert-agile-scrum.png" alt="Introduction to Agile Development and Scrum — IBM course certificate via Coursera, 2026">
+                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
+                                <path d="M2 17 V2 H17"/>
+                                <path d="M98 17 V2 H83"/>
+                                <path d="M98 58 V73 H83"/>
+                                <path d="M2 58 V73 H17"/>
+                            </svg>
+                        </button>
+                        <p class="cert-caption">
+                            <span class="cert-name">Introduction to Agile Development and Scrum</span>
+                            <span class="cert-meta">IBM · Coursera · 2026</span>
+                        </p>
+                    </li>
+
+                    <li class="cert-tile">
+                        <button class="cert-tile-btn" type="button" data-cert-name="Certificate of Excellence" data-cert-meta="University of Jeddah · 2025–2026">
+                            <img src="assets/cert-excellence.png" alt="Certificate of Excellence — University of Jeddah, awarded for two successive semesters of excellent grades, 2025–2026">
+                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
+                                <path d="M2 17 V2 H17"/>
+                                <path d="M98 17 V2 H83"/>
+                                <path d="M98 58 V73 H83"/>
+                                <path d="M2 58 V73 H17"/>
+                            </svg>
+                        </button>
+                        <p class="cert-caption">
+                            <span class="cert-name">Certificate of Excellence</span>
+                            <span class="cert-meta">University of Jeddah · 2025–2026</span>
+                        </p>
+                    </li>
+
+                    <li class="cert-tile">
+                        <button class="cert-tile-btn" type="button" data-cert-name="Best Project Award — Web Development" data-cert-meta="Software Engineering Dept. · University of Jeddah">
+                            <img src="assets/cert-best-project.jpg" alt="Certificate of Appreciation — Best Project Award for Web Development, Software Engineering Department, University of Jeddah">
+                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
+                                <path d="M2 17 V2 H17"/>
+                                <path d="M98 17 V2 H83"/>
+                                <path d="M98 58 V73 H83"/>
+                                <path d="M2 58 V73 H17"/>
+                            </svg>
+                        </button>
+                        <p class="cert-caption">
+                            <span class="cert-name">Best Project Award — Web Development</span>
+                            <span class="cert-meta">Software Engineering Dept. · University of Jeddah</span>
+                        </p>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="cert-dots" id="certDots" role="tablist" aria-label="Jump to a certificate"></div>
+
+        </section>
+
+        <div class="cert-lightbox" id="certLightbox" hidden>
+            <div class="cert-lightbox-backdrop" data-cert-close></div>
+            <div class="cert-lightbox-panel" role="dialog" aria-modal="true" aria-label="Certificate preview">
+                <button class="cert-lightbox-close" type="button" data-cert-close aria-label="Close certificate preview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+                </button>
+                <img class="cert-lightbox-img" src="assets/cert-placeholder.svg" alt="">
+                <p class="cert-lightbox-caption">
+                    <span class="cert-lightbox-name"></span>
+                    <span class="cert-lightbox-meta"></span>
+                </p>
+            </div>
+        </div>
+
+
         <section class="contact-section" id="contact" aria-labelledby="contact-heading">
             <div class="contact-inner">
 
@@ -529,14 +628,14 @@
 
 
 
-            <nav class="footer-nav">
+            <nav class="footer-nav"> 
                 <a href="#about">About</a>
                 <a href="#projects">Projects</a>
                 <a href="#skills">Skills</a>
                 <a href="#contact">Contact</a>
             </nav>
 
-            <a href="#hero" class="footer-top-link">Back to top ↑</a>
+            <a href="#hero" class="footer-top-link">Start over ↑</a>
         </div>
         <!-- <p class="footer-quote">A jack of all trades is a master of none,<br>but oftentimes better than a master of one.</p> -->
 
@@ -561,6 +660,7 @@
     <script type="module" src="js/about.js"></script>
     <script src="js/links.js"></script>
     <script src="js/projects.js"></script>
+    <script src="js/certifications.js"></script>
 
     <script>
         (function () {

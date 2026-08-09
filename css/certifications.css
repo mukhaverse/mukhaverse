@@ -1,0 +1,324 @@
+/* ─── Section ─────────────────────────────────────────────── */
+.certifications-section {
+    padding: 5.5rem 3rem 3.5rem;
+    background-color: var(--cream);
+}
+
+.certifications-section .section-header {
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+}
+
+
+/* ─── Strip ───────────────────────────────────────────────── */
+/* full-bleed: breaks out of the section's own padding so the strip
+   (and its edge shadow) reaches the true viewport edge, while the
+   section-header above stays comfortably inset */
+.cert-strip {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+
+.cert-strip::before,
+.cert-strip::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.cert-strip::before {
+    left: 0;
+    background: linear-gradient(to right, var(--cream), transparent);
+}
+
+.cert-strip::after {
+    right: 0;
+    background: linear-gradient(to left, var(--cream), transparent);
+}
+
+.cert-track {
+    display: flex;
+    gap: 4rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 7rem 1.5rem;
+    margin: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.cert-track::-webkit-scrollbar {
+    display: none;
+}
+
+.cert-track:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 6px;
+}
+
+
+/* ─── Tile ────────────────────────────────────────────────── */
+/* sized so one certificate dominates the viewport with only a sliver
+   of its neighbors peeking in on either side, matching the strip's
+   own edge gutter (updated alongside it at each breakpoint below) */
+.cert-tile {
+    flex: 0 0 auto;
+    width: min(500px, calc(100vw - 15rem));
+    scroll-snap-align: center;
+}
+
+.cert-tile-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background-color: var(--cream-2);
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.35s ease;
+}
+
+.cert-tile-btn:hover,
+.cert-tile-btn:focus-visible {
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
+}
+
+.cert-tile-btn:focus-visible {
+    outline: 2.5px solid var(--dark);
+    outline-offset: 4px;
+}
+
+.cert-tile-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.cert-tile-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    fill: none;
+    stroke: rgb(102, 101, 101);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.cert-tile-frame path {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    transition: stroke-dashoffset 0.4s ease;
+}
+
+.cert-tile-btn:hover .cert-tile-frame path,
+.cert-tile-btn:focus-visible .cert-tile-frame path {
+    stroke-dashoffset: 0;
+}
+
+.cert-tile-frame path:nth-child(1) { transition-delay: 0s; }
+.cert-tile-frame path:nth-child(2) { transition-delay: 0.05s; }
+.cert-tile-frame path:nth-child(3) { transition-delay: 0.1s; }
+.cert-tile-frame path:nth-child(4) { transition-delay: 0.15s; }
+
+.cert-caption {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.cert-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.3;
+    text-transform: none;
+}
+
+.cert-meta {
+    font-size: 0.76rem;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+/* ─── Dots ────────────────────────────────────────────────── */
+.cert-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 2rem;
+}
+
+.cert-dot {
+    width: 0.65rem;
+    height: 0.65rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.cert-dot:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.cert-dot:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}
+
+.cert-dot.is-active {
+    background-color: var(--dark);
+    transform: scale(1.4);
+}
+
+
+/* ─── Lightbox ────────────────────────────────────────────── */
+body.cert-lightbox-open {
+    overflow: hidden;
+}
+
+.cert-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.cert-lightbox[hidden] {
+    display: none;
+}
+
+.cert-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.78);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.cert-lightbox-panel {
+    position: relative;
+    max-width: min(90vw, 760px);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--cream);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.cert-lightbox.is-open .cert-lightbox-backdrop {
+    opacity: 1;
+}
+
+.cert-lightbox.is-open .cert-lightbox-panel {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+.cert-lightbox-img {
+    max-width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    display: block;
+}
+
+.cert-lightbox-caption {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+}
+
+.cert-lightbox-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--dark);
+    text-transform: none;
+}
+
+.cert-lightbox-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.cert-lightbox-close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--dark);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.cert-lightbox-close svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+}
+
+.cert-lightbox-close:hover,
+.cert-lightbox-close:focus-visible {
+    background-color: rgba(39, 39, 39, 0.12);
+}
+
+.cert-lightbox-close:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}
+
+
+/* ─── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .cert-tile-btn,
+    .cert-tile-frame path,
+    .cert-dot,
+    .cert-lightbox-backdrop,
+    .cert-lightbox-panel,
+    .cert-lightbox-close {
+        transition: none;
+        transition-delay: 0s;
+    }
+}
