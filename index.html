@@ -397,8 +397,8 @@
         <section class="certifications-section" id="certifications" aria-labelledby="certifications-heading">
 
             <div class="section-header">
-                <span class="section-tag">Credentials</span>
-                <h2 class="section-title" id="certifications-heading">Certifications</h2>
+                <!-- <span class="section-tag">Credentials</span> -->
+                <h2 class="section-title cer-ti" id="certifications-heading">Certifications <br> <span class="cer-and">&</span> Achievements</h2>
             </div>
 
             <div class="cert-strip">
@@ -421,6 +421,25 @@
                         </p>
                     </li>
 
+                    
+
+                    <li class="cert-tile">
+                        <button class="cert-tile-btn" type="button" data-cert-name="Best Project Award — Web Development" data-cert-meta="Software Engineering Dept. · University of Jeddah">
+                            <img src="assets/cert-best-project.jpg" alt="Certificate of Appreciation — Best Project Award for Web Development, Software Engineering Department, University of Jeddah">
+                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
+                                <path d="M2 17 V2 H17"/>
+                                <path d="M98 17 V2 H83"/>
+                                <path d="M98 58 V73 H83"/>
+                                <path d="M2 58 V73 H17"/>
+                            </svg>
+                        </button>
+                        <p class="cert-caption">
+                            <span class="cert-name">Best Project Award — Web Development</span>
+                            <span class="cert-meta">Software Engineering Dept. · University of Jeddah</span>
+                        </p>
+                    </li>
+
+
                     <li class="cert-tile">
                         <button class="cert-tile-btn" type="button" data-cert-name="Introduction to Agile Development and Scrum" data-cert-meta="IBM · Coursera · 2026">
                             <img src="assets/cert-agile-scrum.png" alt="Introduction to Agile Development and Scrum — IBM course certificate via Coursera, 2026">
@@ -436,6 +455,8 @@
                             <span class="cert-meta">IBM · Coursera · 2026</span>
                         </p>
                     </li>
+
+
 
                     <li class="cert-tile">
                         <button class="cert-tile-btn" type="button" data-cert-name="Certificate of Excellence" data-cert-meta="University of Jeddah · 2025–2026">
@@ -453,21 +474,9 @@
                         </p>
                     </li>
 
-                    <li class="cert-tile">
-                        <button class="cert-tile-btn" type="button" data-cert-name="Best Project Award — Web Development" data-cert-meta="Software Engineering Dept. · University of Jeddah">
-                            <img src="assets/cert-best-project.jpg" alt="Certificate of Appreciation — Best Project Award for Web Development, Software Engineering Department, University of Jeddah">
-                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
-                                <path d="M2 17 V2 H17"/>
-                                <path d="M98 17 V2 H83"/>
-                                <path d="M98 58 V73 H83"/>
-                                <path d="M2 58 V73 H17"/>
-                            </svg>
-                        </button>
-                        <p class="cert-caption">
-                            <span class="cert-name">Best Project Award — Web Development</span>
-                            <span class="cert-meta">Software Engineering Dept. · University of Jeddah</span>
-                        </p>
-                    </li>
+
+
+
 
                 </ul>
 
@@ -520,7 +529,16 @@
                        aria-label="Send email to Shumokh">
                         <div class="fan-card-corner">
                             <span class="fan-card-corner-val">E</span>
-                            <span class="fan-card-corner-suit">✉</span>
+
+                                <span class="fan-card-corner-suit" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="5" width="18" height="14" rx="2"
+                                            stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M3 7L12 13L21 7"
+                                            stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </span>
+
                         </div>
                         <div class="fan-card-center">
                             <span class="fan-card-icon"><img src="assets/email.png" alt="mail-icon"></span>
@@ -530,7 +548,18 @@
                         <div class="fan-card-bottom">
                             <div class="fan-card-corner fan-card-corner--flipped">
                                 <span class="fan-card-corner-val">E</span>
-                                <span class="fan-card-corner-suit">✉</span>
+
+
+                                <span class="fan-card-corner-suit" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="3" y="5" width="18" height="14" rx="2"
+                                            stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M3 7L12 13L21 7"
+                                            stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </span>
+
+
                             </div>
                         </div>
                     </a>

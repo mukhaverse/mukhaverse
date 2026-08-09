@@ -241,3 +241,14 @@
 }
 
 
+.fan-card-corner-suit {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.fan-card-corner-suit svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    display: block;
+}
+
