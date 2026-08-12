@@ -162,7 +162,7 @@
 
 /* ─── Heading ─────────────────────────────────────────────── */
 .about-statement {
-    font-size: clamp(1.8rem, 2.3vw, 3rem);
+    font-size: clamp(1.5rem, 2vw, 2rem);
     font-weight: 300;
     line-height: 1.45;
     color: rgba(249, 244, 235, 0.4);
@@ -197,7 +197,7 @@
 }
 
 .about-line-main {
-    max-width: 50ch;
+    max-width: 60vw;
     margin-left: auto;
     text-align: right;
 }
@@ -312,7 +312,7 @@
     }
 
     .about-statement {
-        font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+        font-size: clamp(1.1rem, 5vw, 1.5rem);
         line-height: 1.35;
     }
 
