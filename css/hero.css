@@ -8,6 +8,10 @@
     opacity: 0;
 }
 
+.navbar{
+    padding-bottom: 10rem;
+}
+
 
 .hero {
     position: relative;
@@ -138,8 +142,8 @@
     flex-direction: column;
     align-items: start;
     max-width: 55%;
-    font-size: clamp(1.7rem, 2.2vw, 2.8rem);
-    margin-top: 1rem;
+    font-size: clamp(1.5rem, 2vw, 2.6rem);
+    margin-top: -2.5rem;
     /* color: red; */
 }
 

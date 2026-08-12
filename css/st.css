@@ -95,6 +95,9 @@ body {
     align-items: center;
     padding: 1rem 2rem;
     background-color: #F9F4EB;
+
+      padding-bottom: 0rem;
+
 }
 
 .nav-logo {
@@ -199,16 +202,16 @@ body {
 
 
 
-.hero-description {
+/* .hero-description {
   display: flex;
   flex-direction: column;
   align-items: start;
   max-width: 50%;
   font-size: 1.4rem;
-}
+} */
 
-.hero-tag {
-  /* flex-shrink: 0; */
+/* .hero-tag {
+  flex-shrink: 0;
   background-color:#333;
   color:  #F9F4EB;
   padding: 5px 10px;
@@ -216,13 +219,13 @@ body {
   border: none;
   font-size: 0.8rem;
   
-}
+} */
 
-.hero-description-text {
+/* .hero-description-text {
   flex: 1;
   margin-top: 3px;
 }
-
+ */
 
 /* Responsive Media Queries */
 
