@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/cards.css">
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/certifications.css">
+    <link rel="stylesheet" href="css/project-carousel.css">
     <link rel="stylesheet" href="css/contact.css">
 
 
@@ -283,7 +284,7 @@
                         RxNorm API, with a live Socket.io chat to message a pharmacist directly.
                     </p>
                     <a class="project-link" href="https://github.com/mukhaverse/Medixa">GitHub</a>
-                    <a class="project-link" href="https://medixa.onrender.com/">Visit Website</a>
+                    <button class="project-link project-browse-btn" type="button" data-project-title="Medixa" data-media='[{"type":"video","src":"assets/medixaVid1.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 1"},{"type":"video","src":"assets/medixaVid12.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 2"},{"type":"video","src":"assets/medixaVid123.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 3"},{"type":"image","src":"assets/medixaPic2.png","alt":"Medixa screenshot 1"},{"type":"image","src":"assets/medixaPic4.png","alt":"Medixa screenshot 2"}]'>Browse</button>
                 </div>
             </article>
 
@@ -311,7 +312,7 @@
                         with a WebAR feature for visualizing products in real space.
                     </p>
                     <a class="project-link" href="https://github.com/mukhaverse/Atelier">GitHub</a>
-                    <a class="project-link" href="https://mukhaverse.github.io/Atelier/">Visit Website</a>
+                    <button class="project-link project-browse-btn" type="button" data-project-title="Atelier" data-media='[{"type":"video","src":"assets/atelVid1.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 1"},{"type":"video","src":"assets/atelVid12.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 2"},{"type":"video","src":"assets/atelVid123.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 3"},{"type":"video","src":"assets/atelVid1234.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 4"},{"type":"video","src":"assets/atelVid12345.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 5"}]'>Browse</button>
                 </div>
             </article>
 
@@ -339,6 +340,7 @@
                         <li><strong>Hill Climb Racing Control</strong> - steering and acceleration mapped to hand-tracking input</li>
                     </ul>
                     <a class="project-link" href="https://github.com/mukhaverse">GitHub</a>
+                    <button class="project-link project-browse-btn" type="button" data-project-title="Computer Vision &amp; Hand Tracking" data-media='[{"type":"video","src":"assets/compvis-demo.mp4","alt":"Computer vision hand-tracking demo"}]'>Browse</button>
                 </div>
             </article>
 
@@ -386,7 +388,6 @@
                         a focus on animation and spatial interaction using Three.js and GSAP.
                     </p>
                     <a class="project-link" href="https://github.com/mukhaverse/IoT">GitHub</a>
-                    <a class="project-link" href="https://mukhaverse.github.io/IoT/">Visit Website</a>
                 </div>
             </article>
 
@@ -502,6 +503,26 @@
                     <span class="cert-lightbox-name"></span>
                     <span class="cert-lightbox-meta"></span>
                 </p>
+            </div>
+        </div>
+
+        <div class="project-carousel" id="projectCarousel" hidden>
+            <div class="project-carousel-backdrop" data-carousel-close></div>
+            <div class="project-carousel-panel" role="dialog" aria-modal="true" aria-label="Project media preview">
+                <button class="project-carousel-close" type="button" data-carousel-close aria-label="Close preview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+                </button>
+                <p class="project-carousel-title" id="projectCarouselTitle"></p>
+                <div class="project-carousel-stage">
+                    <button class="project-carousel-nav project-carousel-prev" type="button" aria-label="Previous slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 L9 12 L15 18"/></svg>
+                    </button>
+                    <div class="project-carousel-slides" id="projectCarouselSlides"></div>
+                    <button class="project-carousel-nav project-carousel-next" type="button" aria-label="Next slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 L15 12 L9 18"/></svg>
+                    </button>
+                </div>
+                <div class="project-carousel-thumbs" id="projectCarouselThumbs"></div>
             </div>
         </div>
 
@@ -695,6 +716,7 @@
     <script src="js/links.js"></script>
     <script src="js/projects.js"></script>
     <script src="js/certifications.js"></script>
+    <script src="js/project-carousel.js"></script>
 
     <script>
         (function () {
