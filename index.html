@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shumokh Alsharif</title>
+    <meta name="description" content="Shumokh Alsharif, software engineering student at the University of Jeddah. Full-stack web development and UI/UX.">
+    <meta name="theme-color" content="#F9F4EB">
+    <script>document.documentElement.classList.add("js")</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Odibee+Sans&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
     <link rel="stylesheet" href="css/hero.css">
-
-
     <link rel="stylesheet" href="css/st.css">
-    <link rel="stylesheet" href="css/projects.css">
     <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/projects.css">
+    <link rel="stylesheet" href="css/record.css">
     <link rel="stylesheet" href="css/certifications.css">
     <link rel="stylesheet" href="css/project-carousel.css">
     <link rel="stylesheet" href="css/contact.css">
-
-
-
-
-    <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Gravitas+One&family=Odibee+Sans&family=Roboto:ital,wght@0,100..900;1,100..900&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
+
 
     <div class="page-wrapper">
 
@@ -97,41 +98,87 @@
 
 <section class="about-section" id="about" aria-labelledby="about-heading">
 
-            <div class="about-watermark" aria-hidden="true">♠</div>
+            <h2 class="about-sr" id="about-heading">About me</h2>
 
-            <div class="about-inner">
+            <!-- Identities: one badge per hat. The stage pins and each scroll
+                 step flips the badge over to the next one. To add another,
+                 copy an .id-panel and set its data-theme / data-step / data-band /
+                 data-org / data-foot-l / data-foot-r (themes live in about.js). -->
+            <div class="about-stage">
+                <div class="about-stage-inner">
 
-                
-
-                <div class="about-layout">
-
-                    <div class="about-years" aria-label="2022 to 2026">
-                        <span class="about-yr-note">Started</span>
-                        <span class="about-yr">2023</span>
-                        <div class="about-track" aria-hidden="true">
-                            <div class="about-track-fill"></div>
-                        </div>
-                        <span class="about-yr">2027</span>
-                        <span class="about-yr-note">Graduating</span>
-                        <div class="about-degree">
-                            <p class="about-degree-name">B.Sc. Software Engineering</p>
-                            <p class="about-degree-uni">University of Jeddah</p>
+                    <div class="id-lanyard" aria-hidden="true">
+                        <div class="id-rig">
+                            <svg class="id-strap" viewBox="0 0 120 220" preserveAspectRatio="none">
+                                <path class="strap" d="M14 0h26l26 206H54Z"/>
+                                <path class="strap" d="M80 0h26L66 206H54Z"/>
+                                <path class="stitch" d="M19 0 44 200M35 0 59 200M85 0 61 200M101 0 63 200"/>
+                            </svg>
+                            <svg class="id-clip" viewBox="0 0 60 70">
+                                <rect class="clip-body" x="16" y="0" width="28" height="22" rx="5"/>
+                                <rect class="clip-shine" x="20" y="4" width="20" height="3" rx="1.5"/>
+                                <path class="clip-hook" d="M30 22v10a14 14 0 1 0 14 14"/>
+                                <circle class="clip-ring" cx="30" cy="48" r="13"/>
+                            </svg>
+                            <div class="id-badge">
+                                <span class="id-slot"></span>
+                                <span class="id-band" data-field="band">Student</span>
+                                <span class="id-photo"><img src="assets/1st-Logo-inv-gry.svg" alt="" draggable="false"></span>
+                                <span class="id-name">Shumokh Alsharif</span>
+                                <span class="id-org" data-field="org">Software Engineering, University of Jeddah</span>
+                                <span class="id-foot"><span data-field="footL">B.Sc. Software Eng.</span><span data-field="footR">2023–27</span></span>
+                            </div>
                         </div>
                     </div>
 
+                    <div class="id-panels">
 
-                    <div class="about-right">
-                        <h2 class="about-statement" id="about-heading">
-                            <span class="about-line about-line-lead">A website should feel just as good as it functions. That's what I build.</span>
-                            <span class="about-line about-line-main">
-                           My focus is mainly web development and UI/UX, backed by experience in project management.<br>Currently expanding into DevOps
+                        <article class="id-panel" data-theme="student" data-step="Student" data-band="Student" data-org="Software Engineering, University of Jeddah" data-foot-l="B.Sc. Software Eng." data-foot-r="2023–27">
+                            <span class="id-float" aria-hidden="true"></span>
+                            <h3 class="id-title">Software engineering student</h3>
+                            <p class="id-meta">University of Jeddah · 2023–&#8288;2027</p>
+                            <div class="id-copy">
+                                <p class="about-bio">I&rsquo;m Shumokh, a software engineering student at the University of Jeddah. I work across frontend and backend, mostly in <span class="hl">the messy middle</span> where they meet, and I care about <span class="hl">intentional UI and great UX</span> as much as the code underneath.</p>
+                                <p class="about-bio about-bio--second">My focus is web development and UI/UX, backed by experience in project management. Right now I&rsquo;m expanding into DevOps, because nothing levels you up like <span class="hl">trial and error</span>.</p>
+                            </div>
+                            <span class="about-timeline" role="img" aria-label="Started 2023, graduating 2027">
+                                <span class="about-yr">2023</span>
+                                <span class="about-track" aria-hidden="true">
+                                    <span class="about-track-fill"></span>
+                                    <span class="about-now"></span>
+                                </span>
+                                <span class="about-yr">2027</span>
                             </span>
-                            <!-- <span class="about-emphasis">It is my comfort zone.</span> -->
-                        </h2>
+                        </article>
+
+                        <article class="id-panel" data-theme="club" data-step="Track Lead" data-band="Track Lead" data-org="[Club name]" data-foot-l="Programming track" data-foot-r="[20XX]">
+                            <span class="id-float" aria-hidden="true"></span>
+                            <h3 class="id-title">Programming Track Lead</h3>
+                            <p class="id-meta">[Club name] · [20XX]–present</p>
+                            <div class="id-copy">
+                                <p class="about-bio">[Two or three lines on what you lead: who the programming track is for, the sessions or workshops you run, and how many members you&rsquo;ve brought through it.]</p>
+                            </div>
+                        </article>
+
+                        <article class="id-panel" data-theme="gdg" data-step="GDG on Campus" data-band="Web Development" data-org="Google Developer Groups on Campus, UJ" data-foot-l="[Your title]" data-foot-r="[20XX]">
+                            <span class="id-float" aria-hidden="true"></span>
+                            <h3 class="id-title">Web Development, GDG on Campus</h3>
+                            <p class="id-meta">Google Developer Groups on Campus · University of Jeddah · [20XX]</p>
+                            <div class="id-copy">
+                                <p class="about-bio">[Two or three lines on your web development role: what you build or teach for the chapter, the events or sites you&rsquo;ve shipped, and who you work with.]</p>
+                            </div>
+                        </article>
+
                     </div>
+
+                    <nav class="id-progress" aria-label="My roles"></nav>
 
                 </div>
+            </div>
 
+            <!-- the closing line, read once the badges are done -->
+            <div class="about-inner">
+                <p class="about-statement">A website should <em>feel</em> just as good as it <em>functions.</em> That's what I build.</p>
             </div>
         </section>
 
@@ -141,7 +188,7 @@
 
 
 
-    <section class="skills">
+    <section class="skills" id="skills" aria-label="Skills">
         <div class="skills-header">
             <!-- <h1>My skills or whatever </h1> -->
         </div>
@@ -254,144 +301,167 @@
 
 
 
-    <section class="projects-section" id="projects" aria-labelledby="projects-heading">
+<section class="projects-section" id="projects" aria-labelledby="projects-heading">
 
-            <div class="section-header">
-                <span class="section-tag">Projects</span>
+            <div class="deck-head">
                 <h2 class="section-title" id="projects-heading">My Deck of Work</h2>
+                <p class="deck-sub">Five projects, each with its stack, demos and code. Click through the media on any card.</p>
             </div>
 
-            <article class="project" aria-label="Project: Medixa">
-                <div class="project-visual" aria-hidden="true">
-                    <img src="assets/medixa_mockup.png" alt="Medixa project mockup">
+            <nav class="deck-nav" aria-label="Jump to a project">
+                <div class="deck-nav-links">
+                    <a class="deck-nav-link" href="#project-medixa"><span class="deck-nav-num">01</span>Medixa</a>
+                    <a class="deck-nav-link" href="#project-atelier"><span class="deck-nav-num">02</span>Atelier</a>
+                    <a class="deck-nav-link" href="#project-cv"><span class="deck-nav-num">03</span>Computer Vision &amp; Hand Tracking</a>
+                    <a class="deck-nav-link" href="#project-seedsync"><span class="deck-nav-num">04</span>SeedSync</a>
+                    <a class="deck-nav-link" href="#project-iot"><span class="deck-nav-num">05</span>IoT Exhibition Archive</a>
                 </div>
-                <div class="project-content">
-                    <p class="project-label">Full-Stack Development</p>
-                    <h3>Medixa</h3>
-                    <div class="project-tech-stack">
-                        <span class="project-tech">Node.js</span>
-                        <span class="project-tech">Express</span>
-                        <span class="project-tech">MySQL</span>
-                        <span class="project-tech">Socket.io</span>
-                        <span class="project-tech">OCR</span>
-                        <span class="project-tech">Three.js</span>
+                <span class="deck-nav-progress" aria-hidden="true"><span class="deck-nav-progress-fill"></span></span>
+            </nav>
+
+            <div class="deck">
+                <article class="deck-card" id="project-medixa" style="--i:0" aria-labelledby="project-medixa-title">
+                    <div class="deck-card-face">
+                        <div class="deck-gallery" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixa_mockup.png&quot;, &quot;alt&quot;: &quot;Medixa on desktop, laptop and phone&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid1.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 1&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid12.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 2&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid123.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 3&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic2.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 1&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic4.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 2&quot;}]">
+                            <div class="deck-stage">
+                                <img src="assets/medixa_mockup.png" alt="Medixa on desktop, laptop and phone" loading="lazy">
+                                <button class="deck-expand project-browse-btn" type="button" data-project-title="Medixa" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixa_mockup.png&quot;, &quot;alt&quot;: &quot;Medixa on desktop, laptop and phone&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid1.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 1&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid12.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 2&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid123.mp4&quot;, &quot;alt&quot;: &quot;Medixa demo clip 3&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic2.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 1&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic4.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 2&quot;}]" data-start="0" aria-label="View Medixa media full screen"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+                            </div>
+                            <div class="deck-thumbs" role="group" aria-label="Medixa media">
+                                <button class="deck-thumb" type="button" data-index="0" aria-label="Show Medixa on desktop, laptop and phone" aria-pressed="true"><img src="assets/medixa_mockup.png" alt="" loading="lazy"></button>
+                                <button class="deck-thumb" type="button" data-index="1" aria-label="Show Medixa demo clip 1" aria-pressed="false"><video data-src="assets/medixaVid1.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="2" aria-label="Show Medixa demo clip 2" aria-pressed="false"><video data-src="assets/medixaVid12.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="3" aria-label="Show Medixa demo clip 3" aria-pressed="false"><video data-src="assets/medixaVid123.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="4" aria-label="Show Medixa screenshot 1" aria-pressed="false"><img src="assets/medixaPic2.png" alt="" loading="lazy"></button>
+                                <button class="deck-thumb" type="button" data-index="5" aria-label="Show Medixa screenshot 2" aria-pressed="false"><img src="assets/medixaPic4.png" alt="" loading="lazy"></button>
+                            </div>
+                        </div>
+
+                        <div class="deck-body">
+                            <h3 class="deck-title" id="project-medixa-title">Medixa</h3>
+                            <p class="deck-kind"><span class="deck-num">01 / 05</span>Full-stack development</p>
+                            <p class="deck-desc">A full-stack medication safety platform helping patients check whether their
+                                prescriptions are safe to combine. Users can scan pill packaging using OCR to
+                                pull the medication name automatically, then run an instant interaction check
+                                for severity, clinical significance, and management guidance, sourced from the
+                                RxNorm API, with a live Socket.io chat to message a pharmacist directly.</p>
+                            
+                            <ul class="deck-stack" aria-label="Tech stack"><li>Node.js</li><li>Express</li><li>MySQL</li><li>Socket.io</li><li>OCR</li><li>Three.js</li></ul>
+                            <div class="deck-actions"><a class="deck-btn" href="https://github.com/mukhaverse/Medixa" target="_blank" rel="noopener noreferrer">Code on GitHub<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+                        </div>
+                        <div class="deck-shade" aria-hidden="true"></div>
                     </div>
-                    <p class="project-description">
-                        A full-stack medication safety platform helping patients check whether their
-                        prescriptions are safe to combine. Users can scan pill packaging using OCR to
-                        pull the medication name automatically, then run an instant interaction check
-                        for severity, clinical significance, and management guidance, sourced from the
-                        RxNorm API, with a live Socket.io chat to message a pharmacist directly.
-                    </p>
-                    <a class="project-link" href="https://github.com/mukhaverse/Medixa">GitHub</a>
-                    <button class="project-link project-browse-btn" type="button" data-project-title="Medixa" data-media='[{"type":"video","src":"assets/medixaVid1.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 1"},{"type":"video","src":"assets/medixaVid12.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 2"},{"type":"video","src":"assets/medixaVid123.mp4","poster":"assets/medixa_mockup.png","alt":"Medixa demo clip 3"},{"type":"image","src":"assets/medixaPic2.png","alt":"Medixa screenshot 1"},{"type":"image","src":"assets/medixaPic4.png","alt":"Medixa screenshot 2"}]'>Browse</button>
-                </div>
-            </article>
+                </article>
+                <article class="deck-card" id="project-atelier" style="--i:1" aria-labelledby="project-atelier-title">
+                    <div class="deck-card-face">
+                        <div class="deck-gallery" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/atelier-mockup.png&quot;, &quot;alt&quot;: &quot;Atelier shown across devices&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid1.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 1&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid12.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 2&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid123.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 3&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid1234.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 4&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid12345.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 5&quot;}]">
+                            <div class="deck-stage">
+                                <img src="assets/atelier-mockup.png" alt="Atelier shown across devices" loading="lazy">
+                                <button class="deck-expand project-browse-btn" type="button" data-project-title="Atelier" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/atelier-mockup.png&quot;, &quot;alt&quot;: &quot;Atelier shown across devices&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid1.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 1&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid12.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 2&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid123.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 3&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid1234.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 4&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/atelVid12345.mp4&quot;, &quot;alt&quot;: &quot;Atelier demo clip 5&quot;}]" data-start="0" aria-label="View Atelier media full screen"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+                            </div>
+                            <div class="deck-thumbs" role="group" aria-label="Atelier media">
+                                <button class="deck-thumb" type="button" data-index="0" aria-label="Show Atelier shown across devices" aria-pressed="true"><img src="assets/atelier-mockup.png" alt="" loading="lazy"></button>
+                                <button class="deck-thumb" type="button" data-index="1" aria-label="Show Atelier demo clip 1" aria-pressed="false"><video data-src="assets/atelVid1.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="2" aria-label="Show Atelier demo clip 2" aria-pressed="false"><video data-src="assets/atelVid12.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="3" aria-label="Show Atelier demo clip 3" aria-pressed="false"><video data-src="assets/atelVid123.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="4" aria-label="Show Atelier demo clip 4" aria-pressed="false"><video data-src="assets/atelVid1234.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="5" aria-label="Show Atelier demo clip 5" aria-pressed="false"><video data-src="assets/atelVid12345.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                            </div>
+                        </div>
 
-
-
-            <article class="project" aria-label="Project: Atelier Platform">
-                <div class="project-visual" aria-hidden="true">
-                    <img src="assets/atelier-mockup.png" alt="atelier project mockup">
-                </div>
-                <div class="project-content">
-                    <p class="project-label">Full-Stack Development</p>
-                    <h3>Atelier</h3>
-                    <div class="project-tech-stack">
-                        <span class="project-tech">Node.js</span>
-                        <span class="project-tech">Express</span>
-                        <span class="project-tech">MongoDB</span>
-                        <span class="project-tech">NodeMailer </span>
-                        <span class="project-tech">WebAR</span>
-                        <span class="project-tech">GSAP</span>
+                        <div class="deck-body">
+                            <h3 class="deck-title" id="project-atelier-title">Atelier</h3>
+                            <p class="deck-kind"><span class="deck-num">02 / 05</span>Full-stack development</p>
+                            <p class="deck-desc">A full-stack web platform connecting artists and buyers, enabling users to browse,
+                                purchase, and request custom artwork. Features include authentication, wishlist,
+                                and a commission system with server-side email handling using NodeMailer, along
+                                with a WebAR feature for visualizing products in real space.</p>
+                            
+                            <ul class="deck-stack" aria-label="Tech stack"><li>Node.js</li><li>Express</li><li>MongoDB</li><li>NodeMailer</li><li>WebAR</li><li>GSAP</li></ul>
+                            <div class="deck-actions"><a class="deck-btn" href="https://github.com/mukhaverse/Atelier" target="_blank" rel="noopener noreferrer">Code on GitHub<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+                        </div>
+                        <div class="deck-shade" aria-hidden="true"></div>
                     </div>
-                    <p class="project-description">
-                        A full-stack web platform connecting artists and buyers, enabling users to browse,
-                        purchase, and request custom artwork. Features include authentication, wishlist,
-                        and a commission system with server-side email handling using NodeMailer, along
-                        with a WebAR feature for visualizing products in real space.
-                    </p>
-                    <a class="project-link" href="https://github.com/mukhaverse/Atelier">GitHub</a>
-                    <button class="project-link project-browse-btn" type="button" data-project-title="Atelier" data-media='[{"type":"video","src":"assets/atelVid1.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 1"},{"type":"video","src":"assets/atelVid12.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 2"},{"type":"video","src":"assets/atelVid123.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 3"},{"type":"video","src":"assets/atelVid1234.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 4"},{"type":"video","src":"assets/atelVid12345.mp4","poster":"assets/atelier-mockup.png","alt":"Atelier demo clip 5"}]'>Browse</button>
-                </div>
-            </article>
+                </article>
+                <article class="deck-card" id="project-cv" style="--i:2" aria-labelledby="project-cv-title">
+                    <div class="deck-card-face">
+                        <div class="deck-gallery" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/compvis-demo.mp4&quot;, &quot;alt&quot;: &quot;Hand-tracking demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]">
+                            <div class="deck-stage is-video">
+                                <video src="assets/compvis-demo.mp4" muted loop playsinline preload="metadata" aria-label="Hand-tracking demo"></video>
+                                <button class="deck-expand project-browse-btn" type="button" data-project-title="Computer Vision &amp; Hand Tracking" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/compvis-demo.mp4&quot;, &quot;alt&quot;: &quot;Hand-tracking demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]" data-start="0" aria-label="View Computer Vision &amp; Hand Tracking media full screen"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+                            </div>
+                            <div class="deck-thumbs" role="group" aria-label="Computer Vision &amp; Hand Tracking media">
+                                <button class="deck-thumb" type="button" data-index="0" aria-label="Show Hand-tracking demo" aria-pressed="true"><video data-src="assets/compvis-demo.mp4#t=1" muted playsinline preload="none" aria-hidden="true"></video><span class="deck-thumb-play" aria-hidden="true"></span></button>
+                                <button class="deck-thumb" type="button" data-index="1" aria-label="Show Hill Climb Racing steered by hand gestures" aria-pressed="false"><img src="assets/pyHill-mockup.png" alt="" loading="lazy"></button>
+                            </div>
+                        </div>
 
-
-
-            <article class="project" aria-label="Project: Computer Vision Hand-Tracking Demos">
-                <div class="project-visual" aria-hidden="true">
-                    <video src="assets/compvis-demo.mp4" autoplay loop muted playsinline></video>
-                </div>
-                <div class="project-content">
-                    <p class="project-label">Computer Vision</p>
-                    <h3>Computer Vision &amp; Hand Tracking</h3>
-                    <div class="project-tech-stack">
-                        <span class="project-tech">Python</span>
-                        <span class="project-tech">OpenCV</span>
-                        <span class="project-tech">MediaPipe</span>
-                        <span class="project-tech">ModernGL</span>
+                        <div class="deck-body">
+                            <h3 class="deck-title" id="project-cv-title">Computer Vision &amp; Hand Tracking</h3>
+                            <p class="deck-kind"><span class="deck-num">03 / 05</span>Computer vision</p>
+                            <p class="deck-desc">Three real-time hand-tracking experiments built with Python, OpenCV, and MediaPipe:</p>
+                            <ul class="deck-list">
+                                <li><strong>Gesture-Controlled Mouse</strong>: cursor movement and clicks driven entirely by hand position and pinch gestures</li>
+                                <li><strong>Particle Visuals</strong>: a GPU-rendered swarm of particles pulled into flowing, looping patterns by two-handed pinch gestures</li>
+                                <li><strong>Hill Climb Racing Control</strong>: steering and acceleration mapped to hand-tracking input</li>
+                            </ul>
+                            <ul class="deck-stack" aria-label="Tech stack"><li>Python</li><li>OpenCV</li><li>MediaPipe</li><li>ModernGL</li></ul>
+                            <div class="deck-actions"><a class="deck-btn" href="https://github.com/mukhaverse" target="_blank" rel="noopener noreferrer">GitHub profile<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+                        </div>
+                        <div class="deck-shade" aria-hidden="true"></div>
                     </div>
-                    <p class="project-description">
-                        Three real-time hand-tracking experiments built with Python, OpenCV, and MediaPipe:
-                    </p>
-                    <ul class="project-description-list">
-                        <li><strong>Gesture-Controlled Mouse</strong> - cursor movement and clicks driven entirely by hand position and pinch gestures</li>
-                        <li><strong>Particle Visuals</strong> - a GPU-rendered swarm of particles pulled into flowing, looping patterns by two-handed pinch gestures</li>
-                        <li><strong>Hill Climb Racing Control</strong> - steering and acceleration mapped to hand-tracking input</li>
-                    </ul>
-                    <a class="project-link" href="https://github.com/mukhaverse">GitHub</a>
-                    <button class="project-link project-browse-btn" type="button" data-project-title="Computer Vision &amp; Hand Tracking" data-media='[{"type":"video","src":"assets/compvis-demo.mp4","alt":"Computer vision hand-tracking demo"}]'>Browse</button>
-                </div>
-            </article>
+                </article>
+                <article class="deck-card" id="project-seedsync" style="--i:3" aria-labelledby="project-seedsync-title">
+                    <div class="deck-card-face">
+                        <div class="deck-gallery" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup.png&quot;, &quot;alt&quot;: &quot;SeedSync greenhouse app screens&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup1.png&quot;, &quot;alt&quot;: &quot;SeedSync sensor and motor screens&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup2.png&quot;, &quot;alt&quot;: &quot;SeedSync add-greenhouse setup flow&quot;}]">
+                            <div class="deck-stage">
+                                <img src="assets/seed-mockup.png" alt="SeedSync greenhouse app screens" loading="lazy">
+                                <button class="deck-expand project-browse-btn" type="button" data-project-title="SeedSync" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup.png&quot;, &quot;alt&quot;: &quot;SeedSync greenhouse app screens&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup1.png&quot;, &quot;alt&quot;: &quot;SeedSync sensor and motor screens&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/seed-mockup2.png&quot;, &quot;alt&quot;: &quot;SeedSync add-greenhouse setup flow&quot;}]" data-start="0" aria-label="View SeedSync media full screen"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+                            </div>
+                            <div class="deck-thumbs" role="group" aria-label="SeedSync media">
+                                <button class="deck-thumb" type="button" data-index="0" aria-label="Show SeedSync greenhouse app screens" aria-pressed="true"><img src="assets/seed-mockup.png" alt="" loading="lazy"></button>
+                                <button class="deck-thumb" type="button" data-index="1" aria-label="Show SeedSync sensor and motor screens" aria-pressed="false"><img src="assets/seed-mockup1.png" alt="" loading="lazy"></button>
+                                <button class="deck-thumb" type="button" data-index="2" aria-label="Show SeedSync add-greenhouse setup flow" aria-pressed="false"><img src="assets/seed-mockup2.png" alt="" loading="lazy"></button>
+                            </div>
+                        </div>
 
-
-
-            <article class="project" aria-label="Project: SeedSync App">
-                <div class="project-visual" aria-hidden="true">
-                    <img src="assets/seed-mockup.png" alt="atelier project mockup">
-                </div>
-                <div class="project-content">
-                    <p class="project-label">UX / System Design</p>
-                    <h3>SeedSync</h3>
-                    <div class="project-tech-stack">
-                        <span class="project-tech">Figma</span>
-                        <span class="project-tech">IoT Concepts</span>
-                        <span class="project-tech">User Research</span>
+                        <div class="deck-body">
+                            <h3 class="deck-title" id="project-seedsync-title">SeedSync</h3>
+                            <p class="deck-kind"><span class="deck-num">04 / 05</span>UX / system design</p>
+                            <p class="deck-desc">An IoT-based greenhouse management system designed to monitor and control environmental
+                                conditions such as temperature, humidity, and soil moisture. The project focused on
+                                user research, data-driven design decisions, and building an intuitive interface for
+                                real-time monitoring and automation.</p>
+                            
+                            <ul class="deck-stack" aria-label="Tech stack"><li>Figma</li><li>IoT concepts</li><li>User research</li></ul>
+                            <div class="deck-actions"><a class="deck-btn" href="https://www.figma.com/design/coRQ80n2HJ1Midos33r95y/SeedSync?node-id=0-1&amp;t=3B1EqentwZcM4kq3-1" target="_blank" rel="noopener noreferrer">Open the Figma prototype<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+                        </div>
+                        <div class="deck-shade" aria-hidden="true"></div>
                     </div>
-                    <p class="project-description">
-                        An IoT-based greenhouse management system designed to monitor and control environmental
-                        conditions such as temperature, humidity, and soil moisture. The project focused on
-                        user research, data-driven design decisions, and building an intuitive interface for
-                        real-time monitoring and automation.
-                    </p>
-                    <a class="project-link" href="https://www.figma.com/design/coRQ80n2HJ1Midos33r95y/SeedSync?node-id=0-1&t=3B1EqentwZcM4kq3-1">View Prototype</a>
-                </div>
-            </article>
+                </article>
+                <article class="deck-card" id="project-iot" style="--i:4" aria-labelledby="project-iot-title">
+                    <div class="deck-card-face">
+                        <div class="deck-gallery" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/iot-mockup.png&quot;, &quot;alt&quot;: &quot;IoT Exhibition Archive website mockup&quot;}]">
+                            <div class="deck-stage">
+                                <img src="assets/iot-mockup.png" alt="IoT Exhibition Archive website mockup" loading="lazy">
+                                <button class="deck-expand project-browse-btn" type="button" data-project-title="IoT Exhibition Archive" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/iot-mockup.png&quot;, &quot;alt&quot;: &quot;IoT Exhibition Archive website mockup&quot;}]" data-start="0" aria-label="View IoT Exhibition Archive media full screen"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+                            </div>
+                        </div>
 
-
-
-            <article class="project" aria-label="Project: IoT Exhibition Website">
-                <div class="project-visual" aria-hidden="true"><img src="assets/iot-mockup.png" alt="IoT project mockup"></div>
-                <div class="project-content">
-                    <p class="project-label">Frontend Development</p>
-                    <h3>IoT Exhibition Archive</h3>
-                    <div class="project-tech-stack">
-                        <span class="project-tech">JavaScript</span>
-                        <span class="project-tech">HTML</span>
-                        <span class="project-tech">CSS</span>
-                        <span class="project-tech">Three.js</span>
-                        <span class="project-tech">GSAP</span>
+                        <div class="deck-body">
+                            <h3 class="deck-title" id="project-iot-title">IoT Exhibition Archive</h3>
+                            <p class="deck-kind"><span class="deck-num">05 / 05</span>Frontend development</p>
+                            <p class="deck-desc">A digital exhibition platform designed to showcase student projects, combining
+                                interactive sections, behind-the-scenes content, and user comments. Built with
+                                a focus on animation and spatial interaction using Three.js and GSAP.</p>
+                            
+                            <ul class="deck-stack" aria-label="Tech stack"><li>JavaScript</li><li>HTML</li><li>CSS</li><li>Three.js</li><li>GSAP</li></ul>
+                            <div class="deck-actions"><a class="deck-btn" href="https://github.com/mukhaverse/IoT" target="_blank" rel="noopener noreferrer">Code on GitHub<svg aria-hidden="true" viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+                        </div>
+                        <div class="deck-shade" aria-hidden="true"></div>
                     </div>
-                    <p class="project-description">
-                        A digital exhibition platform designed to showcase student projects, combining
-                        interactive sections, behind-the-scenes content, and user comments. Built with
-                        a focus on animation and spatial interaction using Three.js and GSAP.
-                    </p>
-                    <a class="project-link" href="https://github.com/mukhaverse/IoT">GitHub</a>
-                </div>
-            </article>
-
-
+                </article>
+            </div>
         </section>
 
 
@@ -400,96 +470,68 @@
 
         
         
-        <section class="certifications-section" id="certifications" aria-labelledby="certifications-heading">
+<!-- Beyond the Deck: hidden for now (the badge idea moved into About). Remove `hidden` to bring it back. -->
+<section class="record-section" id="record" aria-labelledby="record-heading" hidden>
+            <div class="record-pin">
 
-            <div class="section-header">
-                <!-- <span class="section-tag">Credentials</span> -->
-                <h2 class="section-title cer-ti" id="certifications-heading">Certifications <br> <span class="cer-and">&</span> Achievements</h2>
-            </div>
+                <div class="record-side">
+                    <h2 class="section-title" id="record-heading">Beyond the Deck</h2>
+                    <p class="record-sub">Leadership, clubs, hackathons and awards: what I do once the assignment is handed in. Scroll to change the badge.</p>
 
-            <div class="cert-strip">
+                    <div class="wheel" aria-label="Timeline">
+                        <span class="wheel-marker" aria-hidden="true"></span>
+                        <ol class="wheel-drum">
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="0" data-photos="" data-kind="leadership" data-label="Leadership" data-year="[20XX]" data-title="[Your role]" data-org="[Club or organization]" data-note="[Two or three lines on what you led or changed: team size, events you ran, members grown.]"><span class="wheel-year">[20XX]</span><span class="wheel-title">[Your role]</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="1" data-photos="" data-kind="leadership" data-label="Leadership" data-year="[20XX]" data-title="[Your role]" data-org="[Club or organization]" data-note="[Two or three lines on what you led or changed.]"><span class="wheel-year">[20XX]</span><span class="wheel-title">[Your role]</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="2" data-photos="" data-kind="hackathon" data-label="Hackathon" data-year="[20XX]" data-title="[Hackathon name]" data-org="[Organizer]" data-note="[What your team built, the part you owned, and the result.]" data-role="[Your role · result]"><span class="wheel-year">[20XX]</span><span class="wheel-title">[Hackathon name]</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="3" data-photos="" data-kind="hackathon" data-label="Hackathon" data-year="[20XX]" data-title="[Hackathon name]" data-org="[Organizer]" data-note="[What your team built, the part you owned, and the result.]" data-role="[Your role · result]"><span class="wheel-year">[20XX]</span><span class="wheel-title">[Hackathon name]</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="4" data-kind="award" data-label="Award" data-year="" data-title="Best Project Award, Web Development" data-org="Software Engineering Dept., University of Jeddah" data-note="Won the department’s Elite Badge for best project in the Web Development course (CCSW-321)." data-cert-src="assets/cert-best-project.jpg" data-cert-alt="Certificate of Appreciation: Best Project Award for Web Development, Software Engineering Department, University of Jeddah" data-cert-name="Best Project Award, Web Development" data-cert-meta="Software Engineering Dept. · University of Jeddah"><span class="wheel-year">—</span><span class="wheel-title">Best Project Award</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="5" data-kind="award" data-label="Award" data-year="2025–26" data-title="Certificate of Excellence" data-org="University of Jeddah" data-note="Awarded for two successive semesters of excellent grades." data-cert-src="assets/cert-excellence.png" data-cert-alt="Certificate of Excellence, University of Jeddah, awarded for two successive semesters of excellent grades, 2025–2026" data-cert-name="Certificate of Excellence" data-cert-meta="University of Jeddah · 2025–2026"><span class="wheel-year">2025–26</span><span class="wheel-title">Certificate of Excellence</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="6" data-kind="certificate" data-label="Certificate" data-year="2026" data-title="Introduction to DevOps" data-org="IBM · Coursera" data-note="Foundations of DevOps culture, CI/CD and automation." data-cert-src="assets/cert-devops.png" data-cert-alt="Introduction to DevOps, IBM course certificate via Coursera, 2026" data-cert-name="Introduction to DevOps" data-cert-meta="IBM · Coursera · 2026"><span class="wheel-year">2026</span><span class="wheel-title">Introduction to DevOps</span></button></li>
+                            <li class="wheel-item"><button class="wheel-btn" type="button" data-index="7" data-kind="certificate" data-label="Certificate" data-year="2026" data-title="Introduction to Agile Development and Scrum" data-org="IBM · Coursera" data-note="Agile planning, Scrum roles, sprints and ceremonies." data-cert-src="assets/cert-agile-scrum.png" data-cert-alt="Introduction to Agile Development and Scrum, IBM course certificate via Coursera, 2026" data-cert-name="Introduction to Agile Development and Scrum" data-cert-meta="IBM · Coursera · 2026"><span class="wheel-year">2026</span><span class="wheel-title">Agile Development &amp; Scrum</span></button></li>
+                        </ol>
+                    </div>
+                </div>
 
-                <ul class="cert-track" id="certTrack" tabindex="0" aria-label="Certifications — scroll horizontally to browse, select a certificate to enlarge it">
+                <div class="lanyard" aria-hidden="true">
+                    <div class="lanyard-rig">
+                        <svg class="lanyard-strap" viewBox="0 0 120 220" preserveAspectRatio="none">
+                            <path class="strap" d="M14 0h26l26 206H54Z"/>
+                            <path class="strap" d="M80 0h26L66 206H54Z"/>
+                            <path class="stitch" d="M19 0 44 200M35 0 59 200M85 0 61 200M101 0 63 200"/>
+                        </svg>
+                        <svg class="lanyard-clip" viewBox="0 0 60 70">
+                            <rect class="clip-body" x="16" y="0" width="28" height="22" rx="5"/>
+                            <rect class="clip-shine" x="20" y="4" width="20" height="3" rx="1.5"/>
+                            <path class="clip-hook" d="M30 22v10a14 14 0 1 0 14 14"/>
+                            <circle class="clip-ring" cx="30" cy="48" r="13"/>
+                        </svg>
+                        <div class="badge" data-theme="leadership">
+                            <span class="badge-slot"></span>
+                            <span class="badge-band"><span class="badge-swap" data-field="band">Leadership</span></span>
+                            <span class="badge-photo"><img src="assets/1st-Logo-inv-gry.svg" alt="" draggable="false"></span>
+                            <span class="badge-big badge-swap" data-field="big">[Your role]</span>
+                            <span class="badge-sub badge-swap" data-field="sub">[Club or organization]</span>
+                            <span class="badge-foot"><span class="badge-swap" data-field="footL">Term</span><span class="badge-swap" data-field="footR">[20XX]</span></span>
+                        </div>
+                    </div>
+                </div>
 
-                    <li class="cert-tile">
-                        <button class="cert-tile-btn" type="button" data-cert-name="Introduction to DevOps" data-cert-meta="IBM · Coursera · 2026">
-                            <img src="assets/cert-devops.png" alt="Introduction to DevOps — IBM course certificate via Coursera, 2026">
-                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
-                                <path d="M2 17 V2 H17"/>
-                                <path d="M98 17 V2 H83"/>
-                                <path d="M98 58 V73 H83"/>
-                                <path d="M2 58 V73 H17"/>
-                            </svg>
-                        </button>
-                        <p class="cert-caption">
-                            <span class="cert-name">Introduction to DevOps</span>
-                            <span class="cert-meta">IBM · Coursera · 2026</span>
-                        </p>
-                    </li>
-
-                    
-
-                    <li class="cert-tile">
-                        <button class="cert-tile-btn" type="button" data-cert-name="Best Project Award — Web Development" data-cert-meta="Software Engineering Dept. · University of Jeddah">
-                            <img src="assets/cert-best-project.jpg" alt="Certificate of Appreciation — Best Project Award for Web Development, Software Engineering Department, University of Jeddah">
-                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
-                                <path d="M2 17 V2 H17"/>
-                                <path d="M98 17 V2 H83"/>
-                                <path d="M98 58 V73 H83"/>
-                                <path d="M2 58 V73 H17"/>
-                            </svg>
-                        </button>
-                        <p class="cert-caption">
-                            <span class="cert-name">Best Project Award - Web Development</span>
-                            <span class="cert-meta">Software Engineering Dept. · University of Jeddah</span>
-                        </p>
-                    </li>
-
-
-                    <li class="cert-tile">
-                        <button class="cert-tile-btn" type="button" data-cert-name="Introduction to Agile Development and Scrum" data-cert-meta="IBM · Coursera · 2026">
-                            <img src="assets/cert-agile-scrum.png" alt="Introduction to Agile Development and Scrum — IBM course certificate via Coursera, 2026">
-                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
-                                <path d="M2 17 V2 H17"/>
-                                <path d="M98 17 V2 H83"/>
-                                <path d="M98 58 V73 H83"/>
-                                <path d="M2 58 V73 H17"/>
-                            </svg>
-                        </button>
-                        <p class="cert-caption">
-                            <span class="cert-name">Introduction to Agile Development and Scrum</span>
-                            <span class="cert-meta">IBM · Coursera · 2026</span>
-                        </p>
-                    </li>
-
-
-
-                    <li class="cert-tile">
-                        <button class="cert-tile-btn" type="button" data-cert-name="Certificate of Excellence" data-cert-meta="University of Jeddah · 2025–2026">
-                            <img src="assets/cert-excellence.png" alt="Certificate of Excellence — University of Jeddah, awarded for two successive semesters of excellent grades, 2025–2026">
-                            <svg class="cert-tile-frame" viewBox="0 0 100 75" aria-hidden="true" focusable="false">
-                                <path d="M2 17 V2 H17"/>
-                                <path d="M98 17 V2 H83"/>
-                                <path d="M98 58 V73 H83"/>
-                                <path d="M2 58 V73 H17"/>
-                            </svg>
-                        </button>
-                        <p class="cert-caption">
-                            <span class="cert-name">Certificate of Excellence</span>
-                            <span class="cert-meta">University of Jeddah · 2025–2026</span>
-                        </p>
-                    </li>
-
-
-
-
-
-                </ul>
+                <div class="record-detail" aria-live="polite">
+                    <p class="detail-count"><span class="detail-index">01</span> / 08</p>
+                    <p class="detail-meta"></p>
+                    <h3 class="detail-title"></h3>
+                    <p class="detail-note"></p>
+                    <div class="detail-actions">
+                        <span class="detail-nav">
+                            <button class="detail-btn detail-prev" type="button" aria-label="Previous entry">Prev</button>
+                            <button class="detail-btn detail-next" type="button" aria-label="Next entry">Next</button>
+                        </span>
+                    </div>
+                    <div class="detail-media" data-count="0"></div>
+                </div>
 
             </div>
-
-            <div class="cert-dots" id="certDots" role="tablist" aria-label="Jump to a certificate"></div>
-
         </section>
 
         <div class="cert-lightbox" id="certLightbox" hidden>
@@ -687,6 +729,7 @@
                 <a href="#about">About</a>
                 <a href="#projects">Projects</a>
                 <a href="#skills">Skills</a>
+                <!-- <a href="#record">Beyond the Deck</a> -->
                 <a href="#contact">Contact</a>
             </nav>
 
@@ -707,36 +750,20 @@
     </footer>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Flip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
 
     <script src="js/hero.js"></script>
+    <script src="js/links.js"></script>
+    <script src="js/project-carousel.js"></script>
+    <!-- modules run in order after parsing; cards.js owns the skills pin, so
+         everything measured below it is created afterwards -->
     <script type="module" src="js/cards.js"></script>
     <script type="module" src="js/about.js"></script>
-    <script src="js/links.js"></script>
-    <script src="js/projects.js"></script>
-    <script src="js/certifications.js"></script>
-    <script src="js/project-carousel.js"></script>
-
-    <script>
-        (function () {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                },
-                { threshold: 0.15 }
-            );
-
-            document
-                .querySelectorAll('.about-years, .about-degree')
-                .forEach((el) => observer.observe(el));
-        })();
-    </script>
+    <script type="module" src="js/projects.js"></script>
+    <script type="module" src="js/record.js"></script>
 
     <script>
         (function () {
@@ -759,94 +786,3 @@
 
 </body>
 </html> 
-
-
-<!-- 
-    <section id="projects">
-        <h2>Projects</h2>
-        
-        <div class="project">
-            <h3>Project Title 1</h3>
-            <p><strong>Technologies:</strong> React, Node.js, MongoDB</p>
-            <p>Brief description of what this project does and the problem it solves. Keep it concise - 2-3 sentences max.</p>
-            
-        </div>
-
-        <div class="project">
-            <h3>Project Title 2</h3>
-            <p><strong>Technologies:</strong> Python, Flask, PostgreSQL</p>
-            <p>Brief description of what this project does and the problem it solves. Keep it concise - 2-3 sentences max.</p>
-            
-        </div>
-
-        <div class="project">
-            <h3>Project Title 3</h3>
-            <p><strong>Technologies:</strong> JavaScript, Express, MySQL</p>
-            <p>Brief description of what this project does and the problem it solves. Keep it concise - 2-3 sentences max.</p>
-            
-        </div>
-    </section>
-
-
-
-    <section id="skills">
-        <h2>Skills & Technologies</h2>
-        
-        <h3>Languages</h3>
-        <ul class="skills-list">
-            <li>JavaScript</li>
-            <li>Python</li>
-            <li>Java</li>
-            <li>C++</li>
-        </ul>
-
-        <h3 style="margin-top: 2rem;">Frameworks & Tools</h3>
-        <ul class="skills-list">
-            <li>React</li>
-            <li>Node.js</li>
-            <li>Git</li>
-            <li>Docker</li>
-        </ul>
-
-        <h3 style="margin-top: 2rem;">Databases</h3>
-        <ul class="skills-list">
-            <li>MongoDB</li>
-            <li>PostgreSQL</li>
-            <li>MySQL</li>
-        </ul>
-    </section>
-
-
-    
-
-    <section id="about">
-        <h2>About Me</h2>
-        <p>
-            Write a paragraph about yourself. Talk about your current education, what year you're in, 
-            what interests you about software development.
-        </p>
-        <p style="margin-top: 1rem;">
-            Add another paragraph about what you're currently learning or working on, what kind of 
-            projects you enjoy, or what you're passionate about in tech.
-        </p>
-        <p style="margin-top: 1rem;">
-            Optional third paragraph about your goals, what kind of opportunities you're looking for, 
-            or other interests outside of coding.
-        </p>
-    </section>
-
-
-    
-
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>I'd love to hear from you! Feel free to reach out through any of the following:</p>
-        <div class="contact-links">
-            <a href="mailto:your.email@example.com">Email</a>
-            <a href="https://github.com/yourusername">GitHub</a>
-            <a href="https://linkedin.com/in/yourusername">LinkedIn</a>
-            <a href="#">Resume</a>
-        </div>
-    </section>
-</body>
-</html> -->

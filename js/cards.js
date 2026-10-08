@@ -1,12 +1,16 @@
-import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
-import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js"
+// gsap + ScrollTrigger come from the classic <script> tags so every file
+// shares one instance (and one set of pin measurements)
+const { gsap, ScrollTrigger } = window
 import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs"
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    if (!gsap || !ScrollTrigger) return
+
     gsap.registerPlugin(ScrollTrigger)
 
     const lenis = new Lenis({ lerp: 0.2, smoothWheel: true })
+    window.lenis = lenis
     lenis.on("scroll", ScrollTrigger.update)
     gsap.ticker.add((time) => { lenis.raf(time * 1000) })
     gsap.ticker.lagSmoothing(0)

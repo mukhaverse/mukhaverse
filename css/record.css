@@ -1,0 +1,557 @@
+/* ─── Beyond the Deck: the lanyard ────────────────────────────
+   One badge hangs from a wine lanyard. It lowers in once when the
+   section is reached, settles, and then stays still. The section pins;
+   as you scroll, the same badge restyles itself for each entry (colours
+   tween through CSS variables, the text fades). A 3D timeline wheel on
+   the left spins with the scroll; on the right the details are read out
+   and any photos or certificates grow in underneath as a collage. */
+
+.record-section {
+    --card-w: clamp(200px, min(18vw, 38vh), 270px);
+    --strap-h: clamp(110px, 21vh, 210px);
+
+    position: relative;
+    background-color: var(--cream);
+    overflow: hidden;
+}
+
+/* undo the global uppercase `span` rule from cards.css without
+   out-ranking the class rules below */
+:where(.record-section) span {
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: none;
+}
+
+.record-pin {
+    position: relative;
+    max-width: 1280px;
+    height: 100svh;
+    min-height: 640px;
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 0.9fr) minmax(0, 1fr);
+    column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    align-items: center;
+}
+
+
+/* ─── Left: heading + timeline wheel ──────────────────────── */
+.record-side {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    padding-top: clamp(4rem, 12vh, 7rem);
+    padding-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+.record-sub {
+    margin-top: 1.1rem;
+    max-width: 30ch;
+    font-size: 1.02rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--mid);
+}
+
+.wheel {
+    position: relative;
+    flex: 1;
+    min-height: 16rem;
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+    perspective: 900px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 28%, #000 72%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 28%, #000 72%, transparent);
+}
+
+.wheel-marker {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1.4rem;
+    height: 2px;
+    background: var(--wine);
+    transform: translateY(-50%);
+}
+
+.wheel-drum {
+    list-style: none;
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+}
+
+.wheel-item {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3.5rem;
+    margin-top: -1.75rem;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.wheel-btn {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 0 2.25rem;
+    font: inherit;
+    text-align: left;
+    color: var(--ink-soft);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.wheel-year {
+    flex: none;
+    width: 4.25rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.wheel-title {
+    min-width: 0;
+    font-size: clamp(1rem, 1.35vw, 1.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wheel-btn:hover,
+.wheel-item.is-active .wheel-btn {
+    color: var(--dark);
+}
+
+.wheel-item.is-active .wheel-title {
+    font-weight: 500;
+}
+
+.wheel-btn:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: -2px;
+    border-radius: 6px;
+}
+
+
+/* ─── Centre: the lanyard ─────────────────────────────────── */
+.lanyard {
+    align-self: stretch;
+    position: relative;
+}
+
+/* strap + clip + badge swing together around the top edge */
+.lanyard-rig {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: var(--card-w);
+    margin-left: calc(var(--card-w) / -2);
+    transform-origin: 50% 0;
+}
+
+.lanyard-strap {
+    display: block;
+    width: 64px;
+    height: var(--strap-h);
+    margin: 0 auto;
+    overflow: visible;
+}
+
+.lanyard-strap .strap {
+    fill: var(--wine);
+}
+
+.lanyard-strap .stitch {
+    fill: none;
+    stroke: rgba(244, 239, 230, 0.28);
+    stroke-width: 0.8;
+    stroke-dasharray: 3 3;
+    vector-effect: non-scaling-stroke;
+}
+
+.lanyard-clip {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 44px;
+    height: 52px;
+    margin: -4px auto 0;
+    overflow: visible;
+}
+
+.clip-body {
+    fill: #b8b1a8;
+    stroke: #8e877e;
+    stroke-width: 1;
+}
+
+.clip-shine {
+    fill: rgba(255, 255, 255, 0.55);
+}
+
+.clip-hook,
+.clip-ring {
+    fill: none;
+    stroke: #8e877e;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+}
+
+.clip-ring {
+    stroke: #a39c93;
+}
+
+
+/* ─── The badge: one card, themed by variables ────────────── */
+.badge {
+    --b-bg: #161412;
+    --b-ink: #f4efe6;
+    --b-soft: rgba(244, 239, 230, 0.62);
+    --b-band: #662020;
+    --b-band-ink: #f4efe6;
+    --b-photo: rgba(244, 239, 230, 0.08);
+    --b-rule: rgba(244, 239, 230, 0.16);
+    --b-invert: 0;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: var(--card-w);
+    aspect-ratio: 0.68;
+    margin-top: -22px;
+    overflow: hidden;
+    color: var(--b-ink);
+    background: var(--b-bg);
+    border-radius: 16px;
+    transform-origin: 50% 14px;
+    box-shadow:
+        0 1px 2px rgba(22, 20, 18, 0.14),
+        0 26px 44px -18px rgba(22, 20, 18, 0.5);
+}
+
+.badge-slot {
+    display: block;
+    flex: none;
+    width: 2.8rem;
+    height: 0.5rem;
+    margin: 0.85rem auto 0;
+    border-radius: 999px;
+    background: var(--cream);
+    box-shadow: inset 0 1px 2px rgba(22, 20, 18, 0.3);
+}
+
+.badge-band {
+    display: block;
+    margin-top: 0.85rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--b-band-ink);
+    background: var(--b-band);
+}
+
+.badge-band .badge-swap {
+    letter-spacing: inherit;
+    text-transform: inherit;
+}
+
+.badge-photo {
+    display: grid;
+    place-items: center;
+    width: 40%;
+    aspect-ratio: 0.8;
+    margin: 1rem 1rem 0;
+    border-radius: 8px;
+    background: var(--b-photo);
+}
+
+.badge-photo img {
+    width: 66%;
+    opacity: 0.85;
+    filter: invert(var(--b-invert));
+}
+
+.badge-big {
+    display: block;
+    margin: auto 1rem 0;
+    padding-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 2.3vw, 2.25rem);
+    line-height: 0.95;
+    color: var(--b-ink);
+}
+
+.badge-sub {
+    display: block;
+    margin: 0.4rem 1rem 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--b-soft);
+}
+
+.badge-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem 0.85rem;
+    font-size: 0.72rem;
+    color: var(--b-soft);
+    border-top: 1px dashed var(--b-rule);
+}
+
+.badge-swap {
+    display: block;
+}
+
+.badge-foot .badge-swap {
+    display: inline;
+}
+
+
+/* ─── Right: details ──────────────────────────────────────── */
+.record-detail {
+    width: 100%;
+    max-width: 26rem;
+    justify-self: end;
+}
+
+.detail-count {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.detail-index {
+    color: var(--dark);
+}
+
+.detail-meta {
+    margin-top: 1.75rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+}
+
+.detail-title {
+    margin-top: 0.5rem;
+    font-size: clamp(1.4rem, 2.1vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dark);
+    text-wrap: balance;
+}
+
+.detail-note {
+    margin-top: 0.85rem;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--mid);
+}
+
+.detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+}
+
+.detail-nav {
+    display: none;
+    gap: 0.4rem;
+}
+
+.detail-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7rem 1.2rem;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--dark);
+    background: transparent;
+    border: 1.5px solid var(--dark);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.detail-btn:hover,
+.detail-btn--solid {
+    color: var(--cream);
+    background: var(--dark);
+}
+
+.detail-btn--solid:hover {
+    background: var(--wine);
+    border-color: var(--wine);
+}
+
+.detail-btn:active {
+    transform: scale(0.98);
+}
+
+.detail-btn:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}
+
+.detail-btn[hidden] {
+    display: none;
+}
+
+
+/* ─── Photos: tiles grow from small rounded squares ───────── */
+.detail-media {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-top: 1.75rem;
+}
+
+.detail-media[data-count="0"] { visibility: hidden; }
+.detail-media[data-count="1"] { grid-template: 1fr / 1fr; }
+.detail-media[data-count="2"] { grid-template: 1fr / 1fr 1fr; }
+.detail-media[data-count="3"] {
+    grid-template-areas: "a b" "a c";
+    grid-template-columns: 1.45fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+.detail-media[data-count="4"] { grid-template: 1fr 1fr / 1fr 1fr; }
+
+.media-tile {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 18px;
+    background: var(--cream-2);
+    cursor: zoom-in;
+}
+
+.media-tile img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* certificates show whole, on paper */
+.media-tile.is-doc {
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.media-tile.is-doc img {
+    object-fit: contain;
+    padding: 0.6rem;
+}
+
+.media-tile:hover img {
+    transform: scale(1.04);
+}
+
+.media-tile:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}
+
+.media-more {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--cream);
+    background: rgba(22, 20, 18, 0.55);
+}
+
+
+/* ─── Without JS: the timeline is a plain list ────────────── */
+.record-section:not(.is-live) .record-pin {
+    height: auto;
+    padding-bottom: 6rem;
+}
+
+.record-section:not(.is-live) .wheel {
+    perspective: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+.record-section:not(.is-live) .wheel-drum,
+.record-section:not(.is-live) .wheel-item {
+    position: static;
+    margin: 0;
+}
+
+.record-section:not(.is-live) .wheel-marker,
+.record-section:not(.is-live) .lanyard,
+.record-section:not(.is-live) .record-detail {
+    display: none;
+}
+
+
+/* ─── Stepped mode (phones, tablets, reduced motion) ──────── */
+.record-section.is-stepped .record-pin {
+    height: auto;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+    padding-bottom: clamp(4rem, 10vh, 6rem);
+}
+
+.record-section.is-stepped .record-side {
+    padding-bottom: 0;
+}
+
+.record-section.is-stepped .wheel {
+    display: none;
+}
+
+.record-section.is-stepped .lanyard {
+    height: calc(var(--strap-h) + 30px + var(--card-w) / 0.68 + 2rem);
+    touch-action: pan-y;
+}
+
+.record-section.is-stepped .detail-nav {
+    display: inline-flex;
+}
+
+.record-section.is-stepped .record-detail {
+    max-width: 36rem;
+    justify-self: start;
+}
+
+@media (max-width: 900px) {
+    .record-section {
+        --card-w: clamp(200px, 54vw, 260px);
+        --strap-h: 100px;
+    }
+}
+
+/* hidden for now: the badge moved into About */
+.record-section[hidden] {
+    display: none;
+}

@@ -1,10 +1,22 @@
+if (typeof gsap === "undefined") {
+    document.documentElement.classList.remove("js");
+    throw new Error("GSAP failed to load; showing static hero");
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set(".navbar, .hero-title, .hero-divider, .hero-description, .hero-cards .card", { opacity: 1 });
+    document.querySelector(".hero-description")?.classList.add("is-visible");
+}
 
+
+const w = window.innerWidth;
+
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 gsap.set(".hero-title", { opacity: 0, y: 150, scale:1.5});
 gsap.set(".hero-divider", { opacity: 0, y: -20 });
 gsap.set(".navbar", { opacity: 0, y: -20 });
-const w = window.innerWidth;
 // gsap.set(".hero-cards .card", { x: 70, opacity: 0 });
 gsap.set(".hero-description", { opacity: 0, x: -20,  y: () => {    
         if (w < 576) return 85;
@@ -13,10 +25,13 @@ gsap.set(".hero-description", { opacity: 0, x: -20,  y: () => {
     } });
 gsap.set(".hero-cards .card", { y: 10, opacity: 0,force3D: true,
     willChange: "transform"});
+}
 
 
+const reduceHero = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tl = gsap.timeline({
-    defaults: { ease: "power2.out" }
+    defaults: { ease: "power2.out" },
+    paused: reduceHero
 });
 
 

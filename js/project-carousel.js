@@ -110,9 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.hidden = false;
         document.body.classList.add("project-carousel-open");
 
+        const start = parseInt(btn.dataset.start, 10) || 0;
+        document.querySelectorAll(".deck-stage video").forEach((v) => v.pause());
+        window.lenis?.stop();
+
         requestAnimationFrame(() => {
             modal.classList.add("is-open");
-            setActive(0);
+            setActive(start);
         });
 
         if (closeBtn) closeBtn.focus();
@@ -123,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         slidesEl.querySelectorAll("video").forEach((v) => v.pause());
         modal.classList.remove("is-open");
         document.body.classList.remove("project-carousel-open");
+        window.lenis?.start();
 
         const finish = () => {
             modal.hidden = true;

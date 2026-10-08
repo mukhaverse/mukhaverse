@@ -1,345 +1,731 @@
-/* ─── Section ─────────────────────────────────────────────── */
+/* ─── About ───────────────────────────────────────────────────
+   A stage that pins: a badge hangs on a wine lanyard and each scroll
+   step flips it over to another of Shumokh's hats (student, track
+   lead, GDG). The copy beside it changes with the badge. Once the
+   badges are done, one closing statement lights up word by word.
+   One typeface, no accent colour in the text: emphasis is italic and
+   weight. The badge carries the colour. */
+
 .about-section {
+    --ink-hi: #f4efe6;
+    --ink-mid: rgba(244, 239, 230, 0.72);
+    --ink-lo: rgba(244, 239, 230, 0.56);
+    --rule: rgba(244, 239, 230, 0.16);
+
     position: relative;
     background-color: var(--dark);
-    color: var(--light);
-    min-height: 110dvh;
-    padding: 0 5rem;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    color: var(--ink-hi);
 }
 
-.about-inner {
-    max-width: 1000px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 3.5rem;
-}
-
-
-/* ─── Watermark ───────────────────────────────────────────── */
-.about-watermark {
+/* the section's heading, for screen readers and the outline */
+.about-sr {
     position: absolute;
-    bottom: -6%;
-    right: 3%;
-    font-size: clamp(220px, 30vw, 380px);
-    color: rgba(249, 244, 235, 0.03);
-    line-height: 1;
-    user-select: none;
-    pointer-events: none;
-    z-index: 0;
-}
-
-
-/* ─── Tag ─────────────────────────────────────────────────── */
-.about-section .section-tag {
-    background-color: transparent;
-    color: rgba(249, 244, 235, 0.3);
-    border: 1px solid rgba(249, 244, 235, 0.12);
-    letter-spacing: 3px;
-    display: inline-block;
-}
-
-
-/* ─── Layout ──────────────────────────────────────────────── */
-.about-layout {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 4.5rem;
-    align-items: center;
-}
-
-
-/* ─── Year column ─────────────────────────────────────────── */
-.about-years {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.6s ease 0s, transform 0.6s ease 0s;
-}
-
-.about-years.is-visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.about-yr {
-    font-family: var(--font-display);
-    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
-    font-weight: 400;
-    color: rgba(249, 244, 235, 0.88);
-    line-height: 1;
-    letter-spacing: -1px;
-}
-
-.about-yr-note {
-    display: block;
-    font-size: 0.58rem;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgba(249, 244, 235, 0.444);
-    text-align: center;
-    margin: 0.35rem 0;
-}
-
-
-/* ─── Animated track ──────────────────────────────────────── */
-.about-track {
     width: 1px;
-    height: clamp(60px, 10vw, 110px);
-    background: rgba(249, 244, 235, 0.08);
-    margin: 0.5rem 0;
-    position: relative;
+    height: 1px;
     overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
-.about-track-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(249, 244, 235, 0.5);
-    animation: track-fill 2.4s ease-in-out infinite alternate;
-}
-
-@keyframes track-fill {
-    0%   { height: 8%;  top: 0%; }
-    50%  { height: 80%; top: 0%; }
-    100% { height: 8%;  top: 88%; }
-}
-
-
-/* ─── Degree (anchored under graduating) ──────────────────── */
-.about-degree {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-    margin-top: 0.6rem;
-
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
-}
-
-.about-degree.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.about-degree-name {
-    font-size: clamp(0.65rem, 1vw, 0.78rem);
-    font-weight: 400;
-    color: rgba(249, 244, 235, 0.703);
-    letter-spacing: 0.3px;
-    text-align: center;
-}
-
-.about-degree-uni {
-    font-size: clamp(0.6rem, 0.9vw, 0.7rem);
-    font-weight: 300;
-    color: rgba(249, 244, 235, 0.555);
-    letter-spacing: 0.3px;
-    text-align: center;
-}
-
-
-/* ─── Right column ────────────────────────────────────────── */
-.about-right {
-    border-left: 1px solid rgba(249, 244, 235, 0.08);
-    padding-left: 4.5rem;
-}
-
-
-/* ─── Heading ─────────────────────────────────────────────── */
-.about-statement {
-    font-size: clamp(1.5rem, 2vw, 2rem);
-    font-weight: 300;
-    line-height: 1.45;
-    color: rgba(249, 244, 235, 0.4);
-    font-family: var(--font-body);
-
-    background-image: radial-gradient(calc(200px + var(--spot-boost, 0) * 130px) circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.35) 60%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
-}
-
-.about-statement.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.about-line {
-    display: block;
-    text-wrap: balance;
+/* undo the global uppercase `span` rule from cards.css without
+   out-ranking the class rules below */
+:where(.about-section) span {
     font-size: inherit;
     font-weight: inherit;
     text-transform: none;
 }
 
-.about-line-lead {
-    max-width: 54ch;
-    margin-bottom: 1.5rem;
+.about-section ::selection {
+    background: var(--ink-hi);
+    color: var(--dark);
 }
 
-.about-line-main {
-    max-width: 60vw;
-    margin-left: auto;
-    text-align: right;
+.about-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(4rem, 12vh, 8rem) clamp(1.25rem, 5vw, 5rem) clamp(6rem, 16vh, 10rem);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2rem, 5vw, 5rem);
 }
 
-/* "It is my comfort zone." — own line, soft italic, lit by the same drifting spotlight */
-.about-emphasis {
-    display: block;
-    width: fit-content;
-    max-width: 55%;
-    margin-top: 1.75rem;
-    margin-left: auto;
-    margin-right: -1.5rem;
-    text-align: right;
-    /* font-family: var(--font-body); */
-    font-style: italic;
+
+/* ─── Closing statement: sits under the copy column ───────── */
+.about-statement {
+    grid-column: 2;
+    font-family: var(--font-body);
     font-weight: 300;
-    font-size: 0.7em;
-    color: rgba(249, 244, 235, 0.35);
-    background-image: radial-gradient(calc(150px + var(--spot-boost, 0) * 100px) circle at var(--mx, 50%) var(--my, 50%), #fff 0%, rgba(249, 244, 235, 0.3) 60%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    font-size: clamp(2rem, 3.9vw, 3.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.032em;
+    color: var(--ink-hi);
+    max-width: 18ch;
+    text-wrap: balance;
 }
 
-.about-statement.is-visible .about-emphasis {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 0.55s;
+.about-statement em {
+    font-style: italic;
+    font-weight: 400;
+}
+
+.about-statement .word {
+    will-change: opacity;
 }
 
 
-/* ─── Responsive ──────────────────────────────────────────── */
-@media (max-width: 900px) {
-    .about-section  { padding: 0 3rem; }
-    .about-layout   { gap: 3rem; }
-    .about-right    { padding-left: 3rem; }
+/* ─── Stage: pinned while the badges change ───────────────── */
+.about-stage {
+    --card-w: clamp(210px, min(22vw, 44svh), 330px);
+    --strap-h: clamp(80px, 17svh, 180px);
+    --gutter: clamp(1.25rem, 5vw, 5rem);
+
+    position: relative;
 }
 
-@media (max-width: 768px) {
-    .about-section {
-        padding: 5rem 1.5rem 4rem;
-        min-height: 100svh;
-        overflow: visible;
-        justify-content: center;
+/* the badge waits above the stage before it drops in; keep it from
+   showing over whatever is above (clip, so sticky still works) */
+.about-section.is-pinned .about-stage-inner {
+    overflow: hidden;
+    overflow: clip;
+}
+
+.about-stage-inner {
+    position: relative;
+    max-width: 1280px;
+    height: 100svh;
+    min-height: 560px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: clamp(2rem, 5vw, 5rem);
+}
+
+
+/* ─── The lanyard ─────────────────────────────────────────── */
+.id-lanyard {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: relative;
+}
+
+/* strap + clip + badge swing together around the top edge */
+.id-rig {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: var(--card-w);
+    margin-left: calc(var(--card-w) / -2);
+    transform-origin: 50% 0;
+    perspective: 1100px;
+}
+
+/* the strap comes out of the dark rather than starting mid-air */
+.id-strap {
+    display: block;
+    width: 64px;
+    height: var(--strap-h);
+    margin: 0 auto;
+    overflow: visible;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 45%);
+    mask-image: linear-gradient(180deg, transparent, #000 45%);
+}
+
+.id-strap .strap {
+    fill: var(--wine);
+}
+
+.id-strap .stitch {
+    fill: none;
+    stroke: rgba(244, 239, 230, 0.3);
+    stroke-width: 0.8;
+    stroke-dasharray: 3 3;
+    vector-effect: non-scaling-stroke;
+}
+
+.id-clip {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 44px;
+    height: 52px;
+    margin: -4px auto 0;
+    overflow: visible;
+}
+
+.id-clip .clip-body {
+    fill: #b8b1a8;
+    stroke: #8e877e;
+    stroke-width: 1;
+}
+
+.id-clip .clip-shine {
+    fill: rgba(255, 255, 255, 0.55);
+}
+
+.id-clip .clip-hook,
+.id-clip .clip-ring {
+    fill: none;
+    stroke: #8e877e;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+}
+
+.id-clip .clip-ring {
+    stroke: #a39c93;
+}
+
+
+/* ─── The badge: one card, themed by variables ────────────── */
+.id-badge {
+    /* student theme; about.js tweens these per role */
+    --b-bg: #ece4d6;
+    --b-ink: #161412;
+    --b-soft: rgba(22, 20, 18, 0.66);
+    --b-band: #662020;
+    --b-band-ink: #f4efe6;
+    --b-photo: rgba(102, 32, 32, 0.08);
+    --b-rule: rgba(22, 20, 18, 0.16);
+    --b-invert: 0.88;
+    --sheen: 130%;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: var(--card-w);
+    aspect-ratio: 0.68;
+    margin-top: -22px;
+    overflow: hidden;
+    color: var(--b-ink);
+    background: var(--b-bg);
+    border-radius: 16px;
+    transform-origin: 50% 50%;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 30px 60px -24px rgba(0, 0, 0, 0.9);
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* nothing on the card squashes; the name takes the slack */
+.id-badge > * {
+    flex: none;
+}
+
+/* light catches the card as it turns over */
+.id-badge::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.28) 48%,
+        rgba(255, 255, 255, 0.06) 56%,
+        transparent 66%);
+    background-size: 250% 100%;
+    background-position: var(--sheen) 0;
+    mix-blend-mode: soft-light;
+}
+
+.id-slot {
+    display: block;
+    flex: none;
+    width: 2.8rem;
+    height: 0.5rem;
+    margin: 0.85rem auto 0;
+    border-radius: 999px;
+    background: var(--dark);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.id-band {
+    display: block;
+    margin-top: 0.85rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--b-band-ink);
+    background: var(--b-band);
+}
+
+.id-photo {
+    display: grid;
+    place-items: center;
+    width: 40%;
+    aspect-ratio: 0.8;
+    margin: 1rem 1rem 0;
+    border-radius: 8px;
+    background: var(--b-photo);
+}
+
+.id-badge > .id-photo {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.id-photo img {
+    width: 66%;
+    max-height: 80%;
+    object-fit: contain;
+    opacity: 0.85;
+    filter: invert(var(--b-invert));
+}
+
+.id-name {
+    display: block;
+    margin: auto 1rem 0;
+    padding-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, calc(var(--card-w) * 0.105), 2.3rem);
+    line-height: 0.95;
+    white-space: nowrap;
+    color: var(--b-ink);
+}
+
+.id-org {
+    display: block;
+    margin: 0.4rem 1rem 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--b-soft);
+}
+
+.id-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem 0.85rem;
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--b-soft);
+    border-top: 1px dashed var(--b-rule);
+}
+
+.id-foot span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ─── Copy for each role ──────────────────────────────────── */
+.id-panels {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    display: grid;
+}
+
+/* all panels share one cell; about.js shows one at a time */
+.id-panel {
+    grid-area: 1 / 1;
+    min-width: 0;
+}
+
+.id-float {
+    display: none;
+}
+
+.id-title {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(2rem, 3.9vw, 3.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.032em;
+    color: var(--ink-hi);
+    max-width: 16ch;
+    text-wrap: balance;
+}
+
+.id-meta {
+    margin-top: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--ink-lo);
+    font-variant-numeric: tabular-nums;
+}
+
+.id-copy {
+    margin-top: clamp(1.4rem, 4svh, 2.5rem);
+}
+
+.about-bio {
+    max-width: 44ch;
+    font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--ink-hi);
+    text-wrap: pretty;
+}
+
+.about-bio--second {
+    margin-top: 1.1em;
+    color: var(--ink-mid);
+}
+
+/* a rule draws under each key phrase once the copy is in */
+.about-bio .hl {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: var(--hl, 100%) 1px;
+    padding-bottom: 0.08em;
+}
+
+.about-section.is-live .about-bio .hl {
+    --hl: 0%;
+}
+
+
+/* ─── Timeline: where "now" sits between 2023 and 2027 ────── */
+.about-timeline {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    max-width: 24rem;
+    margin-top: clamp(1.5rem, 4svh, 2.25rem);
+}
+
+.about-yr {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-hi);
+    font-variant-numeric: tabular-nums;
+}
+
+.about-track {
+    position: relative;
+    display: block;
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+}
+
+.about-track-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--progress, 82%);
+    background: var(--ink-hi);
+    transform-origin: left center;
+}
+
+.about-now {
+    position: absolute;
+    left: var(--progress, 82%);
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ink-hi);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 4px var(--dark);
+}
+
+/* "now" breathes */
+.about-now::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--ink-hi);
+    animation: about-now-pulse 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes about-now-pulse {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(3.4); opacity: 0; }
+}
+
+
+/* ─── Progress: one segment per role, fills with the scroll ─ */
+.id-progress {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    gap: 0.75rem;
+    padding-bottom: clamp(1.5rem, 5svh, 3rem);
+}
+
+.id-step {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6rem 0 0.25rem;
+    font: inherit;
+    text-align: left;
+    color: var(--ink-lo);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.id-step-bar {
+    position: relative;
+    display: block;
+    height: 2px;
+    overflow: hidden;
+    background: var(--rule);
+    border-radius: 2px;
+}
+
+.id-step-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--ink-hi);
+    transform-origin: left center;
+    transform: scaleX(0);
+}
+
+.id-step-label {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.id-step:hover,
+.id-step[aria-current="true"] {
+    color: var(--ink-hi);
+}
+
+.id-step:focus-visible {
+    outline: 2px solid var(--ink-hi);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+
+/* ─── Static mode: no JS, reduced motion, very short screens ─
+   Every role is listed in order; the badge stays beside them. */
+.about-section:not(.is-pinned) .about-stage-inner {
+    height: auto;
+    min-height: 0;
+    padding-bottom: clamp(5rem, 12vh, 8rem);
+}
+
+.about-section:not(.is-pinned) .id-panels {
+    align-self: start;
+    row-gap: clamp(4rem, 10vh, 6rem);
+    padding-top: clamp(2rem, 6vh, 4rem);
+}
+
+.about-section:not(.is-pinned) .id-panel {
+    grid-area: auto;
+}
+
+.about-section:not(.is-pinned) .id-progress {
+    display: none;
+}
+
+.about-section:not(.is-pinned) .id-lanyard {
+    align-self: stretch;
+}
+
+.about-section:not(.is-pinned) .id-rig {
+    position: sticky;
+    margin-left: auto;
+    margin-right: auto;
+    left: auto;
+}
+
+.about-section:not(.is-pinned) .id-strap {
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .about-now::after { animation: none; opacity: 0; }
+}
+
+/* landscape phones: the sticky badge has to fit the height */
+@media (max-height: 519px) and (min-width: 761px) {
+    .about-stage {
+        --card-w: clamp(140px, 44svh, 220px);
+        --strap-h: 48px;
     }
 
-    .about-layout {
-        grid-template-columns: auto 1fr;
-        gap: 1.5rem;
-        min-height: calc(100svh - 6rem);
-        align-items: stretch;
-    }
-
-    .about-yr {
-        font-size: clamp(2.2rem, 7vw, 2.6rem);
-    }
-
-    /* cap these so their text width doesn't stretch the auto column
-       and starve the paragraph of horizontal space */
-    .about-degree-name,
-    .about-degree-uni {
-        max-width: 90px;
-    }
-
-    /* reset years back to vertical column */
-    .about-years {
-        flex-direction: column;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: flex-start;
-        height: 100%;
-        gap: 0;
-    }
-
-    .about-yr-note { margin: 0.35rem 0; }
-
-    /* track stretches to fill the space between 2022 and 2026 */
-    .about-track {
-        flex: 1;
-        width: 1px;
-        height: auto;
-        min-height: 40px;
-        margin: 0.5rem 0;
-    }
-
-    /* reset back to vertical fill animation */
-    .about-track-fill {
-        width: 100%;
-        height: 8%;
-        top: 0;
-        left: 0;
-        animation: track-fill 2.4s ease-in-out infinite alternate;
-    }
-
-    .about-degree {
-        width: auto;
+    .id-photo {
+        width: 26%;
         margin-top: 0.6rem;
-        align-items: center;
     }
 
-    /* statement sits beside the track, centered vertically */
-    .about-right {
-        border-top: none;
-        border-left: 1px solid rgba(249, 244, 235, 0.08);
-        padding-top: 0;
-        padding-left: 1.5rem;
-        display: flex;
-        align-items: center;
+    .id-org {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* ─── Phones and small tablets ────────────────────────────── */
+@media (max-width: 760px) {
+    .about-stage {
+        --card-w: clamp(118px, min(38vw, 23svh), 160px);
+        --strap-h: clamp(30px, 7svh, 72px);
+        --gutter: 1rem;
+        /* total drop of the rig: strap + clip + badge */
+        --rig-h: calc(var(--strap-h) + 26px + var(--card-w) / 0.68);
+    }
+
+    .about-inner {
+        display: block;
+        padding: clamp(3.5rem, 10vh, 5rem) 1rem clamp(5rem, 14vh, 7rem);
     }
 
     .about-statement {
-        font-size: clamp(1.1rem, 5vw, 1.5rem);
-        line-height: 1.35;
+        font-size: clamp(1.9rem, 8.4vw, 2.6rem);
     }
 
-    /* the desktop zigzag (narrow columns, right-aligned, negative
-       offset margins) needs real width to breathe — this column
-       doesn't have it, so drop back to a plain stacked block */
-    .about-line-lead,
-    .about-line-main {
+    .about-stage-inner {
+        display: block;
+        min-height: 0;
+    }
+
+    .id-lanyard {
+        position: absolute;
+        top: 0;
+        right: var(--gutter);
+        width: var(--card-w);
+        z-index: 1;
+    }
+
+    .id-rig {
+        left: 0;
+        margin-left: 0;
+    }
+
+    .id-strap {
+        width: 44px;
+    }
+
+    .id-clip {
+        width: 34px;
+        height: 40px;
+    }
+
+    .id-badge {
+        margin-top: -16px;
+        border-radius: 11px;
+    }
+
+    .id-slot {
+        width: 1.9rem;
+        height: 0.36rem;
+        margin-top: 0.55rem;
+    }
+
+    .id-band {
+        margin-top: 0.5rem;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.5rem;
+        letter-spacing: 0.12em;
+    }
+
+    .id-photo {
+        width: 28%;
+        margin: 0.5rem 0.6rem 0;
+        border-radius: 4px;
+    }
+
+    .id-name {
+        margin: auto 0.6rem 0;
+        padding-top: 0.4rem;
+        font-size: calc(var(--card-w) * 0.15);
+    }
+
+    .id-org {
+        margin: 0.25rem 0.6rem 0.5rem;
+        font-size: 0.56rem;
+    }
+
+    .id-foot {
+        padding: 0.4rem 0.6rem 0.5rem;
+        font-size: 0.5rem;
+    }
+
+    .id-panels {
+        display: grid;
+        padding-top: clamp(1.25rem, 4svh, 2.25rem);
+    }
+
+    /* reserves the badge's corner so the title wraps around it */
+    .id-float {
+        display: block;
+        float: right;
+        width: calc(var(--card-w) + 0.9rem);
+        height: calc(var(--rig-h) - clamp(1.25rem, 4svh, 2.25rem) + 0.5rem);
+        shape-outside: inset(0 0 0 0 round 0 0 0 12px);
+    }
+
+    .id-title {
+        font-size: clamp(1.6rem, min(7.2vw, 5svh), 2.3rem);
         max-width: none;
-        margin-left: 0;
-        text-align: left;
+        text-wrap: wrap;
     }
 
-    .about-line-lead {
-        margin-bottom: 2.7rem;
+    .id-meta {
+        margin-top: 0.7rem;
+        font-size: 0.85rem;
     }
 
-    .about-emphasis {
-        width: auto;
-        max-width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        margin-top: 2rem;
-        text-align: left;
+    .id-copy {
+        margin-top: clamp(1rem, 2.6svh, 1.5rem);
     }
-}
 
-@media (max-width: 480px) {
-    .about-yr { font-size: clamp(2rem, 9vw, 2.8rem); }
+    .about-bio {
+        max-width: none;
+        font-size: clamp(0.92rem, 2.2svh, 1.02rem);
+        line-height: 1.55;
+    }
+
+    .about-bio--second {
+        margin-top: 0.8em;
+    }
+
+    .about-timeline {
+        clear: both;
+        margin-top: clamp(1rem, 3svh, 1.75rem);
+    }
+
+    .id-progress {
+        position: absolute;
+        left: var(--gutter);
+        right: var(--gutter);
+        bottom: 0;
+        gap: 0.5rem;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .id-step-label {
+        margin-top: 0.55rem;
+        font-size: 0.74rem;
+    }
+
+    /* static mode on phones: badge on top, roles listed below */
+    .about-section:not(.is-pinned) .id-lanyard {
+        position: relative;
+        right: auto;
+        height: var(--rig-h);
+        margin: 0 auto;
+    }
+
+    .about-section:not(.is-pinned) .id-rig {
+        position: absolute;
+    }
+
+    .about-section:not(.is-pinned) .id-float {
+        display: none;
+    }
 }

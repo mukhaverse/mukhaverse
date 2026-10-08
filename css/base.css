@@ -2,8 +2,8 @@
 :root {
     --cream: #F9F4EB;
     --cream-2:  #f0ece5;
-    --dark:  #000;
-    --mid: #333;
+    --dark:  #161412;  /* warm off-black */
+    --mid: #3a3532;
     --muted:  #999;
     --light:  #f9f4eb;
     --accent-1:   #e5d9f6;
@@ -13,6 +13,10 @@
     --accent-5:  #c8e6f7;
     --red:  #662020;
     --red-light: rgba(102, 32, 32, 0.08);
+    --suit-red: #EB1C24;
+    --wine: #662020;  /* the one accent: footer red */
+    --ink-soft: #5b534d;
+    --hairline: rgba(22, 20, 18, 0.12);
     --radius-sm:  3px;
     --radius-md:  10px;
     --radius-lg:  20px;
@@ -44,6 +48,11 @@ body {
     overflow-x: hidden;
     overscroll-behavior-x: none;
     touch-action: pan-y;
+}
+
+::selection {
+    background: var(--red);
+    color: var(--cream);
 }
 
 img {
