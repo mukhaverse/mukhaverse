@@ -43,8 +43,9 @@
 .about-inner {
     max-width: 1280px;
     margin: 0 auto;
-    /* a held breath of empty dark between the badges and the statement */
-    padding: clamp(10rem, 42vh, 24rem) clamp(1.25rem, 5vw, 5rem) clamp(6rem, 16vh, 10rem);
+    /* about half a screen of empty dark on each side, so the statement
+       lands on its own before the skills arrive */
+    padding: clamp(12rem, 50vh, 36rem) clamp(1.25rem, 5vw, 5rem) clamp(12rem, 50vh, 36rem);
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     column-gap: clamp(2rem, 5vw, 5rem);
@@ -616,7 +617,7 @@
 
     .about-inner {
         display: block;
-        padding: clamp(8rem, 36svh, 16rem) 1rem clamp(5rem, 14vh, 7rem);
+        padding: clamp(9rem, 45svh, 24rem) 1rem clamp(9rem, 45svh, 24rem);
     }
 
     .about-statement {
