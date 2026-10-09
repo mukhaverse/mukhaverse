@@ -63,12 +63,11 @@ function setupIdentities(section, reduceMotion) {
             "--b-band": "#662020", "--b-band-ink": "#f4efe6", "--b-title": "#662020", "--b-photo": "rgba(102, 32, 32, 0.08)",
             "--b-rule": "rgba(22, 20, 18, 0.16)", "--b-invert": 0.88
         },
-        // Tuwaiq Club: purple card, a band running through the logo's
-        // colours (dark purple under the text), white name and title
+        // Tuwaiq Club: purple card, deeper purple band with white letters
+        // and the logo's three squares after them (about.css), white title
         club: {
             "--b-bg": "#5b2fb5", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.74)",
-            "--b-band": "linear-gradient(90deg, #381a74, #7a4fe0 45%, #4cc4e6 80%, #f7931e)",
-            "--b-band-ink": "#ffffff", "--b-title": "#ffffff", "--b-photo": "rgba(244, 239, 230, 0.1)",
+            "--b-band": "#381a74", "--b-band-ink": "#ffffff", "--b-title": "#ffffff", "--b-photo": "rgba(244, 239, 230, 0.1)",
             "--b-rule": "rgba(244, 239, 230, 0.22)", "--b-invert": 0
         },
         // GDG on Campus: white card washed with Google's colours, a grey band
@@ -81,7 +80,7 @@ function setupIdentities(section, reduceMotion) {
             "--b-band": "linear-gradient(#f1f3f4, #f1f3f4) top / 100% calc(100% - 4px) no-repeat, " +
                 "linear-gradient(90deg, #4285f4 25%, #ea4335 0 50%, #fbbc04 0 75%, #34a853 0)",
             "--b-band-ink": "#202124", "--b-title": "#1a73e8",
-            "--b-photo": "linear-gradient(135deg, #e8f0fe, #fce8e6 50%, #e6f4ea)",
+            "--b-photo": "#f1f3f4",
             "--b-rule": "rgba(22, 20, 18, 0.14)", "--b-invert": 0.88
         },
         // EG & VR Club: the logo's navy card, its blue-to-green band, green title
@@ -112,6 +111,7 @@ function setupIdentities(section, reduceMotion) {
     const dress = (i) => {
         const d = panels[i].dataset;
         gsap.set(badge, THEMES[d.theme] || THEMES.student);
+        badge.dataset.theme = d.theme || "student";
         paintBand(field("band"), d.band || "", (d.bandColors || "").split(/\s+/).filter(Boolean));
         field("role").textContent = d.role || "";
         field("footL").textContent = d.footL || "";

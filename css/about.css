@@ -257,6 +257,20 @@
     background: var(--b-band);
 }
 
+/* Tuwaiq Club: the logo's three squares stepping off the end of the name */
+.id-badge[data-theme="club"] .id-band::after {
+    content: "";
+    display: inline-block;
+    width: 0.86em;
+    height: 1.3em;
+    margin-left: 0.6em;
+    vertical-align: -0.3em;
+    background:
+        linear-gradient(#4cc4e6, #4cc4e6) 0 0 / 44% 29% no-repeat,
+        linear-gradient(#f7931e, #f7931e) 100% 50% / 44% 29% no-repeat,
+        linear-gradient(#9468f2, #9468f2) 0 100% / 44% 29% no-repeat;
+}
+
 /* letters painted one colour each (data-band-colors) read as a wordmark */
 .id-band > span {
     font-weight: 700;
