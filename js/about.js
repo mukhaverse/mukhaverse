@@ -60,31 +60,60 @@ function setupIdentities(section, reduceMotion) {
         // Shumokh's own card: cream with a wine band
         student: {
             "--b-bg": "#ece4d6", "--b-ink": "#161412", "--b-soft": "rgba(22, 20, 18, 0.66)",
-            "--b-band": "#662020", "--b-band-ink": "#f4efe6", "--b-photo": "rgba(102, 32, 32, 0.08)",
+            "--b-band": "#662020", "--b-band-ink": "#f4efe6", "--b-title": "#662020", "--b-photo": "rgba(102, 32, 32, 0.08)",
             "--b-rule": "rgba(22, 20, 18, 0.16)", "--b-invert": 0.88
         },
-        // club role: the wine card, band flipped to cream
+        // Tuwaiq Club: purple card, a band running through the logo's
+        // colours (dark purple under the text), white name and title
         club: {
-            "--b-bg": "#662020", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.74)",
-            "--b-band": "#f4efe6", "--b-band-ink": "#662020", "--b-photo": "rgba(244, 239, 230, 0.1)",
+            "--b-bg": "#5b2fb5", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.74)",
+            "--b-band": "linear-gradient(90deg, #381a74, #7a4fe0 45%, #4cc4e6 80%, #f7931e)",
+            "--b-band-ink": "#ffffff", "--b-title": "#ffffff", "--b-photo": "rgba(244, 239, 230, 0.1)",
             "--b-rule": "rgba(244, 239, 230, 0.22)", "--b-invert": 0
         },
-        // GDG on Campus: white card, ink band
+        // GDG on Campus: white card washed with Google's colours, a grey band
+        // (letters from data-band-colors) edged in the four-colour stripe
         gdg: {
-            "--b-bg": "#ffffff", "--b-ink": "#161412", "--b-soft": "rgba(22, 20, 18, 0.66)",
-            "--b-band": "#161412", "--b-band-ink": "#f4efe6", "--b-photo": "rgba(22, 20, 18, 0.06)",
+            "--b-bg": "radial-gradient(120% 70% at 100% 100%, rgba(52, 168, 83, 0.18), transparent 60%), " +
+                "radial-gradient(90% 60% at 0% 55%, rgba(66, 133, 244, 0.14), transparent 60%), " +
+                "radial-gradient(70% 40% at 100% 20%, rgba(251, 188, 4, 0.14), transparent 60%), #ffffff",
+            "--b-ink": "#202124", "--b-soft": "rgba(32, 33, 36, 0.66)",
+            "--b-band": "linear-gradient(#f1f3f4, #f1f3f4) top / 100% calc(100% - 4px) no-repeat, " +
+                "linear-gradient(90deg, #4285f4 25%, #ea4335 0 50%, #fbbc04 0 75%, #34a853 0)",
+            "--b-band-ink": "#202124", "--b-title": "#1a73e8",
+            "--b-photo": "linear-gradient(135deg, #e8f0fe, #fce8e6 50%, #e6f4ea)",
             "--b-rule": "rgba(22, 20, 18, 0.14)", "--b-invert": 0.88
+        },
+        // EG & VR Club: the logo's navy card, its blue-to-green band, green title
+        egvr: {
+            "--b-bg": "#14213d", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.72)",
+            "--b-band": "linear-gradient(90deg, #3fa9f5, #4fd1c5, #79d94f)", "--b-band-ink": "#14213d",
+            "--b-title": "#79d94f", "--b-photo": "rgba(244, 239, 230, 0.08)",
+            "--b-rule": "rgba(244, 239, 230, 0.2)", "--b-invert": 0
         }
     };
 
     const field = (name) => badge.querySelector(`[data-field="${name}"]`);
 
+    // band text, optionally one colour per letter (cycling, spaces skipped)
+    const paintBand = (el, text, colors) => {
+        if (!colors.length) { el.textContent = text; return; }
+        let k = 0;
+        el.replaceChildren(...Array.from(text, (ch) => {
+            if (ch === " ") return document.createTextNode(ch);
+            const span = document.createElement("span");
+            span.textContent = ch;
+            span.style.color = colors[k++ % colors.length];
+            return span;
+        }));
+    };
+
     // write role i onto the badge, no animation
     const dress = (i) => {
         const d = panels[i].dataset;
         gsap.set(badge, THEMES[d.theme] || THEMES.student);
-        field("band").textContent = d.band || "";
-        field("org").textContent = d.org || "";
+        paintBand(field("band"), d.band || "", (d.bandColors || "").split(/\s+/).filter(Boolean));
+        field("role").textContent = d.role || "";
         field("footL").textContent = d.footL || "";
         field("footR").textContent = d.footR || "";
     };

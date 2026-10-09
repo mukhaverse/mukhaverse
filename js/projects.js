@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const animate = Boolean(gsap && ScrollTrigger) && !reduceMotion;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 
     // ─── Galleries ───────────────────────────────────────────
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // the element being shown (during a crossfade the old one is still in the DOM)
         let currentEl = stage.querySelector("img, video");
+        let current = 0;
         let wantsPlay = false;
 
         const playIfWanted = () => {
@@ -33,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        const show = (index) => {
+        // dir: which side the new media slides in from (1 = right, -1 = left)
+        const show = (index, dir = Math.sign(index - current)) => {
             const item = media[index];
             if (!item) return;
             const old = currentEl;
@@ -56,11 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
             stage.classList.toggle("is-video", item.type === "video");
             stage.insertBefore(el, expand);
             currentEl = el;
+            current = index;
             if (old) {
                 if (old.tagName === "VIDEO") old.pause();
                 if (animate) {
-                    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" });
-                    gsap.to(old, { opacity: 0, duration: 0.25, onComplete: () => old.remove() });
+                    gsap.fromTo(el, { opacity: 0, x: dir * 28 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" });
+                    gsap.to(old, { opacity: 0, x: dir * -28, duration: 0.3, ease: "power2.in", onComplete: () => old.remove() });
                 } else {
                     old.remove();
                 }
@@ -78,6 +82,62 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
+        // step through with a swipe on the stage or the arrow keys on the thumbs
+        const step = (d) => {
+            wantsPlay = true;
+            show((current + d + media.length) % media.length, d);
+        };
+
+        if (media.length > 1) {
+            let startX = null;
+            let startY = 0;
+            stage.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "mouse") return;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            stage.addEventListener("pointerup", (e) => {
+                if (startX === null) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                startX = null;
+                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+            });
+            stage.addEventListener("pointercancel", () => { startX = null; });
+
+            root.querySelector(".deck-thumbs")?.addEventListener("keydown", (e) => {
+                const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+                if (!d) return;
+                e.preventDefault();
+                step(d);
+                thumbs[current].focus();
+            });
+        }
+
+        // tilt toward the cursor, with a soft glare where it points
+        if (animate && finePointer) {
+            stage.classList.add("can-tilt");
+            gsap.set(stage, { transformPerspective: 900 });
+            const tiltX = gsap.quickTo(stage, "rotationX", { duration: 0.6, ease: "power3.out" });
+            const tiltY = gsap.quickTo(stage, "rotationY", { duration: 0.6, ease: "power3.out" });
+            let rect;
+            stage.addEventListener("pointerenter", () => { rect = stage.getBoundingClientRect(); });
+            stage.addEventListener("pointermove", (e) => {
+                if (!rect) rect = stage.getBoundingClientRect();
+                const px = (e.clientX - rect.left) / rect.width;
+                const py = (e.clientY - rect.top) / rect.height;
+                tiltY((px - 0.5) * 8);
+                tiltX((0.5 - py) * 6);
+                stage.style.setProperty("--gx", `${px * 100}%`);
+                stage.style.setProperty("--gy", `${py * 100}%`);
+            });
+            stage.addEventListener("pointerleave", () => {
+                rect = null;
+                tiltX(0);
+                tiltY(0);
+            });
+        }
+
         // fill in video thumbnails only once the card gets close
         const thumbVideos = root.querySelectorAll(".deck-thumb video[data-src]");
         if (thumbVideos.length) {
@@ -90,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return {
+            cover: (media.find((m) => m.type === "image") || {}).src,
             setPlaying(on) { wantsPlay = on; playIfWanted(); }
         };
     });
@@ -118,6 +179,37 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         galleries.forEach((g, i) => g.setPlaying(i === index));
     };
+
+    // peek: hovering a name in the bar draws that card a little way out
+    if (finePointer) {
+        const peek = document.createElement("div");
+        peek.className = "deck-peek";
+        peek.setAttribute("aria-hidden", "true");
+        const peekImg = document.createElement("img");
+        peekImg.alt = "";
+        peek.appendChild(peekImg);
+        nav.appendChild(peek);
+        let hideTimer;
+
+        navLinks.forEach((link, i) => {
+            const src = galleries[i].cover;
+            if (!src) return;
+            link.addEventListener("pointerenter", () => {
+                clearTimeout(hideTimer);
+                if (peekImg.getAttribute("src") !== src) peekImg.src = src;
+                const navRect = nav.getBoundingClientRect();
+                const linkRect = link.getBoundingClientRect();
+                const half = peek.offsetWidth / 2;
+                const x = linkRect.left - navRect.left + linkRect.width / 2;
+                peek.style.setProperty("--x", `${Math.min(Math.max(x, half), navRect.width - half)}px`);
+                peek.classList.add("is-on");
+            });
+            link.addEventListener("pointerleave", () => {
+                hideTimer = setTimeout(() => peek.classList.remove("is-on"), 80);
+            });
+            link.addEventListener("click", () => peek.classList.remove("is-on"));
+        });
+    }
 
     if (!gsap || !ScrollTrigger) {
         // no GSAP: plain anchors still work (scroll-margin-top handles the bar)
@@ -211,8 +303,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     invalidateOnRefresh: true
                 }
             })
-                .to(face, { scale: 0.94, ease: "none" }, 0)
-                .to(shade, { opacity: 0.22, ease: "none" }, 0);
+                .to(face, { scale: 0.97, ease: "none" }, 0)
+                .to(shade, { opacity: 0.8, ease: "none" }, 0);
         });
     });
 });

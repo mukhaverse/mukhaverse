@@ -119,7 +119,7 @@ const EASE_TO_BACK  = "power3.inOut";
         duration: 0.6,
         stagger: 0.07,
         ease: "back.out(1.3)",
-        delay: .5,
+        delay: .25,
         scrollTrigger: {
         trigger: stage,
         start: "top 80%",
