@@ -64,6 +64,7 @@
     position: absolute;
     width: 210px;
     aspect-ratio: 5 / 7;
+    min-height: 0; /* keep every card the same shape, however long its text */
     border-radius: var(--radius-lg);
     padding: 1.1rem;
     cursor: pointer;
@@ -80,7 +81,6 @@
 }
 
 .fan-card[data-card-index="0"] {
-    width: 220px;
     padding: 0;
 }
 

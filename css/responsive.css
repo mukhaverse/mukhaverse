@@ -214,12 +214,8 @@
 
     .fan-card-center {
         gap: 0.4rem;
+        padding: 0;
     }
-
-     .fan-card[data-card-index="0"] {
-
-    width: 170px
-}
 
     .site-footer {
         padding: 1.75rem 1.75rem;
@@ -385,20 +381,17 @@
 
     .fan-card-url {
         font-size: 0.6rem;
+        line-height: 1.15;
     }
 
     .fan-card-center {
         gap: 0.3rem;
+        padding: 0;
     }
 
     .fan-intro-tagline {
         font-size: 1rem;
     }
-     .fan-card[data-card-index="0"] {
-
-    width: 135px
-}
-
     .site-footer {
         padding: 1.5rem 1.25rem;
     }

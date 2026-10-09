@@ -1,6 +1,6 @@
 // Projects — "My Deck of Work"
-// Sticky index bar that follows the active card, stacked sticky cards
-// on desktop, and an inline media gallery inside every card.
+// Stacked sticky cards on desktop, and an inline media gallery inside
+// every card.
 const { gsap, ScrollTrigger } = window;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -156,69 +156,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    // ─── Index bar ───────────────────────────────────────────
-    const nav = section.querySelector(".deck-nav");
-    const navLinks = Array.from(section.querySelectorAll(".deck-nav-link"));
-    const linkBar = section.querySelector(".deck-nav-links");
+    // ─── Active card ─────────────────────────────────────────
+    // only the card in view plays its video
     let activeIndex = -1;
 
     const setActive = (index) => {
         if (index === activeIndex) return;
         activeIndex = index;
-        navLinks.forEach((link, i) => {
-            const on = i === index;
-            link.classList.toggle("is-active", on);
-            if (on) {
-                link.setAttribute("aria-current", "true");
-                if (linkBar.scrollWidth > linkBar.clientWidth) {
-                    linkBar.scrollTo({ left: link.offsetLeft - 16, behavior: reduceMotion ? "auto" : "smooth" });
-                }
-            } else {
-                link.removeAttribute("aria-current");
-            }
-        });
         galleries.forEach((g, i) => g.setPlaying(i === index));
     };
 
-    // peek: hovering a name in the bar draws that card a little way out
-    if (finePointer) {
-        const peek = document.createElement("div");
-        peek.className = "deck-peek";
-        peek.setAttribute("aria-hidden", "true");
-        const peekImg = document.createElement("img");
-        peekImg.alt = "";
-        peek.appendChild(peekImg);
-        nav.appendChild(peek);
-        let hideTimer;
-
-        navLinks.forEach((link, i) => {
-            const src = galleries[i].cover;
-            if (!src) return;
-            link.addEventListener("pointerenter", () => {
-                clearTimeout(hideTimer);
-                if (peekImg.getAttribute("src") !== src) peekImg.src = src;
-                const navRect = nav.getBoundingClientRect();
-                const linkRect = link.getBoundingClientRect();
-                const half = peek.offsetWidth / 2;
-                const x = linkRect.left - navRect.left + linkRect.width / 2;
-                peek.style.setProperty("--x", `${Math.min(Math.max(x, half), navRect.width - half)}px`);
-                peek.classList.add("is-on");
-            });
-            link.addEventListener("pointerleave", () => {
-                hideTimer = setTimeout(() => peek.classList.remove("is-on"), 80);
-            });
-            link.addEventListener("click", () => peek.classList.remove("is-on"));
-        });
-    }
-
     if (!gsap || !ScrollTrigger) {
-        // no GSAP: plain anchors still work (scroll-margin-top handles the bar)
         galleries.forEach((g) => g.setPlaying(true));
         return;
     }
     gsap.registerPlugin(ScrollTrigger);
 
-    const triggers = cards.map((card, i) => ScrollTrigger.create({
+    cards.forEach((card, i) => ScrollTrigger.create({
         trigger: card,
         start: "top 60%",
         endTrigger: cards[i + 1] || card,
@@ -234,26 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onLeaveBack: () => setActive(-1)
     });
 
-    navLinks.forEach((link, i) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            // the card's natural top, landed just under the sticky bar
-            const naturalTop = triggers[i].start + window.innerHeight * 0.6;
-            const target = naturalTop - nav.offsetHeight - 16;
-            if (window.lenis) window.lenis.scrollTo(target, { duration: reduceMotion ? 0 : 1.2 });
-            else window.scrollTo({ top: target, behavior: reduceMotion ? "auto" : "smooth" });
-            history.replaceState(null, "", link.getAttribute("href"));
-        });
-    });
-
     if (!animate) return;
-
-    // progress line under the index bar
-    gsap.to(".deck-nav-progress-fill", {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: { trigger: ".deck", start: "top 70%", end: "bottom bottom", scrub: true }
-    });
 
 
     // ─── Stacking ────────────────────────────────────────────
