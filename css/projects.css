@@ -96,22 +96,6 @@
     touch-action: pan-y;  /* horizontal swipes step through the media */
 }
 
-/* glare that follows the cursor while the stage tilts (set up in projects.js) */
-.deck-stage.can-tilt::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.22), transparent 55%);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.deck-stage.can-tilt:hover::after {
-    opacity: 1;
-}
-
 .deck-stage.is-video {
     background-color: #0d0d0d;
 }

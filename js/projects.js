@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const animate = Boolean(gsap && ScrollTrigger) && !reduceMotion;
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 
     // ─── Galleries ───────────────────────────────────────────
@@ -111,30 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 step(d);
                 thumbs[current].focus();
-            });
-        }
-
-        // tilt toward the cursor, with a soft glare where it points
-        if (animate && finePointer) {
-            stage.classList.add("can-tilt");
-            gsap.set(stage, { transformPerspective: 900 });
-            const tiltX = gsap.quickTo(stage, "rotationX", { duration: 0.6, ease: "power3.out" });
-            const tiltY = gsap.quickTo(stage, "rotationY", { duration: 0.6, ease: "power3.out" });
-            let rect;
-            stage.addEventListener("pointerenter", () => { rect = stage.getBoundingClientRect(); });
-            stage.addEventListener("pointermove", (e) => {
-                if (!rect) rect = stage.getBoundingClientRect();
-                const px = (e.clientX - rect.left) / rect.width;
-                const py = (e.clientY - rect.top) / rect.height;
-                tiltY((px - 0.5) * 8);
-                tiltX((0.5 - py) * 6);
-                stage.style.setProperty("--gx", `${px * 100}%`);
-                stage.style.setProperty("--gy", `${py * 100}%`);
-            });
-            stage.addEventListener("pointerleave", () => {
-                rect = null;
-                tiltX(0);
-                tiltY(0);
             });
         }
 

@@ -88,8 +88,8 @@ tl.to(".hero-cards .card", {
 
     opacity: 1,
     scale: 1,
-    stagger: 0.15,
-    duration: 0.6,
+    stagger: 0.09,
+    duration: 0.35,
     ease: "back.out(2)"
 }, "-=1.2");
 

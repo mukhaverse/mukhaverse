@@ -348,6 +348,10 @@
         font-size: 3.5rem;
     }
 
+    .contact-inner {
+        gap: 2rem;
+    }
+
     .pip {
 
     font-size: 2.5rem;
@@ -358,7 +362,7 @@
 
 
     .fan-stage {
-        min-height: 300px;
+        min-height: 240px;
     }
 
     .fan-card {
