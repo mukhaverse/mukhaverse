@@ -1,4 +1,5 @@
-// Drafting-sheet splash: the signature is drawn on a grid while the page loads.
+// Drafting-sheet splash: the signature is drawn while the page loads, then the
+// whole drawing rewinds and the blank sheet fades out.
 // Runs at the top of <body> so it paints before the rest of the page.
 // Once per tab session; a click or key skips it; static for reduced motion.
 // hero.js holds its intro until "splash:done".
@@ -12,6 +13,7 @@
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const T = reduce ? 0 : 1;           // scales every delay/duration
     const MIN = 3400, CAP = 8000;       // never leave before the ink is done, never trap anyone
+    const REWIND = 1200;                // the exit plays the drawing backwards in this long
 
     // signature traced from the scan, in its own coordinates
     const SIG = [
@@ -33,12 +35,15 @@
         return e;
     };
     const line = (parent, d, w = 1, stroke = WINE) => el("path", { d, fill: "none", stroke, "stroke-width": w }, parent);
+    // every drawing animation is kept so the exit can play them all backwards
+    const anims = [];
+    const animate = (node, kf, opt) => anims.push(node.animate(kf, opt));
     const fadeIn = (node, delay, dur = 300) =>
-        node.animate([{ opacity: 0 }, { opacity: 1 }], { delay: delay * T, duration: dur * T, fill: "both" });
+        animate(node, [{ opacity: 0 }, { opacity: 1 }], { delay: delay * T, duration: dur * T, fill: "both" });
     const draw = (node, delay, dur, easing = "cubic-bezier(.37,0,.63,1)") => {
         node.setAttribute("pathLength", 1);
         node.style.strokeDasharray = "1 2";
-        node.animate(
+        animate(node,
             [{ strokeDashoffset: 1, opacity: 0 }, { opacity: 1, offset: .001 }, { strokeDashoffset: 0, opacity: 1 }],
             { delay: delay * T, duration: dur * T, easing, fill: "both" });
     };
@@ -62,16 +67,9 @@
     const gs = Math.max(10, W / 80);
     const id = "splash" + Date.now();
 
-    // grid
     const defs = el("defs", {}, svg);
-    const minor = el("pattern", { id: id + "m", width: gs, height: gs, patternUnits: "userSpaceOnUse" }, defs);
-    line(minor, `M${gs} 0L0 0 0 ${gs}`, 1, "rgba(102,32,32,.055)");
-    const major = el("pattern", { id: id + "g", width: gs * 5, height: gs * 5, patternUnits: "userSpaceOnUse" }, defs);
-    el("rect", { width: gs * 5, height: gs * 5, fill: `url(#${id}m)` }, major);
-    line(major, `M${gs * 5} 0L0 0 0 ${gs * 5}`, 1, "rgba(102,32,32,.12)");
     const clip = el("clipPath", { id: id + "c" }, defs);
     el("rect", { x: m, y: m, width: W - 2 * m, height: H - 2 * m }, clip);
-    fadeIn(el("rect", { width: W, height: H, fill: `url(#${id}g)` }, svg), 0, 500);
 
     // frame + one quiet label per corner
     draw(line(svg, `M${m} ${m}H${W - m}V${H - m}H${m}Z`, 1.4), 100, 700, "cubic-bezier(.6,0,.2,1)");
@@ -114,7 +112,7 @@
     pass(ink, 1900, 1300, true);
     fadeIn(el("circle", { cx: DOT.x, cy: DOT.y, r: DOT.r, fill: INK }, ink), 3250, 100);
     for (const g of [guides, hair])
-        g.animate([{ opacity: 1 }, { opacity: 0 }], { delay: 3300 * T, duration: 450 * T, fill: "forwards" });
+        animate(g, [{ opacity: 1 }, { opacity: 0 }], { delay: 3300 * T, duration: 450 * T, fill: "forwards" });
 
     // ruler loader along the bottom
     const x0 = m + fs * 1.2, x1 = W - m - fs * 5, step = Math.max(5, gs * .6);
@@ -128,9 +126,17 @@
     }
     const pctText = el("text", { x: x0, y: yRule - fs * 1.5, "font-size": fs * .95, "text-anchor": "middle" }, svg);
     pctText.textContent = "000%";
+    let lit = 0;
+    const setRuler = v => {
+        const k = Math.round(v * n);
+        for (; lit <= k && lit <= n; lit++) ticks[lit].setAttribute("stroke", WINE);
+        for (; lit > k + 1; lit--) ticks[lit - 1].setAttribute("stroke", ACC);
+        pctText.setAttribute("x", x0 + k * step);
+        pctText.textContent = String(Math.round(v * 100)).padStart(3, "0") + "%";
+    };
 
     // progress creeps toward 90% until window load, then runs to 100
-    let loaded = document.readyState === "complete", p = 0, lit = 0, hit = 0, last = performance.now(), done = false;
+    let loaded = document.readyState === "complete", p = 0, hit = 0, last = performance.now(), done = false;
     addEventListener("load", () => { loaded = true; }, { once: true });
     const t0 = performance.now();
 
@@ -138,20 +144,39 @@
     addEventListener("wheel", block, { passive: false });
     addEventListener("touchmove", block, { passive: false });
 
-    function finish() {
+    // exit: rewind the whole drawing, then fade the blank sheet
+    function finish(skipped) {
         if (done) return;
         done = true;
+        if (reduce) return leave();
+
+        // each animation waits until the reversed playhead reaches where it
+        // stopped, then plays backwards at the same speed-up; a skip rewinds faster
+        const at = a => Math.min(a.currentTime, a.effect.getComputedTiming().endTime);
+        const head = Math.max(...anims.map(at)), k = Math.max(1, head / (skipped ? 500 : REWIND)), dur = head / k;
+        for (const a of anims) {
+            const go = () => { a.playbackRate = -k; a.play(); };
+            const wait = (head - at(a)) / k;
+            if (wait > 0) setTimeout(go, wait); else go();
+        }
+        const from = p, r0 = performance.now();
+        (function drain(now) {
+            const r = Math.min(1, (now - r0) / dur);
+            setRuler(from * (1 - r * r));
+            if (r < 1) requestAnimationFrame(drain);
+        })(r0);
+        setTimeout(leave, dur + 150);
+    }
+    function leave() {
         removeEventListener("wheel", block);
         removeEventListener("touchmove", block);
         root.classList.remove("splash-on");
         dispatchEvent(new Event("splash:done"));
-        const out = reduce
-            ? splash.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" })
-            : splash.animate([{ transform: "translateY(0)" }, { transform: "translateY(-100%)" }], { duration: 800, easing: "cubic-bezier(.7,0,.2,1)", fill: "forwards" });
-        out.finished.then(() => splash.remove());
+        splash.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, easing: "ease-out", fill: "forwards" })
+            .finished.then(() => splash.remove());
     }
-    splash.addEventListener("pointerdown", finish);
-    addEventListener("keydown", finish, { once: true });
+    splash.addEventListener("pointerdown", () => finish(true));
+    addEventListener("keydown", () => finish(true), { once: true });
 
     (function tick(now) {
         if (done) return;
@@ -161,10 +186,7 @@
         p = Math.max(p, p + (target - p) * Math.min(1, dt / 160));
         if (loaded && p > .995) { p = 1; hit = hit || now; }
 
-        const k = Math.round(p * n);
-        for (; lit <= k && lit <= n; lit++) ticks[lit].setAttribute("stroke", WINE);
-        pctText.setAttribute("x", x0 + k * step);
-        pctText.textContent = String(Math.round(p * 100)).padStart(3, "0") + "%";
+        setRuler(p);
 
         if ((t >= MIN * T && hit && now - hit > 250) || t >= CAP) return finish();
         requestAnimationFrame(tick);
