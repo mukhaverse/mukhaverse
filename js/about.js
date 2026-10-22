@@ -11,7 +11,7 @@
 // Reduced motion and very short screens get every role listed in order
 // with the flat badge beside them, switching as each role scrolls by.
 // gsap / ScrollTrigger / SplitText come from the classic <script> tags.
-import { readCard, paintFront, fontsReady, logoReady } from "./badge-card.js";
+import { readCard, paintFront, cardReady, logoReady } from "./badge-card.js";
 
 const { gsap, ScrollTrigger, SplitText } = window;
 
@@ -75,7 +75,7 @@ function flatBadge(section, cards) {
         paintFront(art, cards[i]);
     };
     new ResizeObserver(() => paint(current)).observe(art);
-    fontsReady.then(() => paint(current));
+    cardReady.then(() => paint(current));
     return { paint };
 }
 
@@ -204,7 +204,7 @@ function setupIdentities(section, panels, cards, flat) {
                 start: "top bottom+=100%",
                 once: true,
                 onEnter: async () => {
-                    const [{ createBadge3D }, logo] = await Promise.all([import("./badge-3d.js"), logoReady, fontsReady]);
+                    const [{ createBadge3D }, logo] = await Promise.all([import("./badge-3d.js"), logoReady, cardReady]);
                     if (reverted) return;
                     const phone = ctx.conditions.phone;
                     const made = await createBadge3D(stageInner, lanyard, cards, logo,

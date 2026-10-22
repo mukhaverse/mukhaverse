@@ -79,7 +79,7 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
     };
     const front = makeFace(), back = makeFace();
 
-    const CW = 1.8, CH = CW / 0.68, CLIP = 0.42, CY = -0.2;
+    const CW = 1.8, CH = CW / 0.68, CLIP = 0.42, CY = -0.38;   // CY: hangs a little low, for more strap
     const card = new THREE.Group();
     card.matrixAutoUpdate = false;
     scene.add(card);
@@ -117,19 +117,23 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
     for (const m of [clipBody, hook, ring]) m.castShadow = true;
     card.add(frontMesh, backMesh, edge, clipBody, hook, ring);
 
-    // ─── Straps: camera-facing ribbons with the stitched wine texture ─
+    // ─── Straps: camera-facing ribbons, warm off-white with grey stitching ─
     const strapCv = Object.assign(document.createElement("canvas"), { width: 64, height: 128 });
     {
         const g = strapCv.getContext("2d");
-        g.fillStyle = "#662020";
+        g.fillStyle = "#e7e1d7";
         g.fillRect(0, 0, 64, 128);
-        g.fillStyle = "rgba(244, 239, 230, 0.32)";
+        g.fillStyle = "rgba(22, 20, 18, 0.22)";
         for (let y = 0; y < 128; y += 16) { g.fillRect(8, y, 2, 8); g.fillRect(54, y, 2, 8); }
     }
     const strapTex = new THREE.CanvasTexture(strapCv);
     strapTex.colorSpace = THREE.SRGBColorSpace;
     strapTex.wrapT = THREE.RepeatWrapping;
-    const strapMat = new THREE.MeshStandardMaterial({ map: strapTex, roughness: 0.85, side: THREE.DoubleSide });
+    // lit like the card faces, so the off-white doesn't go grey in the shade
+    const strapMat = new THREE.MeshStandardMaterial({
+        map: strapTex, emissive: 0xffffff, emissiveMap: strapTex, emissiveIntensity: 0.4,
+        roughness: 0.85, side: THREE.DoubleSide
+    });
     const STRAP_HALF = 0.08, SAMPLES = 56;
     const makeStrap = (length) => {
         const pos = new Float32Array(SAMPLES * 6), uv = new Float32Array(SAMPLES * 4), idx = [];

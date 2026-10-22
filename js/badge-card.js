@@ -31,13 +31,22 @@ export const fontsReady = Promise.all(
     [400, 500, 600, 700].map((w) => document.fonts.load(`${w} 12px "SN Pro"`))
 ).catch(() => {});
 
-// the logo for the back of the card
-export const logoReady = new Promise((resolve) => {
+const loadImage = (src) => new Promise((resolve) => {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
-    img.src = "assets/1st-Logo-inv-gry.svg";
+    img.src = src;
 });
+
+// the logo for the back of the card
+export const logoReady = loadImage("assets/1st-Logo-inv-gry.svg");
+
+// the GDG committee's pattern strip, from the real card
+let gdgPattern = null;
+const patternReady = loadImage("assets/gdg-pattern.png").then((img) => { gdgPattern = img; });
+
+// everything the fronts need before they're painted
+export const cardReady = Promise.all([fontsReady, patternReady]);
 
 export function readCard(panel) {
     const d = panel.dataset;
@@ -169,14 +178,7 @@ function paintStandard(ctx, t, card) {
     ctx.fillText("Shumokh Alsharif", CARD_W / 2, nameBase);
 }
 
-// GDG pattern strip, 89×160: a yellow and a green zigzag woven across each
-// other, with red and blue diamonds where they cross
-const PAT_W = 89, PAT_H = 160;
-const zig = (flip) => new Path2D(Array.from({ length: 11 }, (_, k) =>
-    `${k ? "L" : "M"}${flip ? 120 - (k % 2 ? 83 : 37) : (k % 2 ? 83 : 37)} ${k * 20 - 20}`).join(" "));
-const ZIG = [zig(false), zig(true)];
-const DIAMONDS = Array.from({ length: 11 }, (_, k) =>
-    [new Path2D(`M60 ${k * 20 - 20}L70 ${k * 20 - 10}L60 ${k * 20}L50 ${k * 20 - 10}Z`), k % 2 ? "#4285f4" : "#ea4335"]);
+const PAT_W = 89;
 const GDG_MARK = new Path2D("M14 3 4 10l10 7M20 3l10 7-10 7");
 
 // GDG on Campus: role and committee, photo against the pattern, name, chapter mark
@@ -193,21 +195,20 @@ function paintGdg(ctx, t, card) {
     ctx.font = `700 30px ${SANS}`;
     ctx.fillText(card.headTitle, CARD_W / 2, subBase - 24);
 
+    // the pattern strip tucked behind the photo, cropped to fill like the card
     const top = 126, pw = 118, ph = 160, px = 61;
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(CARD_W / 2, top, PAT_W, ph, 10);
     ctx.clip();
-    ctx.translate(CARD_W / 2, top);
-    ctx.fillStyle = "#f8f9fa";
-    ctx.fillRect(0, 0, PAT_W, PAT_H);
-    ctx.lineWidth = 12;
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#fbbc04";
-    ctx.stroke(ZIG[0]);
-    ctx.strokeStyle = "#34a853";
-    ctx.stroke(ZIG[1]);
-    for (const [d, c] of DIAMONDS) { ctx.fillStyle = c; ctx.fill(d); }
+    ctx.fillStyle = "#f1f3f4";
+    ctx.fillRect(CARD_W / 2, top, PAT_W, ph);
+    if (gdgPattern) {
+        const s = Math.max(PAT_W / gdgPattern.width, ph / gdgPattern.height);
+        const w = gdgPattern.width * s, h = gdgPattern.height * s;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(gdgPattern, CARD_W / 2 + (PAT_W - w) / 2, top + (ph - h) / 2, w, h);
+    }
     ctx.restore();
 
     ctx.save();
