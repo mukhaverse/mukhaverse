@@ -1,11 +1,17 @@
 // About — the identity badges, then the closing statement.
-// The stage pins; each step of the scroll flips the badge over (edge-on,
-// the colours and text change, it turns back to face you) and the copy
-// beside it trades places. Roles come from the .id-panel elements, so
-// adding one is markup only (plus a THEME below if it needs new colours).
+// The stage pins; each step of the scroll turns the badge to the next
+// role and the copy beside it trades places. Roles come from the
+// .id-panel elements, so adding one is markup only (plus a theme in
+// badge-card.js if it needs new colours).
+// On wide screens the badge is 3D (badge-3d.js): it hangs on real physics
+// and can be grabbed and thrown. Everywhere else, and until three.js has
+// loaded, it's the flat badge: the same painted card on the SVG lanyard,
+// flipping edge-on between roles.
 // Reduced motion and very short screens get every role listed in order
-// with the badge beside them, switching as each role scrolls by.
+// with the flat badge beside them, switching as each role scrolls by.
 // gsap / ScrollTrigger / SplitText come from the classic <script> tags.
+import { readCard, paintFront, fontsReady, logoReady } from "./badge-card.js";
+
 const { gsap, ScrollTrigger, SplitText } = window;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,6 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const progress = Math.min(1, Math.max(0, (Date.now() - start) / (end - start)));
     section.style.setProperty("--progress", `${(progress * 100).toFixed(1)}%`);
 
+    // ─── The flat badge shows the first role even without GSAP
+    const panels = Array.from(section.querySelectorAll(".id-panel"));
+    const cards = panels.map(readCard);
+    const flat = flatBadge(section, cards);
+    flat?.paint(0);
+
     if (!gsap || !ScrollTrigger) return; // no GSAP: CSS lists every role
 
     gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // ─── Identities ──────────────────────────────────────────
-    setupIdentities(section, reduceMotion);
+    setupIdentities(section, panels, cards, flat);
 
     // ─── Closing statement: each word lights up as the scroll reaches
     //     it. Created after the pin above it so it measures past it.
@@ -45,78 +57,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function setupIdentities(section, reduceMotion) {
+// the flat badge's card is a canvas, repainted at its own size
+function flatBadge(section, cards) {
+    const art = section.querySelector(".id-art");
+    if (!art || !cards.length) return null;
+    let current = 0;
+    const paint = (i) => {
+        current = i;
+        const w = art.offsetWidth;
+        if (!w) return;
+        const width = Math.round(w * Math.min(window.devicePixelRatio || 1, 2));
+        if (art.width !== width) {
+            art.width = width;
+            art.height = Math.round(width / 0.68);
+        }
+        paintFront(art, cards[i]);
+    };
+    new ResizeObserver(() => paint(current)).observe(art);
+    fontsReady.then(() => paint(current));
+    return { paint };
+}
+
+function setupIdentities(section, panels, cards, flat) {
     const stage = section.querySelector(".about-stage");
+    const stageInner = section.querySelector(".about-stage-inner");
+    const lanyard = section.querySelector(".id-lanyard");
     const rig = section.querySelector(".id-rig");
     const badge = section.querySelector(".id-badge");
     const nav = section.querySelector(".id-progress");
-    const panels = Array.from(section.querySelectorAll(".id-panel"));
     const N = panels.length;
-    if (!stage || !rig || !badge || !nav || !N) return;
+    if (!stage || !stageInner || !lanyard || !rig || !badge || !nav || !N || !flat) return;
 
     section.classList.add("is-live");
-
-    const THEMES = {
-        // Shumokh's own card: cream with a wine band
-        student: {
-            "--b-bg": "#ece4d6", "--b-ink": "#161412", "--b-soft": "rgba(22, 20, 18, 0.66)",
-            "--b-band": "#662020", "--b-band-ink": "#f4efe6", "--b-title": "#662020", "--b-photo": "rgba(102, 32, 32, 0.08)",
-            "--b-rule": "rgba(22, 20, 18, 0.16)", "--b-invert": 0.88
-        },
-        // Tuwaiq Club: purple card, deeper purple band with white letters
-        // and the logo's three squares after them (about.css), white title
-        club: {
-            "--b-bg": "#5b2fb5", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.74)",
-            "--b-band": "#381a74", "--b-band-ink": "#ffffff", "--b-title": "#ffffff", "--b-photo": "rgba(244, 239, 230, 0.1)",
-            "--b-rule": "rgba(244, 239, 230, 0.22)", "--b-invert": 0
-        },
-        // GDG on Campus: white card washed with Google's colours, a grey band
-        // (letters from data-band-colors) edged in the four-colour stripe
-        gdg: {
-            "--b-bg": "radial-gradient(120% 70% at 100% 100%, rgba(52, 168, 83, 0.18), transparent 60%), " +
-                "radial-gradient(90% 60% at 0% 55%, rgba(66, 133, 244, 0.14), transparent 60%), " +
-                "radial-gradient(70% 40% at 100% 20%, rgba(251, 188, 4, 0.14), transparent 60%), #ffffff",
-            "--b-ink": "#202124", "--b-soft": "rgba(32, 33, 36, 0.66)",
-            "--b-band": "linear-gradient(#f1f3f4, #f1f3f4) top / 100% calc(100% - 4px) no-repeat, " +
-                "linear-gradient(90deg, #4285f4 25%, #ea4335 0 50%, #fbbc04 0 75%, #34a853 0)",
-            "--b-band-ink": "#202124", "--b-title": "#1a73e8",
-            "--b-photo": "#f1f3f4",
-            "--b-rule": "rgba(22, 20, 18, 0.14)", "--b-invert": 0.88
-        },
-        // EG & VR Club: the logo's navy card, its blue-to-green band, green title
-        egvr: {
-            "--b-bg": "#14213d", "--b-ink": "#f4efe6", "--b-soft": "rgba(244, 239, 230, 0.72)",
-            "--b-band": "linear-gradient(90deg, #3fa9f5, #4fd1c5, #79d94f)", "--b-band-ink": "#14213d",
-            "--b-title": "#79d94f", "--b-photo": "rgba(244, 239, 230, 0.08)",
-            "--b-rule": "rgba(244, 239, 230, 0.2)", "--b-invert": 0
-        }
-    };
-
-    const field = (name) => badge.querySelector(`[data-field="${name}"]`);
-
-    // band text, optionally one colour per letter (cycling, spaces skipped)
-    const paintBand = (el, text, colors) => {
-        if (!colors.length) { el.textContent = text; return; }
-        let k = 0;
-        el.replaceChildren(...Array.from(text, (ch) => {
-            if (ch === " ") return document.createTextNode(ch);
-            const span = document.createElement("span");
-            span.textContent = ch;
-            span.style.color = colors[k++ % colors.length];
-            return span;
-        }));
-    };
-
-    // write role i onto the badge, no animation
-    const dress = (i) => {
-        const d = panels[i].dataset;
-        gsap.set(badge, THEMES[d.theme] || THEMES.student);
-        badge.dataset.theme = d.theme || "student";
-        paintBand(field("band"), d.band || "", (d.bandColors || "").split(/\s+/).filter(Boolean));
-        field("role").textContent = d.role || "";
-        field("footL").textContent = d.footL || "";
-        field("footR").textContent = d.footR || "";
-    };
 
     // one progress step per role
     const steps = panels.map((panel, i) => {
@@ -139,13 +111,17 @@ function setupIdentities(section, reduceMotion) {
             { "--hl": "100%", duration: 0.9, ease: "power2.inOut", stagger: 0.3, delay, overwrite: true });
     };
 
+    // 3D needs a wide screen and a machine with some headroom
+    const capable = (navigator.hardwareConcurrency || 4) > 2;
+
     const mm = gsap.matchMedia();
 
     mm.add({
         pinned: "(prefers-reduced-motion: no-preference) and (min-height: 520px)",
-        listed: "(prefers-reduced-motion: reduce), (max-height: 519px)"
+        listed: "(prefers-reduced-motion: reduce), (max-height: 519px)",
+        wide: "(min-width: 761px)"
     }, (ctx) => {
-        dress(0);
+        flat.paint(0);
         markStep(0);
 
         if (ctx.conditions.listed) {
@@ -156,7 +132,7 @@ function setupIdentities(section, reduceMotion) {
                     trigger: panel,
                     start: "top 60%",
                     end: "bottom 60%",
-                    onToggle: (self) => { if (self.isActive) dress(i); }
+                    onToggle: (self) => { if (self.isActive) flat.paint(i); }
                 });
             });
             return;
@@ -169,14 +145,22 @@ function setupIdentities(section, reduceMotion) {
         gsap.set(fills, { scaleX: 0 });
         let active = 0;
         let flip = null;
+        let entered = false;
+        let engine = null;      // the 3D badge, once it's loaded
+        let reverted = false;
 
-        // the badge turns edge-on, changes, and turns back to face you;
+        // flat: the badge turns edge-on, changes, and turns back to face you;
         // the rig gives one small swing from the push
         const turnBadge = (to, dir) => {
+            if (engine) {
+                engine.setRole(to, dir);
+                flat.paint(to);
+                return;
+            }
             flip?.kill();
             flip = gsap.timeline()
                 .to(badge, { rotationY: dir * 90, duration: 0.24, ease: "power2.in" })
-                .call(() => dress(to))
+                .call(() => flat.paint(to))
                 .fromTo(badge, { rotationY: -dir * 90 }, { rotationY: 0, duration: 0.8, ease: "back.out(1.5)" })
                 .fromTo(badge, { "--sheen": dir > 0 ? "130%" : "-30%" },
                     { "--sheen": dir > 0 ? "-30%" : "130%", duration: 0.9, ease: "power2.out" }, "<");
@@ -211,6 +195,26 @@ function setupIdentities(section, reduceMotion) {
             markStep(i);
         };
 
+        // 3D: fetched once the stage is a screen away; until it's ready the
+        // flat badge does the job, and it stays if three.js or WebGL fails
+        if (ctx.conditions.wide && capable) {
+            ScrollTrigger.create({
+                trigger: stage,
+                start: "top bottom+=100%",
+                once: true,
+                onEnter: async () => {
+                    const [{ createBadge3D }, logo] = await Promise.all([import("./badge-3d.js"), logoReady, fontsReady]);
+                    if (reverted) return;
+                    const made = await createBadge3D(stageInner, lanyard, cards, logo, { parked: !entered });
+                    if (!made) return;
+                    if (reverted) { made.destroy(); return; }
+                    engine = made;
+                    if (entered) engine.show(active);
+                    section.classList.add("has-3d");
+                }
+            });
+        }
+
         // Entrance: the badge lowers in once and the first copy rises
         gsap.set(rig, { y: -(rig.offsetHeight + 60) });
         gsap.set(parts[0], { opacity: 0, y: 26 });
@@ -219,12 +223,18 @@ function setupIdentities(section, reduceMotion) {
             start: "top 65%",
             once: true,
             onEnter: () => {
-                gsap.timeline()
-                    .to(rig, { y: 0, duration: 1.4, ease: "power3.out" })
-                    .to(rig, {
-                        keyframes: { rotation: [0, 3.5, -2, 0.9, -0.3, 0], easeEach: "sine.inOut" },
-                        duration: 2.2
-                    }, 0.5);
+                entered = true;
+                if (engine) {
+                    engine.drop(active);
+                    gsap.set(rig, { y: 0 });
+                } else {
+                    gsap.timeline()
+                        .to(rig, { y: 0, duration: 1.4, ease: "power3.out" })
+                        .to(rig, {
+                            keyframes: { rotation: [0, 3.5, -2, 0.9, -0.3, 0], easeEach: "sine.inOut" },
+                            duration: 2.2
+                        }, 0.5);
+                }
                 if (active === 0) {
                     gsap.to(parts[0], { opacity: 1, y: 0, duration: 1, ease: "expo.out", stagger: 0.08, delay: 0.15 });
                     underline(0, 0.9);
@@ -261,6 +271,10 @@ function setupIdentities(section, reduceMotion) {
         nav.addEventListener("click", onStep);
 
         return () => {
+            reverted = true;
+            engine?.destroy();
+            engine = null;
+            section.classList.remove("has-3d");
             nav.removeEventListener("click", onStep);
             flip?.kill();
             section.classList.remove("is-pinned");
