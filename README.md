@@ -1,17 +1,47 @@
-## Hi there! 
+<p align="center">
+  <img src=".github/readme/name.svg" alt="SHUMOKH ALSHARIF in animated ASCII art" width="100%">
+</p>
 
-I'm **Shumokh Alsharif**, a passionate Junior Software Engineering student at the University of Jeddah. I enjoy building fun and unique front-end projects with intentional UI and great UX.
+<p align="center">
+  <a href="https://shumokh.dev"><img src="https://img.shields.io/badge/shumokh.dev-0b0b0c?style=for-the-badge" alt="shumokh.dev"></a>
+  <a href="https://www.linkedin.com/in/shumokh-alsharif-903361364"><img src="https://img.shields.io/badge/LinkedIn-0b0b0c?style=for-the-badge" alt="LinkedIn"></a>
+  <a href="https://x.com/mukhaverse"><img src="https://img.shields.io/badge/X-0b0b0c?style=for-the-badge" alt="X"></a>
+  <a href="mailto:shumokhalsharif@gmail.com"><img src="https://img.shields.io/badge/Email-0b0b0c?style=for-the-badge" alt="Email"></a>
+</p>
 
-## About Me
+### `$ whoami`
 
-Other than my passion for front-end development I'm starting to explore back-end development more and more!
-And I'm eager to learn and grow more and improve my skills, nothing like trial and error to get you to level up.
+Software engineering student at the University of Jeddah (2023–2027). I build full-stack web apps with an eye for motion and interaction, the small details that make a site feel alive. Right now I'm expanding into DevOps.
 
+- **Programming Track Lead** at Tuwaiq Club, leading a team of 28
+- **Web Developer** at GDG on Campus, on the backend and testing side
+- **Project Management** at the Electronic Games & VR Club
 
-## Languages and Tools
-<p align="left"> <a href="https://www.cprogramming.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="c" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://expressjs.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="40" height="40"/> </a> <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="figma" width="40" height="40"/> </a> <a href="https://www.framer.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/framer/framer-icon.svg" alt="framer" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="40" height="40"/> </a> <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a> <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="40" height="40"/> </a> </p>
+### `$ ls ./projects`
 
+| Project | What it is | Stack |
+| --- | --- | --- |
+| [**Medixa**](https://github.com/mukhaverse/Medixa) | Medication safety platform: scan pill packaging with OCR, check drug interactions against RxNorm, chat live with a pharmacist | Node.js · Express · MySQL · Socket.io |
+| [**Atelier**](https://github.com/mukhaverse/Atelier) | Marketplace connecting artists and buyers, with custom commissions and a WebAR view to see a piece in your room | Node.js · Express · MongoDB · WebAR |
+| **Hand Tracking** | Three computer vision experiments: a gesture-controlled mouse, pinch-driven GPU particles, and Hill Climb Racing steered by hand | Python · OpenCV · MediaPipe |
+| [**IoT Exhibition Archive**](https://github.com/mukhaverse/IoT) | Digital exhibition for student projects, built around animation and spatial interaction | Three.js · GSAP |
+| [**SeedSync**](https://www.figma.com/design/coRQ80n2HJ1Midos33r95y/SeedSync?node-id=0-1) | IoT greenhouse monitoring, from user research to a real-time dashboard | Figma · UX research |
+| [**shumokh.dev**](https://shumokh.dev) | My portfolio, the repo you're in right now | HTML · CSS · GSAP |
 
-## Latest Blog Posts
+### `$ cat stack.txt`
 
-Currently, I do not have any blog posts to share. Stay tuned!
+<p>
+  <img src="https://skillicons.dev/icons?i=js,ts,react,threejs,html,css" alt="JavaScript, TypeScript, React, Three.js, HTML, CSS"><br>
+  <img src="https://skillicons.dev/icons?i=nodejs,express,nestjs,mongodb,mysql,python,opencv" alt="Node.js, Express, NestJS, MongoDB, MySQL, Python, OpenCV"><br>
+  <img src="https://skillicons.dev/icons?i=figma,postman,vitest,git" alt="Figma, Postman, Vitest, Git">
+</p>
+
+### `$ cat awards.txt`
+
+- **Best Project Award** in Web Development, SE Department, University of Jeddah
+- **Certificate of Excellence**, University of Jeddah, 2025–2026
+- **IBM Introduction to DevOps** and **IBM Agile Development & Scrum**, Coursera, 2026
+
+---
+
+<p align="center"><sub><code>a website should feel just as good as it functions.</code></sub></p>
