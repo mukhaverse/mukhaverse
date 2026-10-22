@@ -19,8 +19,6 @@ hey, i'm shumokh. i build for the web, mostly in the messy middle where frontend
 
 <img src="https://skillicons.dev/icons?i=ts,react,nodejs,nestjs,threejs,mongodb,python,figma" alt="TypeScript, React, Node.js, NestJS, Three.js, MongoDB, Python, Figma">
 
-<br><br>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/mukhaverse/mukhaverse/output/snake-dark.svg">
   <img src="https://raw.githubusercontent.com/mukhaverse/mukhaverse/output/snake.svg" alt="a snake eating my contribution graph" width="100%">
