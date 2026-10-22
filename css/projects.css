@@ -414,53 +414,102 @@
 }
 
 
-/* ─── Focus column on phones: the info becomes a bottom sheet ─ */
+/* ─── Focus column on phones ─────────────────────────────
+   Same editorial frame, scaled down: the column sits right of centre,
+   the index fills the gap on its left, and the giant title keeps the
+   bottom-left corner. Details become plain text instead of chips and
+   pills; the description lives in the plain list and the lightbox. */
 @media (max-width: 699px) {
-    .fx-on .fx-top {
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 1rem var(--fx-gutter) 0.75rem;
-        background: var(--cream-2);
+    .fx-on .fx-heading {
+        font-size: 1.6rem;
     }
 
     .fx-on .fx-info {
-        left: 0;
-        right: 0;
-        bottom: 0;
+        left: var(--fx-gutter);
+        right: var(--fx-gutter);
+        bottom: clamp(1rem, 3vh, 1.5rem);
         width: auto;
-        max-height: 56%;
-        justify-content: flex-start;
-        gap: 0.45rem;
-        padding: 1rem var(--fx-gutter) 1.25rem;
-        background: var(--cream-2);
-        border-top: 1px solid var(--hairline);
-    }
-
-    .fx-on .fx-ln.is-title {
-        order: 0;
+        max-height: 42%;
+        gap: 0.4rem;
     }
 
     .fx-on .fx-title {
-        font-size: 2.6rem;
-        line-height: 0.9;
+        font-size: clamp(3.2rem, 16vw, 4.6rem);
+        line-height: 0.84;
     }
 
-    .fx-on .fx-desc {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    .fx-on .fx-kind {
+        font-size: 0.7rem;
     }
 
+    .fx-on .fx-ln:has(> .fx-desc),
     .fx-on .fx-ln.is-list,
-    .fx-on .fx-index {
+    .fx-on .fx-pill {
         display: none;
+    }
+
+    /* stack as one line of text: Node.js / Express / MySQL */
+    .fx-on .deck-stack {
+        gap: 0 0.4rem;
+        margin: 0;
+    }
+
+    .fx-on .deck-stack li {
+        padding: 0;
+        font-size: 0.8rem;
+        background: none;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .fx-on .deck-stack li + li::before {
+        content: "/";
+        margin-right: 0.4rem;
+        color: #a39b92;
+    }
+
+    /* buttons as underlined text links */
+    .fx-on .fx-actions {
+        gap: 1.25rem;
+        margin-top: 0.15rem;
     }
 
     .fx-on .deck-btn,
     .fx-on .fx-more {
-        padding: 0.6rem 1rem;
+        gap: 0.35rem;
+        padding: 0.25rem 0;
         font-size: 0.85rem;
+        color: var(--dark);
+        background: none;
+        border: 0;
+        border-radius: 0;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+    }
+
+    .fx-on .deck-btn:hover,
+    .fx-on .fx-more:hover {
+        color: var(--dark);
+        background: none;
+    }
+
+    .fx-on .deck-btn i {
+        font-size: 0.95rem;
+    }
+
+    .fx-on .fx-index {
+        top: 34%;
+        right: auto;
+        bottom: auto;
+        left: var(--fx-gutter);
+        max-width: 30%;
+        transform: translateY(-50%);
+        text-align: left;
+    }
+
+    .fx-on .fx-index button {
+        font-size: 0.75rem;
+        text-align: left;
     }
 }

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     index.className = "fx-index";
     index.setAttribute("aria-label", "Jump to a project");
     index.innerHTML = items.map((li, i) =>
-        `<li><button type="button" data-i="${i}">${titles[i].replace("Computer Vision & ", "")}</button></li>`).join("");
+        `<li><button type="button" data-i="${i}">${titles[i].replace("Computer Vision & ", "").replace(" Exhibition", "")}</button></li>`).join("");
     const indexBtns = Array.from(index.querySelectorAll("button"));
 
 
@@ -56,15 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const W = frame.clientWidth;
         const H = frame.clientHeight;
         const phone = W < 700;
-        let bigW = phone ? W * 0.72 : W * 0.3;
+        // phones: the column sits right of centre, leaving the left for the index
+        const x = phone ? W * 0.36 : W * 0.44;
+        let bigW = phone ? W - x - 16 : W * 0.3;
         let bigH = bigW / 1.6;
-        const cap = H * (phone ? 0.3 : 0.46);
+        const cap = H * (phone ? 0.24 : 0.46);
         if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
         G = {
-            x: phone ? 16 : W * 0.44,
+            x,
+            phone,
             focusY: phone ? H * 0.34 : H * 0.47,
+            topEdge: section.querySelector(".fx-top").getBoundingClientRect().height + 24,
             bigH,
-            sMin: phone ? 0.5 : 0.4,
+            sMin: phone ? 0.45 : 0.4,
             gap: phone ? 8 : 10
         };
         frame.style.setProperty("--fx-w", `${bigW}px`);
@@ -87,10 +91,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const b = Math.min(N - 1, a + 1);
         const mid = (i) => ys[i] + (G.bigH * s[i]) / 2;
         const off = G.focusY - (mid(a) + (mid(b) - mid(a)) * (f - a));
-        thumbs.forEach((t, i) => {
-            t.style.transform = `translate(${G.x}px, ${ys[i] + off}px) scale(${s[i]})`;
-        });
         setActive(Math.round(f));
+
+        // phones have no empty margins, so thumbnails fade out before they
+        // reach the heading or the title instead of sliding under them
+        const floor = G.phone ? infos[active].offsetTop - 16 : 0;
+        thumbs.forEach((t, i) => {
+            const top = ys[i] + off;
+            t.style.transform = `translate(${G.x}px, ${top}px) scale(${s[i]})`;
+            if (!G.phone) { t.style.opacity = ""; return; }
+            const bottom = top + G.bigH * s[i];
+            const fade = Math.min((top - G.topEdge + 48) / 48, (floor + 48 - bottom) / 48);
+            t.style.opacity = Math.max(0, Math.min(1, fade));
+        });
     };
 
 
@@ -202,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gsap.set(rows.flat(), { clearProps: "transform" });
             thumbs.forEach((t, i) => {
                 t.style.transform = "";
+                t.style.opacity = "";
                 t.classList.remove("is-focus");
                 t.setAttribute("aria-label", openLabels[i]);
             });
