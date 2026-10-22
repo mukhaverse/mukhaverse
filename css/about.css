@@ -529,13 +529,15 @@ html:not(.js) .id-lanyard {
 
 /* ─── Phones and small tablets ────────────────────────────── */
 @media (max-width: 760px) {
-    /* the badge gets the top of the screen and the role's copy sits under
-       it; the 3D badge fills the same space (badge-3d.js) */
+    /* the badge gets the top of the screen: it hangs on the right, the
+       role's title and meta sit beside it, and the copy runs under both.
+       The 3D badge fills the same space (badge-3d.js) */
     .about-stage {
-        --badge-h: 50svh;
+        --badge-h: 56svh;
+        --badge-share: 0.58;   /* of the screen's width, from the right */
         --strap-h: clamp(30px, 6svh, 60px);
         /* the flat rig (strap + clip + card) fits the badge space */
-        --card-w: clamp(140px, min(46vw, (var(--badge-h) - var(--strap-h) - 20px) * 0.62), 220px);
+        --card-w: clamp(130px, min(52vw, (var(--badge-h) - var(--strap-h) - 20px) * 0.62), 210px);
         --gutter: 1rem;
         /* total drop of the rig: strap + clip + badge */
         --rig-h: calc(var(--strap-h) - 4px + var(--card-w) * 0.1 + var(--card-w) / 0.68);
@@ -577,6 +579,62 @@ html:not(.js) .id-lanyard {
         font-size: clamp(1.45rem, min(6.4vw, 3.8svh), 2rem);
         max-width: none;
         text-wrap: balance;
+    }
+
+    /* pinned: the badge takes the right of the top half... */
+    .about-section.is-pinned .id-lanyard {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: calc(var(--badge-share) * 100%);
+        z-index: 1;
+    }
+
+    .about-section.is-pinned .id-panels {
+        --panels-top: clamp(1.25rem, 5svh, 2.5rem);
+        padding-top: var(--panels-top);
+    }
+
+    /* ...the title and meta stand in the strip to its left, and an empty
+       cell beside them holds the copy down below the badge */
+    .about-section.is-pinned .id-panel {
+        align-self: start;
+        display: grid;
+        grid-template-columns: calc((100% + 2 * var(--gutter)) * (1 - var(--badge-share)) - var(--gutter) - 0.5rem) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto auto;
+        align-content: start;
+    }
+
+    .about-section.is-pinned .id-panel::before {
+        content: "";
+        grid-column: 2;
+        grid-row: 1 / 3;
+        height: calc(var(--badge-h) - var(--panels-top));
+    }
+
+    .about-section.is-pinned .id-title {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: clamp(1.3rem, 5.6vw, 1.7rem);
+        text-wrap: pretty;
+        overflow-wrap: break-word;
+    }
+
+    .about-section.is-pinned .id-meta {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: start;
+        font-size: 0.78rem;
+    }
+
+    .about-section.is-pinned .id-copy {
+        grid-column: 1 / -1;
+        grid-row: 3;
+    }
+
+    .about-section.is-pinned .about-timeline {
+        grid-column: 1 / -1;
+        grid-row: 4;
     }
 
     .id-meta {
@@ -633,6 +691,6 @@ html:not(.js) .id-lanyard {
 /* short phones: a little less badge so the longest copy still breathes */
 @media (max-width: 760px) and (max-height: 700px) {
     .about-stage {
-        --badge-h: 46svh;
+        --badge-h: 53svh;
     }
 }

@@ -13,11 +13,12 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 // off at the column's edge) but lets clicks through to the copy, and only a
 // press that lands on the card grabs it. column: where the card hangs.
 // cards: one per role (readCard). parked: wait above the stage until drop().
-// fit: how much of the column's height the card takes. light: phones, a
-// lower resolution and a smaller shadow map.
+// fit / fitW: how much of the column's height / width the card may take
+// (whichever is tighter wins). light: phones, no drop shadow (it would
+// fall across the copy just under the card, and it saves the extra pass).
 // Resolves to null when three.js can't load or WebGL is off, so the flat
 // badge stays.
-export async function createBadge3D(host, column, cards, logo, { parked = false, fit = 0.55, light = false } = {}) {
+export async function createBadge3D(host, column, cards, logo, { parked = false, fit = 0.55, fitW = 0.62, light = false } = {}) {
     let THREE;
     try {
         THREE = await import(THREE_URL);
@@ -35,19 +36,23 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
         return null;
     }
     host.appendChild(canvas);
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, light ? 1.5 : 2));
+    // full sharpness on phones' 3× screens; it only draws while moving
+    const ratio = Math.min(devicePixelRatio || 1, 3);
+    renderer.setPixelRatio(ratio);
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = !light;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+    // a tight near/far range keeps depth precise, so the card's face and its
+    // edge just behind it never flicker through each other
+    const camera = new THREE.PerspectiveCamera(30, 1, 1, 60);
     scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3532, 1.2));
     const sun = new THREE.DirectionalLight(0xffffff, 1.3);
     sun.position.set(2.5, 4, 7);
-    sun.castShadow = true;
-    sun.shadow.mapSize.setScalar(light ? 512 : 1024);
+    sun.castShadow = !light;
+    sun.shadow.mapSize.setScalar(1024);
     Object.assign(sun.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 1, far: 20 });
     scene.add(sun);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.45 }));
@@ -56,12 +61,15 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
     scene.add(wall);
 
     // ─── The card: two painted faces, an edge, the clip and ring ─
-    // the faces' canvas is also their emissive map, so the colours stay true
-    const TEX_W = 1024, TEX_H = Math.round(TEX_W / 0.68);
+    // the faces' canvas is also their emissive map, so the colours stay true.
+    // resize() sizes it to the card's real size on screen and it's drawn
+    // without mipmaps, so the text is as sharp as the screen allows
     const makeFace = () => {
-        const cv = Object.assign(document.createElement("canvas"), { width: TEX_W, height: TEX_H });
+        const cv = Object.assign(document.createElement("canvas"), { width: 1024, height: Math.round(1024 / 0.68) });
         const tex = new THREE.CanvasTexture(cv);
         tex.colorSpace = THREE.SRGBColorSpace;
+        tex.generateMipmaps = false;
+        tex.minFilter = THREE.LinearFilter;
         tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
         const mat = new THREE.MeshStandardMaterial({
             map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.45,
@@ -90,7 +98,7 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
     // the edge fills the gap between the faces, stopping short of the slot
     const edgeMat = new THREE.MeshStandardMaterial({ color: 0xece4d6, roughness: 0.6 });
     const edgeTop = CH / 2 - slotBottom - 0.03, edgeBottom = -CH / 2 + 0.06;
-    const edge = new THREE.Mesh(new THREE.BoxGeometry(CW - 0.12, edgeTop - edgeBottom, 0.011), edgeMat);
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(CW - 0.12, edgeTop - edgeBottom, 0.006), edgeMat);
     edge.position.y = (edgeTop + edgeBottom) / 2;
     // the ring crosses the card's plane only at its top (above the card) and its
     // bottom (inside the slot); turned 0.6 rad so it reads as a loop, not a line
@@ -335,13 +343,26 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
         if (!w || !h || !col.width || !col.height) return;
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
-        const unit = Math.max(CH / (fit * col.height), CW / (0.62 * col.width));   // world units per CSS px
+        const unit = Math.max(CH / (fit * col.height), CW / (fitW * col.width));   // world units per CSS px
         halfH = (unit * h) / 2;
         halfW = halfH * camera.aspect;
         const dx = (col.left + col.width / 2) - (box.left + w / 2);
         const dy = (col.top + col.height / 2) - (box.top + h / 2);
         camera.position.set(-dx * unit, dy * unit, halfH / Math.tan(THREE.MathUtils.degToRad(15)));
         camera.updateProjectionMatrix();
+        // repaint the faces at about 1.2× the card's size in device pixels
+        const texW = Math.round(clamp((CW / unit) * ratio * 1.2, 512, 2048));
+        if (Math.abs(texW - front.cv.width) > front.cv.width * 0.1) {
+            for (const f of [front, back]) {
+                f.cv.width = texW;
+                f.cv.height = Math.round(texW / 0.68);
+                f.tex.dispose();
+            }
+            if (shown >= 0) {
+                dress(shown, "front");
+                dress(swapTo ?? shown, "back");
+            }
+        }
         if (!raf) draw();
     };
     const sizer = new ResizeObserver(resize);

@@ -4,8 +4,8 @@
 // .id-panel elements, so adding one is markup only (plus a theme in
 // badge-card.js if it needs new colours).
 // While the stage pins, the badge is 3D (badge-3d.js): it hangs on real
-// physics and can be grabbed and thrown; on phones it fills the top half of
-// the screen with the copy under it. On weak devices, and until three.js
+// physics and can be grabbed and thrown; on phones it hangs on the right of
+// the top half, the role's title beside it and the copy under both. On weak devices, and until three.js
 // has loaded, it's the flat badge: the same painted card on the SVG
 // lanyard, flipping edge-on between roles.
 // Reduced motion and very short screens get every role listed in order
@@ -208,7 +208,7 @@ function setupIdentities(section, panels, cards, flat) {
                     if (reverted) return;
                     const phone = ctx.conditions.phone;
                     const made = await createBadge3D(stageInner, lanyard, cards, logo,
-                        { parked: !entered, fit: phone ? 0.64 : 0.55, light: phone });
+                        phone ? { parked: !entered, fit: 0.7, fitW: 0.92, light: true } : { parked: !entered });
                     if (!made) return;
                     if (reverted) { made.destroy(); return; }
                     engine = made;
