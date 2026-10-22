@@ -1,0 +1,20 @@
+/* drafting-sheet splash, built by js/splash.js */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--cream, #F9F4EB);
+    cursor: pointer;
+    will-change: transform;
+}
+
+#splash svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#splash text {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    fill: #662020;
+}

@@ -29,10 +29,13 @@ gsap.set(".hero-cards .card", { y: 10, opacity: 0,force3D: true,
 
 
 const reduceHero = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// js/splash.js covers the page on first visit; start the intro as it lifts
+const splashOn = document.documentElement.classList.contains("splash-on");
 const tl = gsap.timeline({
     defaults: { ease: "power2.out" },
-    paused: reduceHero
+    paused: reduceHero || splashOn
 });
+if (splashOn && !reduceHero) window.addEventListener("splash:done", () => tl.play(), { once: true });
 
 
 tl.to(".hero-title", {
