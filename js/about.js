@@ -3,10 +3,11 @@
 // role and the copy beside it trades places. Roles come from the
 // .id-panel elements, so adding one is markup only (plus a theme in
 // badge-card.js if it needs new colours).
-// On wide screens the badge is 3D (badge-3d.js): it hangs on real physics
-// and can be grabbed and thrown. Everywhere else, and until three.js has
-// loaded, it's the flat badge: the same painted card on the SVG lanyard,
-// flipping edge-on between roles.
+// While the stage pins, the badge is 3D (badge-3d.js): it hangs on real
+// physics and can be grabbed and thrown; on phones it fills the top half of
+// the screen with the copy under it. On weak devices, and until three.js
+// has loaded, it's the flat badge: the same painted card on the SVG
+// lanyard, flipping edge-on between roles.
 // Reduced motion and very short screens get every role listed in order
 // with the flat badge beside them, switching as each role scrolls by.
 // gsap / ScrollTrigger / SplitText come from the classic <script> tags.
@@ -111,15 +112,15 @@ function setupIdentities(section, panels, cards, flat) {
             { "--hl": "100%", duration: 0.9, ease: "power2.inOut", stagger: 0.3, delay, overwrite: true });
     };
 
-    // 3D needs a wide screen and a machine with some headroom
-    const capable = (navigator.hardwareConcurrency || 4) > 2;
+    // 3D needs a device with some headroom
+    const capable = (navigator.hardwareConcurrency || 4) > 2 && (navigator.deviceMemory || 4) >= 2;
 
     const mm = gsap.matchMedia();
 
     mm.add({
         pinned: "(prefers-reduced-motion: no-preference) and (min-height: 520px)",
         listed: "(prefers-reduced-motion: reduce), (max-height: 519px)",
-        wide: "(min-width: 761px)"
+        phone: "(max-width: 760px)"
     }, (ctx) => {
         flat.paint(0);
         markStep(0);
@@ -197,7 +198,7 @@ function setupIdentities(section, panels, cards, flat) {
 
         // 3D: fetched once the stage is a screen away; until it's ready the
         // flat badge does the job, and it stays if three.js or WebGL fails
-        if (ctx.conditions.wide && capable) {
+        if (capable) {
             ScrollTrigger.create({
                 trigger: stage,
                 start: "top bottom+=100%",
@@ -205,7 +206,9 @@ function setupIdentities(section, panels, cards, flat) {
                 onEnter: async () => {
                     const [{ createBadge3D }, logo] = await Promise.all([import("./badge-3d.js"), logoReady, fontsReady]);
                     if (reverted) return;
-                    const made = await createBadge3D(stageInner, lanyard, cards, logo, { parked: !entered });
+                    const phone = ctx.conditions.phone;
+                    const made = await createBadge3D(stageInner, lanyard, cards, logo,
+                        { parked: !entered, fit: phone ? 0.64 : 0.55, light: phone });
                     if (!made) return;
                     if (reverted) { made.destroy(); return; }
                     engine = made;

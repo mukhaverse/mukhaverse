@@ -13,9 +13,11 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 // off at the column's edge) but lets clicks through to the copy, and only a
 // press that lands on the card grabs it. column: where the card hangs.
 // cards: one per role (readCard). parked: wait above the stage until drop().
+// fit: how much of the column's height the card takes. light: phones, a
+// lower resolution and a smaller shadow map.
 // Resolves to null when three.js can't load or WebGL is off, so the flat
 // badge stays.
-export async function createBadge3D(host, column, cards, logo, { parked = false } = {}) {
+export async function createBadge3D(host, column, cards, logo, { parked = false, fit = 0.55, light = false } = {}) {
     let THREE;
     try {
         THREE = await import(THREE_URL);
@@ -33,7 +35,7 @@ export async function createBadge3D(host, column, cards, logo, { parked = false 
         return null;
     }
     host.appendChild(canvas);
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, light ? 1.5 : 2));
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = true;
@@ -45,7 +47,7 @@ export async function createBadge3D(host, column, cards, logo, { parked = false 
     const sun = new THREE.DirectionalLight(0xffffff, 1.3);
     sun.position.set(2.5, 4, 7);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.mapSize.setScalar(light ? 512 : 1024);
     Object.assign(sun.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 1, far: 20 });
     scene.add(sun);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.45 }));
@@ -294,7 +296,8 @@ export async function createBadge3D(host, column, cards, logo, { parked = false 
         renderer.render(scene, camera);
         // once only a gentle drift is left, damp it harder so it eases to a
         // stop in about a second instead of swaying for ten
-        calm = !grab && swapTo === null && moved / Math.max(n, 1) < 0.01;
+        // (judged only on frames that stepped; at 144 Hz some frames don't)
+        if (n) calm = !grab && swapTo === null && moved / n < 0.01;
         // asleep once the card hasn't really moved (under about half a pixel,
         // ignoring the solver's jitter) for half a second, facing you; it can
         // pause for a moment balanced side- or back-on before turning round
@@ -322,20 +325,22 @@ export async function createBadge3D(host, column, cards, logo, { parked = false 
         raf = 0;
     };
 
-    // sizing: the card is sized to the column (backing off when it's narrow)
-    // and the camera slides sideways so it hangs in the column's middle
+    // sizing: the card takes `fit` of the column's height (or 62% of its width
+    // when that's tighter), and the camera slides so it hangs in the
+    // column's middle, wherever the column sits on the stage
     let halfH = 2.4, halfW = 2;
     const resize = () => {
         const w = host.clientWidth, h = host.clientHeight;
         const box = host.getBoundingClientRect(), col = column.getBoundingClientRect();
-        if (!w || !h || !col.width) return;
+        if (!w || !h || !col.width || !col.height) return;
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
-        const z = 9 * Math.max(1, 0.6 / (col.width / h));
-        halfH = z * Math.tan(THREE.MathUtils.degToRad(15));
+        const unit = Math.max(CH / (fit * col.height), CW / (0.62 * col.width));   // world units per CSS px
+        halfH = (unit * h) / 2;
         halfW = halfH * camera.aspect;
-        const shift = (col.left + col.width / 2) - (box.left + w / 2);
-        camera.position.set((-shift * 2 * halfH) / h, 0, z);
+        const dx = (col.left + col.width / 2) - (box.left + w / 2);
+        const dy = (col.top + col.height / 2) - (box.top + h / 2);
+        camera.position.set(-dx * unit, dy * unit, halfH / Math.tan(THREE.MathUtils.degToRad(15)));
         camera.updateProjectionMatrix();
         if (!raf) draw();
     };
@@ -378,9 +383,9 @@ export async function createBadge3D(host, column, cards, logo, { parked = false 
         if (grab && e.pointerId === grab.id) {
             aim(e);
             const p = onPlane(grab.z);
-            const cx = camera.position.x;
+            const { x: cx, y: cy } = camera.position;
             grab.tx = clamp(p.x + grab.dx, cx - halfW + 0.5, cx + halfW - 0.5);
-            grab.ty = clamp(p.y + grab.dy, -halfH + 0.7, halfH - 0.2);
+            grab.ty = clamp(p.y + grab.dy, cy - halfH + 0.7, cy + halfH - 0.2);
         } else if (!grab && e.pointerType === "mouse") {
             host.style.cursor = !parked && hit(e) ? "grab" : "";
         }
