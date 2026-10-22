@@ -1,277 +1,154 @@
 /* ─── Projects: "My Deck of Work" ─────────────────────────────
-   Cards stack on desktop (each new one slides over the last, which
-   sinks back), and every card carries its own media gallery: click a
-   thumbnail to play a demo clip or show a screen inline. */
+   One cover thumbnail per project. Without JS (or with reduced motion,
+   or on very short screens) it is a plain list. With JS the section
+   pins: the thumbnails form one column, the one in focus grows, and its
+   title and info swap in the bottom-left corner. Every thumbnail opens
+   the project's full set of shots in the carousel. */
 
 .projects-section {
+    --fx-gutter: clamp(1rem, 4vw, 3rem);
     background-color: var(--cream-2);
-    padding: clamp(6rem, 14vh, 9rem) clamp(1rem, 4vw, 3rem) clamp(6rem, 14vh, 10rem);
 }
 
-.deck-head {
+
+/* ─── Plain list ──────────────────────────────────────────── */
+.fx {
     max-width: 1280px;
     margin: 0 auto;
+    padding: clamp(6rem, 14vh, 9rem) var(--fx-gutter) clamp(6rem, 14vh, 10rem);
+}
+
+.fx-top {
     display: flex;
-    align-items: flex-end;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 1.5rem 3rem;
-    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-
-.deck {
-    max-width: 1280px;
-    margin: clamp(2.5rem, 6vh, 3.5rem) auto 0;
+.fx-count {
+    display: none;
 }
 
-
-/* ─── Card ────────────────────────────────────────────────── */
-.deck-card {
-    --top: 1.5rem;
-    position: sticky;
-    top: var(--top);
-    min-height: min(calc(100svh - 6.5rem), 620px);
-    margin-bottom: 12vh;
-    display: flex;
-    scroll-margin-top: var(--top);
+.fx-count-now {
+    font: inherit;
+    text-transform: none;
 }
 
-.deck-card:last-child {
-    margin-bottom: 0;
-}
-
-.deck-card-face {
-    position: relative;
-    flex: 1;
+.fx-list {
+    list-style: none;
+    margin: clamp(2.5rem, 6vh, 3.5rem) 0 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(3rem, 8vh, 5rem);
+}
+
+.fx-project {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     align-items: center;
-    gap: clamp(2rem, 4vw, 4rem);
-    padding-block: clamp(1.25rem, 2.5vw, 2.25rem);
-    /* no card: the page colour, just opaque enough to cover the project below */
-    background: var(--cream-2);
-    transform-origin: 50% 0%;
+    gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.fx-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
     overflow: hidden;
+    background: #ebe6de;
+    cursor: pointer;
 }
 
-/* a thin rule marks where each new project starts */
-.deck-card + .deck-card .deck-card-face {
-    border-top: 1px solid var(--hairline);
+.fx-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* covered projects fade back into the page */
-.deck-shade {
+.fx-thumb:focus-visible {
+    outline: 2.5px solid var(--dark);
+    outline-offset: 3px;
+}
+
+.fx-pill {
     position: absolute;
-    inset: 0;
-    background: var(--cream-2);
+    left: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: none;
+    color: var(--cream);
+    background: var(--dark);
+    border-radius: 999px;
     opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
     pointer-events: none;
-    border-radius: inherit;
+}
+
+.fx-thumb:hover .fx-pill,
+.fx-thumb:focus-visible .fx-pill {
+    opacity: 1;
+    transform: none;
+}
+
+@media (hover: none) {
+    .fx-pill {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 
-/* ─── Gallery ─────────────────────────────────────────────── */
-.deck-gallery {
+/* ─── Info ────────────────────────────────────────────────── */
+.fx-info {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     min-width: 0;
 }
 
-.deck-stage {
-    position: relative;
-    aspect-ratio: 1080 / 690;
-    border-radius: 16px;
-    overflow: hidden;
-    background-color: #ebe6de;
-    transition: background-color 0.3s ease;
-    touch-action: pan-y;  /* horizontal swipes step through the media */
+/* mask rows are added by projects.js; they stay invisible to layout here */
+.fx-ln {
+    display: contents;
 }
 
-.deck-stage.is-video {
-    background-color: #0d0d0d;
+.fx-num {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6b6b6b;
+    font-variant-numeric: tabular-nums;
 }
 
-.deck-stage img,
-.deck-stage video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.deck-expand {
-    position: absolute;
-    z-index: 2;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    color: var(--dark);
-    background: rgba(255, 255, 255, 0.92);
-    border: 0;
-    border-radius: 50%;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s ease;
-}
-
-.deck-expand svg {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.deck-stage:hover .deck-expand,
-.deck-expand:focus-visible {
-    opacity: 1;
-    transform: none;
-}
-
-@media (hover: none) {
-    .deck-expand {
-        opacity: 1;
-        transform: none;
-    }
-}
-
-.deck-expand:hover {
-    background: #fff;
-}
-
-.deck-expand:focus-visible {
-    outline: 2.5px solid var(--dark);
-    outline-offset: 2px;
-}
-
-.deck-thumbs {
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding: 4px;
-    margin: -4px;
-    scrollbar-width: none;
-}
-
-.deck-thumbs::-webkit-scrollbar {
-    display: none;
-}
-
-.deck-thumb {
-    position: relative;
-    flex: none;
-    width: clamp(64px, 7vw, 92px);
-    aspect-ratio: 16 / 10;
-    padding: 0;
-    border: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #ebe6de;
-    cursor: pointer;
-    opacity: 0.55;
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    transition: opacity 0.2s ease, outline-color 0.2s ease;
-}
-
-.deck-thumb img,
-.deck-thumb video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-}
-
-.deck-thumb video {
-    background: #0d0d0d;
-}
-
-.deck-thumb-play {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-}
-
-.deck-thumb-play::before {
-    content: "";
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6 4.5v7l5.5-3.5z' fill='%23000'/%3E%3C/svg%3E") center / 12px no-repeat;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-}
-
-.deck-thumb:hover {
-    opacity: 0.85;
-}
-
-.deck-thumb[aria-pressed="true"] {
-    opacity: 1;
-    outline-color: var(--dark);
-}
-
-.deck-thumb:focus-visible {
-    opacity: 1;
-    outline-color: var(--wine);
-}
-
-
-/* ─── Body ────────────────────────────────────────────────── */
-.deck-body {
-    padding-block: clamp(1rem, 3vh, 2rem);
-}
-
-.deck-title {
+.fx-title {
     font-family: var(--font-display);
     font-weight: 400;
     font-size: clamp(2.8rem, 4.8vw, 5rem);
-    line-height: 0.92;
+    line-height: 0.9;
     color: var(--dark);
     text-wrap: balance;
 }
 
-.deck-kind {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-    font-size: 1rem;
+.fx-kind {
+    font-size: 0.8rem;
     font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--mid);
 }
 
-.deck-num {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #6b6b6b;
-    text-transform: none;
-    font-variant-numeric: tabular-nums;
-}
-
-.deck-desc,
+.fx-desc,
 .deck-list {
-    margin-top: 1.25rem;
     font-size: 0.98rem;
     line-height: 1.7;
     font-weight: 300;
     color: #474747;
     max-width: 54ch;
-}
-
-.deck-desc + .deck-list {
-    margin-top: 0.6rem;
 }
 
 .deck-list {
@@ -307,7 +184,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-    margin-top: 1.5rem;
+    margin-top: 0.25rem;
 }
 
 .deck-stack li {
@@ -319,14 +196,15 @@
     border-radius: 999px;
 }
 
-.deck-actions {
+.fx-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
-    margin-top: 1.75rem;
+    margin-top: 0.5rem;
 }
 
-.deck-btn {
+.deck-btn,
+.fx-more {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
@@ -335,12 +213,15 @@
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1;
-    color: var(--cream);
-    background-color: var(--dark);
     border: 1.5px solid var(--dark);
     border-radius: 999px;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.deck-btn {
+    color: var(--cream);
+    background-color: var(--dark);
 }
 
 .deck-btn i {
@@ -353,57 +234,233 @@
     color: var(--dark);
 }
 
-.deck-btn:focus-visible {
+.fx-more {
+    color: var(--dark);
+    background: transparent;
+}
+
+.fx-more:hover {
+    color: var(--cream);
+    background-color: var(--dark);
+}
+
+.fx-more-n {
+    font-size: 0.75rem;
+    text-transform: none;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.6;
+}
+
+.deck-btn:focus-visible,
+.fx-more:focus-visible {
     outline: 2.5px solid var(--dark);
     outline-offset: 3px;
 }
 
-
-/* ─── Smaller laptop heights: tighten so a card fits ──────── */
-@media (min-width: 901px) and (max-height: 820px) {
-    .deck-title {
-        font-size: clamp(2.4rem, 4vw, 3.8rem);
-    }
-
-    .deck-desc,
-    .deck-list {
-        font-size: 0.92rem;
-        line-height: 1.6;
-        margin-top: 0.9rem;
-    }
-
-    .deck-stack {
-        margin-top: 1rem;
-    }
-
-    .deck-actions {
-        margin-top: 1.2rem;
-    }
-}
-
-
-/* ─── Tablet / phone, or very short screens: a plain stack ── */
-@media (max-width: 900px), (max-height: 620px) {
-    .deck-card {
-        position: relative;
-        top: auto;
-        min-height: 0;
-        margin-bottom: 1.5rem;
-    }
-
-    .deck-card-face {
+@media (max-width: 760px) {
+    .fx-project {
         grid-template-columns: 1fr;
         gap: 1.25rem;
-        padding-block: 1.5rem 1rem;
-    }
-
-    .deck-body {
-        padding: 0.25rem 0 0;
     }
 }
 
-@media (max-width: 480px) {
-    .deck-stage {
-        border-radius: 12px;
+
+/* ─── Focus column (class added by projects.js) ───────────── */
+.fx-on .fx {
+    position: relative;
+    max-width: none;
+    height: 100vh;
+    height: 100svh;
+    padding: 0;
+    overflow: hidden;
+}
+
+.fx-on .fx-top {
+    position: absolute;
+    z-index: 4;
+    top: clamp(1.25rem, 3vh, 2rem);
+    left: var(--fx-gutter);
+    right: var(--fx-gutter);
+}
+
+.fx-on .fx-heading {
+    font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+}
+
+/* the counter top-right replaces each project's own number */
+.fx-on .fx-ln:has(> .fx-num) {
+    display: none;
+}
+
+.fx-on .fx-count {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--mid);
+}
+
+.fx-on .fx-list,
+.fx-on .fx-item,
+.fx-on .fx-project {
+    display: block;
+    margin: 0;
+}
+
+/* script sets --fx-w / --fx-h and moves each thumbnail with a transform */
+.fx-on .fx-thumb {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: var(--fx-w, 30vw);
+    height: var(--fx-h, 19vw);
+    aspect-ratio: auto;
+    transform-origin: 0 0;
+    will-change: transform;
+}
+
+.fx-on .fx-thumb.is-focus {
+    z-index: 2;
+}
+
+.fx-on .fx-thumb:not(.is-focus) .fx-pill {
+    display: none;
+}
+
+/* every project's info sits in the same corner; only the focused one shows */
+.fx-on .fx-info {
+    position: absolute;
+    z-index: 3;
+    left: var(--fx-gutter);
+    bottom: clamp(1.5rem, 4vh, 2.5rem);
+    width: min(36vw, 520px);
+    max-height: calc(100% - 7rem);
+    justify-content: flex-end;
+    gap: 0.55rem;
+    visibility: hidden;
+}
+
+.fx-on .fx-info.is-on {
+    visibility: visible;
+}
+
+/* each row slides through its own mask; the padding keeps focus rings unclipped */
+.fx-on .fx-ln {
+    display: block;
+    flex: none;
+    overflow: hidden;
+    padding: 0.4rem;
+    margin: -0.4rem;
+}
+
+.fx-on .fx-ln > * {
+    will-change: transform;
+}
+
+/* the title takes the big bottom-left slot, under its details */
+.fx-on .fx-ln.is-title {
+    order: 9;
+}
+
+.fx-on .fx-title {
+    font-size: clamp(3.4rem, 6vw, 6.5rem);
+    line-height: 0.84;
+}
+
+.fx-on .fx-desc,
+.fx-on .deck-list {
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.fx-on .fx-actions {
+    margin-top: 0.25rem;
+}
+
+.fx-index {
+    position: absolute;
+    z-index: 4;
+    right: var(--fx-gutter);
+    bottom: clamp(1.5rem, 4vh, 2.5rem);
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: right;
+}
+
+.fx-index button {
+    padding: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #a39b92;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+.fx-index button:hover,
+.fx-index button[aria-current="true"] {
+    color: var(--dark);
+}
+
+.fx-index button:focus-visible {
+    outline: 1.5px solid var(--dark);
+    outline-offset: 2px;
+}
+
+
+/* ─── Focus column on phones: the info becomes a bottom sheet ─ */
+@media (max-width: 699px) {
+    .fx-on .fx-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem var(--fx-gutter) 0.75rem;
+        background: var(--cream-2);
+    }
+
+    .fx-on .fx-info {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: auto;
+        max-height: 56%;
+        justify-content: flex-start;
+        gap: 0.45rem;
+        padding: 1rem var(--fx-gutter) 1.25rem;
+        background: var(--cream-2);
+        border-top: 1px solid var(--hairline);
+    }
+
+    .fx-on .fx-ln.is-title {
+        order: 0;
+    }
+
+    .fx-on .fx-title {
+        font-size: 2.6rem;
+        line-height: 0.9;
+    }
+
+    .fx-on .fx-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .fx-on .fx-ln.is-list,
+    .fx-on .fx-index {
+        display: none;
+    }
+
+    .fx-on .deck-btn,
+    .fx-on .fx-more {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
     }
 }

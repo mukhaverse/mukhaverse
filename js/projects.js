@@ -1,220 +1,211 @@
 // Projects — "My Deck of Work"
-// Stacked sticky cards on desktop, and an inline media gallery inside
-// every card.
+// The section pins and its cover thumbnails form one column. Scrolling
+// moves focus down the column: the focused thumbnail grows, the rest
+// shrink, and the focused project's info slides through masks into the
+// bottom-left corner. Clicking a thumbnail focuses it; clicking the
+// focused one opens every shot in the carousel (project-carousel.js).
 const { gsap, ScrollTrigger } = window;
 
 document.addEventListener("DOMContentLoaded", () => {
     const section = document.getElementById("projects");
-    const cards = section ? Array.from(section.querySelectorAll(".deck-card")) : [];
-    if (!cards.length) return;
+    const frame = section?.querySelector(".fx");
+    const items = section ? Array.from(section.querySelectorAll(".fx-item")) : [];
+    if (!frame || !items.length) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const animate = Boolean(gsap && ScrollTrigger) && !reduceMotion;
-
-
-    // ─── Galleries ───────────────────────────────────────────
-    const galleries = cards.map((card) => {
-        const root = card.querySelector(".deck-gallery");
-        const stage = root.querySelector(".deck-stage");
-        const expand = root.querySelector(".deck-expand");
-        const thumbs = Array.from(root.querySelectorAll(".deck-thumb"));
-        let media = [];
-        try { media = JSON.parse(root.dataset.media || "[]"); } catch (e) { media = []; }
-
-        // the element being shown (during a crossfade the old one is still in the DOM)
-        let currentEl = stage.querySelector("img, video");
-        let current = 0;
-        let wantsPlay = false;
-
-        const playIfWanted = () => {
-            const el = currentEl;
-            if (el && el.tagName === "VIDEO") {
-                if (wantsPlay && !reduceMotion) el.play().catch(() => {});
-                else el.pause();
-            }
-        };
-
-        // dir: which side the new media slides in from (1 = right, -1 = left)
-        const show = (index, dir = Math.sign(index - current)) => {
-            const item = media[index];
-            if (!item) return;
-            const old = currentEl;
-
-            let el;
-            if (item.type === "video") {
-                el = document.createElement("video");
-                el.src = item.src;
-                el.muted = true;
-                el.loop = true;
-                el.playsInline = true;
-                el.setAttribute("aria-label", item.alt || "");
-                if (reduceMotion) el.controls = true;
-            } else {
-                el = document.createElement("img");
-                el.src = item.src;
-                el.alt = item.alt || "";
-            }
-
-            stage.classList.toggle("is-video", item.type === "video");
-            stage.insertBefore(el, expand);
-            currentEl = el;
-            current = index;
-            if (old) {
-                if (old.tagName === "VIDEO") old.pause();
-                if (animate) {
-                    gsap.fromTo(el, { opacity: 0, x: dir * 28 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" });
-                    gsap.to(old, { opacity: 0, x: dir * -28, duration: 0.3, ease: "power2.in", onComplete: () => old.remove() });
-                } else {
-                    old.remove();
-                }
-            }
-
-            thumbs.forEach((t, i) => t.setAttribute("aria-pressed", String(i === index)));
-            if (expand) expand.dataset.start = String(index);
-            playIfWanted();
-        };
-
-        thumbs.forEach((thumb) => {
-            thumb.addEventListener("click", () => {
-                wantsPlay = true;
-                show(Number(thumb.dataset.index));
-            });
-        });
-
-        // step through with a swipe on the stage or the arrow keys on the thumbs
-        const step = (d) => {
-            wantsPlay = true;
-            show((current + d + media.length) % media.length, d);
-        };
-
-        if (media.length > 1) {
-            let startX = null;
-            let startY = 0;
-            stage.addEventListener("pointerdown", (e) => {
-                if (e.pointerType === "mouse") return;
-                startX = e.clientX;
-                startY = e.clientY;
-            });
-            stage.addEventListener("pointerup", (e) => {
-                if (startX === null) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                startX = null;
-                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
-            });
-            stage.addEventListener("pointercancel", () => { startX = null; });
-
-            root.querySelector(".deck-thumbs")?.addEventListener("keydown", (e) => {
-                const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-                if (!d) return;
-                e.preventDefault();
-                step(d);
-                thumbs[current].focus();
-            });
-        }
-
-        // fill in video thumbnails only once the card gets close
-        const thumbVideos = root.querySelectorAll(".deck-thumb video[data-src]");
-        if (thumbVideos.length) {
-            const io = new IntersectionObserver(([entry]) => {
-                if (!entry.isIntersecting) return;
-                thumbVideos.forEach((v) => { v.src = v.dataset.src; v.preload = "metadata"; });
-                io.disconnect();
-            }, { rootMargin: "600px 0px" });
-            io.observe(root);
-        }
-
-        return {
-            cover: (media.find((m) => m.type === "image") || {}).src,
-            setPlaying(on) { wantsPlay = on; playIfWanted(); }
-        };
-    });
-
-
-    // ─── Active card ─────────────────────────────────────────
-    // only the card in view plays its video
-    let activeIndex = -1;
-
-    const setActive = (index) => {
-        if (index === activeIndex) return;
-        activeIndex = index;
-        galleries.forEach((g, i) => g.setPlaying(i === index));
-    };
-
-    if (!gsap || !ScrollTrigger) {
-        galleries.forEach((g) => g.setPlaying(true));
-        return;
-    }
+    if (!gsap || !ScrollTrigger || reduceMotion) return;  // the plain list stays
     gsap.registerPlugin(ScrollTrigger);
 
-    cards.forEach((card, i) => ScrollTrigger.create({
-        trigger: card,
-        start: "top 60%",
-        endTrigger: cards[i + 1] || card,
-        end: cards[i + 1] ? "top 60%" : "bottom top",
-        onToggle: (self) => { if (self.isActive) setActive(i); }
-    }));
+    const N = items.length;
+    const thumbs = items.map((li) => li.querySelector(".fx-thumb"));
+    const infos = items.map((li) => li.querySelector(".fx-info"));
+    const countNow = section.querySelector(".fx-count-now");
+    const titles = items.map((li) => li.querySelector(".fx-title").textContent);
+    const openLabels = thumbs.map((t) => t.getAttribute("aria-label"));
+    const pad = (n) => String(n + 1).padStart(2, "0");
 
-    ScrollTrigger.create({
-        trigger: section,
-        start: "top bottom",
-        end: "bottom top",
-        onLeave: () => setActive(-1),
-        onLeaveBack: () => setActive(-1)
+    // wrap every info row in a mask; rows are listed top to bottom as shown
+    // (the title sits last, under its details)
+    const rows = infos.map((info) => {
+        const els = Array.from(info.children);
+        els.forEach((el) => {
+            const ln = document.createElement("div");
+            ln.className = "fx-ln"
+                + (el.classList.contains("fx-title") ? " is-title" : "")
+                + (el.classList.contains("deck-list") ? " is-list" : "");
+            info.insertBefore(ln, el);
+            ln.appendChild(el);
+        });
+        return [...els.filter((el) => !el.classList.contains("fx-title")), info.querySelector(".fx-title")];
     });
 
-    if (!animate) return;
+    const index = document.createElement("ol");
+    index.className = "fx-index";
+    index.setAttribute("aria-label", "Jump to a project");
+    index.innerHTML = items.map((li, i) =>
+        `<li><button type="button" data-i="${i}">${titles[i].replace("Computer Vision & ", "")}</button></li>`).join("");
+    const indexBtns = Array.from(index.querySelectorAll("button"));
 
 
-    // ─── Stacking ────────────────────────────────────────────
+    // ─── Geometry ────────────────────────────────────────────
+    let G = null;
+    let step = 1;
+    let st = null;
+
+    const measure = () => {
+        const W = frame.clientWidth;
+        const H = frame.clientHeight;
+        const phone = W < 700;
+        let bigW = phone ? W * 0.72 : W * 0.3;
+        let bigH = bigW / 1.6;
+        const cap = H * (phone ? 0.3 : 0.46);
+        if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
+        G = {
+            x: phone ? 16 : W * 0.44,
+            focusY: phone ? H * 0.34 : H * 0.47,
+            bigH,
+            sMin: phone ? 0.5 : 0.4,
+            gap: phone ? 8 : 10
+        };
+        frame.style.setProperty("--fx-w", `${bigW}px`);
+        frame.style.setProperty("--fx-h", `${bigH}px`);
+        step = Math.round(H * 0.6);
+    };
+
+    // f runs 0 → N-1 across the pin; whole numbers are a project in focus
+    const layout = (f) => {
+        const s = [];
+        const ys = [];
+        let y = 0;
+        for (let i = 0; i < N; i++) {
+            const k = Math.max(0, 1 - Math.abs(i - f));
+            s[i] = G.sMin + (1 - G.sMin) * k * k * (3 - 2 * k);
+            ys[i] = y;
+            y += G.bigH * s[i] + G.gap;
+        }
+        const a = Math.floor(f);
+        const b = Math.min(N - 1, a + 1);
+        const mid = (i) => ys[i] + (G.bigH * s[i]) / 2;
+        const off = G.focusY - (mid(a) + (mid(b) - mid(a)) * (f - a));
+        thumbs.forEach((t, i) => {
+            t.style.transform = `translate(${G.x}px, ${ys[i] + off}px) scale(${s[i]})`;
+        });
+        setActive(Math.round(f));
+    };
+
+
+    // ─── Focus + info swap ───────────────────────────────────
+    let active = -1;
+
+    const setActive = (i) => {
+        if (i === active) return;
+        const prev = active;
+        const dir = prev < 0 ? 1 : Math.sign(i - prev);
+        active = i;
+
+        thumbs.forEach((t, j) => {
+            t.classList.toggle("is-focus", j === i);
+            t.setAttribute("aria-label", j === i ? openLabels[j] : `Show ${titles[j]}`);
+        });
+        indexBtns.forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
+        if (countNow) countNow.textContent = pad(i);
+
+        const next = infos[i];
+        gsap.killTweensOf(rows[i]);
+        next.classList.add("is-on");
+
+        if (prev < 0) {
+            gsap.set(rows[i], { y: 0 });
+            return;
+        }
+
+        const old = infos[prev];
+        gsap.killTweensOf(rows[prev]);
+        gsap.to(rows[prev], {
+            y: (k, el) => -dir * (el.offsetHeight + 12),
+            duration: 0.32,
+            ease: "power2.in",
+            stagger: 0.025,
+            onComplete: () => {
+                old.classList.remove("is-on");
+                gsap.set(rows[prev], { y: 0 });
+            }
+        });
+        gsap.fromTo(rows[i],
+            { y: (k, el) => dir * (el.offsetHeight + 12) },
+            { y: 0, duration: 0.62, ease: "power3.out", stagger: 0.055, delay: 0.16 }
+        );
+    };
+
+    const go = (i) => {
+        if (!st) return;
+        const y = st.start + i * step;
+        if (window.lenis) window.lenis.scrollTo(y, { duration: 0.9 });
+        else window.scrollTo({ top: y, behavior: "smooth" });
+    };
+
+    // a thumbnail out of focus scrolls to its project instead of opening
+    // the carousel (capture runs before the carousel's own listener)
+    frame.addEventListener("click", (e) => {
+        if (!st) return;
+        const t = e.target.closest(".fx-thumb");
+        if (!t || t.classList.contains("is-focus")) return;
+        e.stopPropagation();
+        go(thumbs.indexOf(t));
+    }, true);
+
+    // tabbing onto a thumbnail brings it into focus
+    frame.addEventListener("focusin", (e) => {
+        if (!st) return;
+        const t = e.target.closest(".fx-thumb");
+        if (t && !t.classList.contains("is-focus")) go(thumbs.indexOf(t));
+    });
+
+    indexBtns.forEach((b) => b.addEventListener("click", () => go(Number(b.dataset.i))));
+
+    // settle on the nearest project once scrolling stops
+    const settle = () => {
+        if (!st || !st.isActive) return;
+        const target = st.start + Math.round((window.scrollY - st.start) / step) * step;
+        if (Math.abs(target - window.scrollY) > 2) go(Math.round((target - st.start) / step));
+    };
+
+
+    // ─── Pin (only where a full screen fits) ─────────────────
     const mm = gsap.matchMedia();
 
-    mm.add({
-        stack: "(min-width: 901px) and (min-height: 621px)",
-        flat: "(max-width: 900px), (max-height: 620px)"
-    }, (ctx) => {
-        const { stack } = ctx.conditions;
+    mm.add("(min-height: 560px)", () => {
+        section.classList.add("fx-on");
+        frame.appendChild(index);
+        measure();
 
-        cards.forEach((card, i) => {
-            const face = card.querySelector(".deck-card-face");
-            const shade = card.querySelector(".deck-shade");
-
-            if (!stack) {
-                gsap.from(face, {
-                    y: 60,
-                    opacity: 0,
-                    duration: 1,
-                    ease: "expo.out",
-                    scrollTrigger: { trigger: card, start: "top 90%", once: true }
-                });
-                return;
-            }
-
-            // slides up into place
-            gsap.fromTo(face,
-                { y: 80 },
-                {
-                    y: 0,
-                    ease: "power2.out",
-                    scrollTrigger: { trigger: card, start: "top bottom", end: "top 40%", scrub: 0.6 }
-                }
-            );
-
-            // covered: sinks back as the next card lands on it
-            const next = cards[i + 1];
-            if (!next) return;
-
-            gsap.timeline({
-                scrollTrigger: {
-                    trigger: next,
-                    start: "top bottom",
-                    end: () => `top ${parseFloat(getComputedStyle(next).top) || 0}px`,
-                    scrub: 0.6,
-                    invalidateOnRefresh: true
-                }
-            })
-                .to(face, { scale: 0.97, ease: "none" }, 0)
-                .to(shade, { opacity: 0.8, ease: "none" }, 0);
+        st = ScrollTrigger.create({
+            trigger: section,
+            start: "top top",
+            end: () => `+=${(N - 1) * step}`,
+            pin: true,
+            invalidateOnRefresh: true,
+            onRefreshInit: measure,
+            onRefresh: (self) => layout(self.progress * (N - 1)),
+            onUpdate: (self) => layout(self.progress * (N - 1))
         });
+        layout(st.progress * (N - 1));
+        ScrollTrigger.addEventListener("scrollEnd", settle);
+
+        return () => {
+            ScrollTrigger.removeEventListener("scrollEnd", settle);
+            st = null;
+            active = -1;
+            section.classList.remove("fx-on");
+            index.remove();
+            gsap.killTweensOf(rows.flat());
+            gsap.set(rows.flat(), { clearProps: "transform" });
+            thumbs.forEach((t, i) => {
+                t.style.transform = "";
+                t.classList.remove("is-focus");
+                t.setAttribute("aria-label", openLabels[i]);
+            });
+            infos.forEach((info) => info.classList.remove("is-on"));
+        };
     });
 });
