@@ -25,6 +25,45 @@ document.addEventListener("DOMContentLoaded", () => {
     const openLabels = thumbs.map((t) => t.getAttribute("aria-label"));
     const pad = (n) => String(n + 1).padStart(2, "0");
 
+
+    // ─── Video covers ────────────────────────────────────────
+    // a cover can be a muted loop: it loads once the section is close,
+    // and only the focused one plays while the section is on screen
+    const videos = thumbs.map((t) => t.querySelector("video[data-src]"));
+    const carousel = document.getElementById("projectCarousel");
+    let onScreen = false;
+
+    videos.forEach((v, i) => {
+        if (!v) return;
+        v.addEventListener("playing", () => thumbs[i].classList.add("is-playing"));
+        v.addEventListener("pause", () => thumbs[i].classList.remove("is-playing"));
+    });
+
+    const syncVideos = () => {
+        videos.forEach((v, i) => {
+            if (!v || !v.src) return;
+            if (i === active && onScreen && (!carousel || carousel.hidden)) v.play().catch(() => {});
+            else v.pause();
+        });
+    };
+
+    if (videos.some(Boolean)) {
+        new IntersectionObserver(([entry], io) => {
+            if (!entry.isIntersecting) return;
+            videos.forEach((v) => { if (v) { v.src = v.dataset.src; v.preload = "auto"; } });
+            io.disconnect();
+            syncVideos();
+        }, { rootMargin: "100% 0px" }).observe(section);
+
+        new IntersectionObserver(([entry]) => {
+            onScreen = entry.isIntersecting;
+            syncVideos();
+        }).observe(frame);
+
+        // resume once the carousel closes
+        if (carousel) new MutationObserver(syncVideos).observe(carousel, { attributes: true, attributeFilter: ["hidden"] });
+    }
+
     // phones show a short description; "Read more" opens the carousel,
     // which carries the full write-up
     infos.forEach((info, i) => {
@@ -89,7 +128,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         frame.style.setProperty("--fx-w", `${G.bigW}px`);
         frame.style.setProperty("--fx-h", `${G.bigH}px`);
-        step = Math.round(H * 0.6);
+    };
+
+    // the frame matches the visible height; the scroll length per project
+    // (step) only changes on a full refresh, so the pin never jumps
+    const setHeight = () => frame.style.setProperty("--fx-vh", `${window.innerHeight}px`);
+    const refreshInit = () => {
+        setHeight();
+        measure();
+        step = Math.round(frame.clientHeight * 0.6);
+    };
+
+    // phone browser bars sliding in and out resize the viewport without a
+    // ScrollTrigger refresh: re-fit the frame and the strip in place
+    let lastH = window.innerHeight;
+    const onResize = () => {
+        if (!st || window.innerHeight === lastH) return;
+        lastH = window.innerHeight;
+        setHeight();
+        measure();
+        layout(st.progress * (N - 1));
     };
 
     // f runs 0 → N-1 across the pin; whole numbers are a project in focus
@@ -137,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         indexBtns.forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
         if (countNow) countNow.textContent = pad(i);
+        syncVideos();
 
         // mid-jump, skip the projects being passed and swap once on arrival
         if (jumpTo === null || jumpTo === i) showInfo(i);
@@ -242,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mm.add("(min-height: 560px)", () => {
         section.classList.add("fx-on");
         frame.appendChild(index);
-        measure();
+        refreshInit();
 
         st = ScrollTrigger.create({
             trigger: section,
@@ -250,15 +309,18 @@ document.addEventListener("DOMContentLoaded", () => {
             end: () => `+=${(N - 1) * step}`,
             pin: true,
             invalidateOnRefresh: true,
-            onRefreshInit: measure,
+            onRefreshInit: refreshInit,
             onRefresh: (self) => layout(self.progress * (N - 1)),
             onUpdate: (self) => layout(self.progress * (N - 1))
         });
         layout(st.progress * (N - 1));
         ScrollTrigger.addEventListener("scrollEnd", settle);
+        window.addEventListener("resize", onResize);
 
         return () => {
             ScrollTrigger.removeEventListener("scrollEnd", settle);
+            window.removeEventListener("resize", onResize);
+            frame.style.removeProperty("--fx-vh");
             clearTimeout(jumpTimer);
             st = null;
             active = -1;

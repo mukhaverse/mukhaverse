@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("project-carousel-open");
 
         const start = parseInt(btn.dataset.start, 10) || 0;
-        document.querySelectorAll(".deck-stage video").forEach((v) => v.pause());
+        document.querySelectorAll(".fx-thumb video").forEach((v) => v.pause());
         window.lenis?.stop();
 
         requestAnimationFrame(() => {
