@@ -414,11 +414,15 @@
 }
 
 
-/* ─── Focus column on phones ─────────────────────────────
-   Same editorial frame, scaled down: the column sits right of centre,
-   the index fills the gap on its left, and the giant title keeps the
+/* ─── Focus rail on phones ───────────────────────────────
+   Same editorial frame: the thumbnails run side to side under the
+   heading (the page still scrolls down), and the giant title keeps the
    bottom-left corner. Details become plain text instead of chips and
-   pills; the description lives in the plain list and the lightbox. */
+   pills, and "Read more" opens the full write-up with the shots. */
+.fx-read {
+    display: none;
+}
+
 @media (max-width: 699px) {
     .fx-on .fx-heading {
         font-size: 1.6rem;
@@ -429,12 +433,12 @@
         right: var(--fx-gutter);
         bottom: clamp(1rem, 3vh, 1.5rem);
         width: auto;
-        max-height: 42%;
-        gap: 0.4rem;
+        max-height: 50%;
+        gap: 0.45rem;
     }
 
     .fx-on .fx-title {
-        font-size: clamp(3.2rem, 16vw, 4.6rem);
+        font-size: clamp(3rem, 15vw, 4.4rem);
         line-height: 0.84;
     }
 
@@ -442,9 +446,18 @@
         font-size: 0.7rem;
     }
 
-    .fx-on .fx-ln:has(> .fx-desc),
+    .fx-on .fx-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.88rem;
+    }
+
     .fx-on .fx-ln.is-list,
-    .fx-on .fx-pill {
+    .fx-on .fx-pill,
+    .fx-on .fx-more,
+    .fx-on .fx-index {
         display: none;
     }
 
@@ -475,41 +488,35 @@
     }
 
     .fx-on .deck-btn,
-    .fx-on .fx-more {
+    .fx-on .fx-read {
+        display: inline-flex;
+        align-items: center;
         gap: 0.35rem;
         padding: 0.25rem 0;
+        font: inherit;
         font-size: 0.85rem;
+        font-weight: 500;
         color: var(--dark);
         background: none;
         border: 0;
         border-radius: 0;
+        cursor: pointer;
         text-decoration: underline;
         text-decoration-thickness: 1px;
         text-underline-offset: 4px;
     }
 
-    .fx-on .deck-btn:hover,
-    .fx-on .fx-more:hover {
+    .fx-on .deck-btn:hover {
         color: var(--dark);
         background: none;
     }
 
+    .fx-on .fx-read:focus-visible {
+        outline: 2.5px solid var(--dark);
+        outline-offset: 3px;
+    }
+
     .fx-on .deck-btn i {
         font-size: 0.95rem;
-    }
-
-    .fx-on .fx-index {
-        top: 34%;
-        right: auto;
-        bottom: auto;
-        left: var(--fx-gutter);
-        max-width: 30%;
-        transform: translateY(-50%);
-        text-align: left;
-    }
-
-    .fx-on .fx-index button {
-        font-size: 0.75rem;
-        text-align: left;
     }
 }

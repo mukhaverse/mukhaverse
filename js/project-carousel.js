@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const slidesEl = document.getElementById("projectCarouselSlides");
     const thumbsEl = document.getElementById("projectCarouselThumbs");
     const titleEl = document.getElementById("projectCarouselTitle");
+    const infoEl = document.getElementById("projectCarouselInfo");
+    const panel = modal.querySelector(".project-carousel-panel");
     const closeBtn = modal.querySelector(".project-carousel-close");
     const prevBtn = modal.querySelector(".project-carousel-prev");
     const nextBtn = modal.querySelector(".project-carousel-next");
@@ -94,6 +96,24 @@ document.addEventListener("DOMContentLoaded", () => {
         nextBtn.hidden = !multi;
     };
 
+    // the full write-up of the project that opened the carousel, under the shots
+    const buildInfo = (btn) => {
+        if (!infoEl) return;
+        infoEl.innerHTML = "";
+        const info = btn.closest(".fx-project")?.querySelector(".fx-info");
+        infoEl.hidden = !info;
+        panel.classList.toggle("has-info", Boolean(info));
+        if (!info) return;
+
+        info.querySelectorAll(".fx-title, .fx-kind, .fx-desc, .deck-list, .deck-stack, .fx-actions").forEach((el) => {
+            const copy = el.cloneNode(true);
+            copy.removeAttribute("id");
+            copy.querySelectorAll(".fx-more, .fx-read").forEach((b) => b.remove());
+            copy.style.transform = "";
+            infoEl.appendChild(copy);
+        });
+    };
+
     const openCarousel = (btn) => {
         let media;
         try {
@@ -105,6 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         lastTrigger = btn;
         buildStage(media, btn.dataset.projectTitle);
+        buildInfo(btn);
+        panel.scrollTop = 0;
         if (titleEl) titleEl.textContent = btn.dataset.projectTitle || "";
 
         modal.hidden = false;

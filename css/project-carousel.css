@@ -251,6 +251,66 @@ body.project-carousel-open {
     outline-offset: 2px;
 }
 
+/* ─── Project write-up (filled from the projects section) ─── */
+.project-carousel-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.project-carousel-panel.has-info .project-carousel-title {
+    display: none;
+}
+
+.project-carousel-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.75rem;
+    text-align: left;
+}
+
+.project-carousel-info[hidden] {
+    display: none;
+}
+
+.project-carousel-info .fx-title {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+}
+
+.project-carousel-info .fx-desc,
+.project-carousel-info .deck-list {
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+@media (min-width: 900px) {
+    .project-carousel-panel.has-info {
+        width: min(94vw, 1240px);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+        grid-template-rows: auto auto;
+        align-items: start;
+        column-gap: 2.5rem;
+    }
+
+    .has-info .project-carousel-stage,
+    .has-info .project-carousel-thumbs {
+        grid-column: 1;
+    }
+
+    .has-info .project-carousel-thumbs {
+        justify-self: center;
+    }
+
+    .has-info .project-carousel-info {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+        margin-top: 0;
+    }
+}
+
 /* ─── Reduced motion ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     .project-carousel-backdrop,

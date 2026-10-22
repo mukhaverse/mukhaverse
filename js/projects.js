@@ -1,9 +1,10 @@
 // Projects — "My Deck of Work"
-// The section pins and its cover thumbnails form one column. Scrolling
-// moves focus down the column: the focused thumbnail grows, the rest
-// shrink, and the focused project's info slides through masks into the
-// bottom-left corner. Clicking a thumbnail focuses it; clicking the
-// focused one opens every shot in the carousel (project-carousel.js).
+// The section pins and its cover thumbnails form one strip: a column on
+// desktop, a side-to-side rail on phones. Scrolling moves focus along the
+// strip: the focused thumbnail grows, the rest shrink, and the focused
+// project's info slides through masks into the bottom-left corner.
+// Clicking a thumbnail focuses it; clicking the focused one opens every
+// shot, with the full write-up, in the carousel (project-carousel.js).
 const { gsap, ScrollTrigger } = window;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,6 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const titles = items.map((li) => li.querySelector(".fx-title").textContent);
     const openLabels = thumbs.map((t) => t.getAttribute("aria-label"));
     const pad = (n) => String(n + 1).padStart(2, "0");
+
+    // phones show a short description; "Read more" opens the carousel,
+    // which carries the full write-up
+    infos.forEach((info, i) => {
+        const read = document.createElement("button");
+        read.type = "button";
+        read.className = "fx-read";
+        read.textContent = "Read more";
+        read.addEventListener("click", () => thumbs[i].click());
+        info.querySelector(".fx-actions").prepend(read);
+    });
 
     // wrap every info row in a mask; rows are listed top to bottom as shown
     // (the title sits last, under its details)
@@ -55,67 +67,70 @@ document.addEventListener("DOMContentLoaded", () => {
     const measure = () => {
         const W = frame.clientWidth;
         const H = frame.clientHeight;
-        const phone = W < 700;
-        // phones: the column sits right of centre, leaving the left for the index
-        const x = phone ? W * 0.36 : W * 0.44;
-        let bigW = phone ? W - x - 16 : W * 0.3;
-        let bigH = bigW / 1.6;
-        const cap = H * (phone ? 0.24 : 0.46);
-        if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
-        G = {
-            x,
-            phone,
-            focusY: phone ? H * 0.34 : H * 0.47,
-            topEdge: section.querySelector(".fx-top").getBoundingClientRect().height + 24,
-            bigH,
-            sMin: phone ? 0.45 : 0.4,
-            gap: phone ? 8 : 10
-        };
-        frame.style.setProperty("--fx-w", `${bigW}px`);
-        frame.style.setProperty("--fx-h", `${bigH}px`);
+        const top = section.querySelector(".fx-top");
+        const topEdge = top.offsetTop + top.offsetHeight + 16;
+
+        if (W < 700) {
+            // phones: a rail, focused card left-aligned, the next one peeking in
+            // centred in the space between the heading and the tallest info
+            const infoTop = Math.min(...infos.map((info) => info.offsetTop)) - 20;
+            let bigW = W - 16 - 48;
+            let bigH = bigW / 1.6;
+            const cap = Math.min(H * 0.32, infoTop - topEdge);
+            if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
+            const railTop = topEdge + Math.max(0, (infoTop - topEdge - bigH) / 2);
+            G = { rail: true, x: 16, bottom: railTop + bigH, bigW, bigH, sMin: 0.42, gap: 8 };
+        } else {
+            let bigW = W * 0.3;
+            let bigH = bigW / 1.6;
+            const cap = H * 0.46;
+            if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
+            G = { rail: false, x: W * 0.44, focusY: H * 0.47, bigW, bigH, sMin: 0.4, gap: 10 };
+        }
+        frame.style.setProperty("--fx-w", `${G.bigW}px`);
+        frame.style.setProperty("--fx-h", `${G.bigH}px`);
         step = Math.round(H * 0.6);
     };
 
     // f runs 0 → N-1 across the pin; whole numbers are a project in focus
     const layout = (f) => {
         const s = [];
-        const ys = [];
-        let y = 0;
+        const pos = [];
+        let p = 0;
         for (let i = 0; i < N; i++) {
             const k = Math.max(0, 1 - Math.abs(i - f));
             s[i] = G.sMin + (1 - G.sMin) * k * k * (3 - 2 * k);
-            ys[i] = y;
-            y += G.bigH * s[i] + G.gap;
+            pos[i] = p;
+            p += (G.rail ? G.bigW : G.bigH) * s[i] + G.gap;
         }
         const a = Math.floor(f);
         const b = Math.min(N - 1, a + 1);
-        const mid = (i) => ys[i] + (G.bigH * s[i]) / 2;
-        const off = G.focusY - (mid(a) + (mid(b) - mid(a)) * (f - a));
-        setActive(Math.round(f));
 
-        // phones have no empty margins, so thumbnails fade out before they
-        // reach the heading or the title instead of sliding under them
-        const floor = G.phone ? infos[active].offsetTop - 16 : 0;
-        thumbs.forEach((t, i) => {
-            const top = ys[i] + off;
-            t.style.transform = `translate(${G.x}px, ${top}px) scale(${s[i]})`;
-            if (!G.phone) { t.style.opacity = ""; return; }
-            const bottom = top + G.bigH * s[i];
-            const fade = Math.min((top - G.topEdge + 48) / 48, (floor + 48 - bottom) / 48);
-            t.style.opacity = Math.max(0, Math.min(1, fade));
-        });
+        if (G.rail) {
+            // left edges slide past the gutter; bottoms stay on one line
+            const off = G.x - (pos[a] + (pos[b] - pos[a]) * (f - a));
+            thumbs.forEach((t, i) => {
+                t.style.transform = `translate(${pos[i] + off}px, ${G.bottom - G.bigH * s[i]}px) scale(${s[i]})`;
+            });
+        } else {
+            const mid = (i) => pos[i] + (G.bigH * s[i]) / 2;
+            const off = G.focusY - (mid(a) + (mid(b) - mid(a)) * (f - a));
+            thumbs.forEach((t, i) => {
+                t.style.transform = `translate(${G.x}px, ${pos[i] + off}px) scale(${s[i]})`;
+            });
+        }
+        setActive(Math.round(f));
     };
 
 
-    // ─── Focus + info swap ───────────────────────────────────
-    let active = -1;
+    // ─── Focus ───────────────────────────────────────────────
+    let active = -1;      // thumbnail in focus
+    let shown = -1;       // info on screen (lags behind during a jump)
+    let jumpTo = null;    // set while a click scrolls several projects at once
 
     const setActive = (i) => {
         if (i === active) return;
-        const prev = active;
-        const dir = prev < 0 ? 1 : Math.sign(i - prev);
         active = i;
-
         thumbs.forEach((t, j) => {
             t.classList.toggle("is-focus", j === i);
             t.setAttribute("aria-label", j === i ? openLabels[j] : `Show ${titles[j]}`);
@@ -123,16 +138,26 @@ document.addEventListener("DOMContentLoaded", () => {
         indexBtns.forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
         if (countNow) countNow.textContent = pad(i);
 
-        const next = infos[i];
+        // mid-jump, skip the projects being passed and swap once on arrival
+        if (jumpTo === null || jumpTo === i) showInfo(i);
+    };
+
+
+    // ─── Info swap ───────────────────────────────────────────
+    const showInfo = (i) => {
+        if (i === shown) return;
+        const prev = shown;
+        const dir = prev < 0 ? 1 : Math.sign(i - prev);
+        shown = i;
+
         gsap.killTweensOf(rows[i]);
-        next.classList.add("is-on");
+        infos[i].classList.add("is-on");
 
         if (prev < 0) {
             gsap.set(rows[i], { y: 0 });
             return;
         }
 
-        const old = infos[prev];
         gsap.killTweensOf(rows[prev]);
         gsap.to(rows[prev], {
             y: (k, el) => -dir * (el.offsetHeight + 12),
@@ -140,21 +165,44 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power2.in",
             stagger: 0.025,
             onComplete: () => {
-                old.classList.remove("is-on");
+                infos[prev].classList.remove("is-on");
                 gsap.set(rows[prev], { y: 0 });
             }
         });
         gsap.fromTo(rows[i],
             { y: (k, el) => dir * (el.offsetHeight + 12) },
-            { y: 0, duration: 0.62, ease: "power3.out", stagger: 0.055, delay: 0.16 }
+            { y: 0, duration: 0.62, ease: "power3.out", stagger: 0.055, delay: 0.16, onComplete: ensure }
         );
     };
+
+    // whatever happened in between, the focused project's info ends up on screen
+    const ensure = () => {
+        if (!st || jumpTo !== null) return;
+        if (shown !== active) { showInfo(active); return; }
+        if (rows.some((r) => r.some((el) => gsap.isTweening(el)))) return;
+        infos.forEach((info, j) => info.classList.toggle("is-on", j === shown));
+        gsap.set(rows[shown], { y: 0 });
+    };
+
+
+    // ─── Navigation ──────────────────────────────────────────
+    let jumpTimer = 0;
 
     const go = (i) => {
         if (!st) return;
         const y = st.start + i * step;
-        if (window.lenis) window.lenis.scrollTo(y, { duration: 0.9 });
-        else window.scrollTo({ top: y, behavior: "smooth" });
+        const arrive = () => {
+            clearTimeout(jumpTimer);
+            jumpTo = null;
+            ensure();
+        };
+        if (Math.abs(i - active) > 1) {
+            jumpTo = i;
+            clearTimeout(jumpTimer);
+            jumpTimer = setTimeout(arrive, 1600);  // in case the scroll gets interrupted
+        }
+        if (window.lenis) window.lenis.scrollTo(y, { duration: 0.9, onComplete: arrive });
+        else { window.scrollTo({ top: y, behavior: "smooth" }); }
     };
 
     // a thumbnail out of focus scrolls to its project instead of opening
@@ -169,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // tabbing onto a thumbnail brings it into focus
     frame.addEventListener("focusin", (e) => {
-        if (!st) return;
+        if (!st || e.target.matches(":not(:focus-visible)")) return;
         const t = e.target.closest(".fx-thumb");
         if (t && !t.classList.contains("is-focus")) go(thumbs.indexOf(t));
     });
@@ -178,9 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // settle on the nearest project once scrolling stops
     const settle = () => {
-        if (!st || !st.isActive) return;
-        const target = st.start + Math.round((window.scrollY - st.start) / step) * step;
-        if (Math.abs(target - window.scrollY) > 2) go(Math.round((target - st.start) / step));
+        if (!st) return;
+        jumpTo = null;
+        if (st.isActive) {
+            const target = Math.round((window.scrollY - st.start) / step);
+            if (Math.abs(st.start + target * step - window.scrollY) > 2) { go(target); return; }
+        }
+        ensure();
     };
 
 
@@ -207,15 +259,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return () => {
             ScrollTrigger.removeEventListener("scrollEnd", settle);
+            clearTimeout(jumpTimer);
             st = null;
             active = -1;
+            shown = -1;
+            jumpTo = null;
             section.classList.remove("fx-on");
             index.remove();
             gsap.killTweensOf(rows.flat());
             gsap.set(rows.flat(), { clearProps: "transform" });
             thumbs.forEach((t, i) => {
                 t.style.transform = "";
-                t.style.opacity = "";
                 t.classList.remove("is-focus");
                 t.setAttribute("aria-label", openLabels[i]);
             });
