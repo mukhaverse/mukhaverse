@@ -1,8 +1,9 @@
 /* ─── Projects: "My Deck of Work" ─────────────────────────────
    One cover thumbnail per project. Without JS (or with reduced motion,
    or on very short screens) it is a plain list. With JS the section
-   pins: the thumbnails form one column, the one in focus grows, and its
-   title and info swap in the bottom-left corner. Every thumbnail opens
+   pins: every cover sits in one large frame and they crossfade as the
+   focus moves, while the title and info swap in the bottom-left
+   corner. Every thumbnail opens
    the project's full set of shots in the carousel. */
 
 .projects-section {
@@ -153,6 +154,13 @@
     line-height: 0.9;
     color: var(--dark);
     text-wrap: balance;
+}
+
+.fx-tag {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+    line-height: 1.2;
+    color: var(--mid);
 }
 
 .fx-kind {
@@ -331,21 +339,40 @@
     margin: 0;
 }
 
-/* script sets --fx-w / --fx-h and moves each thumbnail with a transform */
+/* script sets --fx-w / --fx-h and places every cover in the same spot.
+   The focused one fades in on top; the one it replaces waits, then
+   fades out underneath, so the swap never dips to the background */
 .fx-on .fx-thumb {
     position: absolute;
     z-index: 1;
     top: 0;
     left: 0;
-    width: var(--fx-w, 30vw);
-    height: var(--fx-h, 19vw);
+    width: var(--fx-w, 52vw);
+    height: var(--fx-h, 32.5vw);
     aspect-ratio: auto;
-    transform-origin: 0 0;
-    will-change: transform;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease 0.4s;
 }
 
 .fx-on .fx-thumb.is-focus {
     z-index: 2;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* the incoming cover also settles from a slight zoom */
+.fx-on .fx-thumb img,
+.fx-on .fx-thumb video {
+    transform: scale(1.04);
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.4s;
+}
+
+.fx-on .fx-thumb.is-focus img,
+.fx-on .fx-thumb.is-focus video {
+    transform: none;
+    transition-delay: 0s;
 }
 
 .fx-on .fx-thumb:not(.is-focus) .fx-pill {
@@ -385,6 +412,10 @@
 /* the title takes the big bottom-left slot, under its details */
 .fx-on .fx-ln.is-title {
     order: 9;
+}
+
+.fx-on .fx-ln.is-tag {
+    order: 10;
 }
 
 .fx-on .fx-title {
@@ -439,9 +470,8 @@
 
 
 /* ─── Focus rail on phones ───────────────────────────────
-   Same editorial frame: the thumbnails run side to side under the
-   heading (the page still scrolls down), and the giant title keeps the
-   bottom-left corner. Details become plain text instead of chips and
+   Same editorial frame: the covers crossfade full-width under the
+   heading, and the giant title keeps the bottom-left corner. Details become plain text instead of chips and
    pills, and "Read more" opens the full write-up with the shots. */
 .fx-read {
     display: none;

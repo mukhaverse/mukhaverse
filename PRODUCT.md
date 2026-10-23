@@ -35,7 +35,7 @@ Static single page hosted on GitHub Pages with a custom domain (CNAME). Visitors
 
 ## Evidence on Hand
 
-- Projects: Medixa, Atelier, Computer Vision & Hand Tracking, SeedSync, IoT Exhibition Archive, with mockups and demo videos in assets/.
+- Projects: Medixa, Atelier, AirPoint, Swarm, SeedSync, IoT Exhibition Archive, with mockups and demo videos in assets/.
 - Awards/certs: Best Project Award (Web Dev, SE Dept., UJ), Certificate of Excellence (UJ, 2025–2026), IBM Intro to DevOps (Coursera 2026), IBM Agile & Scrum (Coursera 2026).
 - Leadership, clubs and hackathons: NOT yet provided. Use clearly marked placeholders; never invent roles, clubs, events or wins.
 

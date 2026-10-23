@@ -321,7 +321,7 @@
             <div class="fx">
                 <div class="fx-top">
                     <h2 class="section-title fx-heading" id="projects-heading">My Deck of Work</h2>
-                    <p class="fx-count" aria-hidden="true"><span class="fx-count-now">01</span> / 05</p>
+                    <p class="fx-count" aria-hidden="true"><span class="fx-count-now">01</span> / 06</p>
                 </div>
 
                 <ol class="fx-list">
@@ -332,7 +332,7 @@
                                 <span class="fx-pill" aria-hidden="true">View 6 shots</span>
                             </button>
                             <div class="fx-info">
-                                <p class="fx-num">01 / 05</p>
+                                <p class="fx-num">01 / 06</p>
                                 <h3 class="fx-title" id="project-medixa-title">Medixa</h3>
                                 <p class="fx-kind">Full-stack development</p>
                                 <p class="fx-desc">A full-stack medication safety platform helping patients check whether their
@@ -355,7 +355,7 @@
                                 <span class="fx-pill" aria-hidden="true">View 6 shots</span>
                             </button>
                             <div class="fx-info">
-                                <p class="fx-num">02 / 05</p>
+                                <p class="fx-num">02 / 06</p>
                                 <h3 class="fx-title" id="project-atelier-title">Atelier</h3>
                                 <p class="fx-kind">Full-stack development</p>
                                 <p class="fx-desc">A full-stack web platform connecting artists and buyers, enabling users to browse,
@@ -370,26 +370,47 @@
                             </div>
                         </article>
                     </li>
-                    <li class="fx-item" id="project-cv">
-                        <article class="fx-project" aria-labelledby="project-cv-title">
-                            <button class="fx-thumb has-video project-browse-btn" type="button" data-project-title="Computer Vision &amp; Hand Tracking" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/compvis-demo.mp4&quot;, &quot;alt&quot;: &quot;Hand-tracking demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]" data-start="0" aria-label="View both Computer Vision &amp; Hand Tracking shots">
-                                <video muted loop playsinline preload="none" poster="assets/compvis-cover.jpg" data-src="assets/compvis-demo.mp4" aria-hidden="true"></video>
+                    <!-- both covers use the combined demo until the split clips are in -->
+                    <li class="fx-item" id="project-mouse">
+                        <article class="fx-project" aria-labelledby="project-mouse-title">
+                            <button class="fx-thumb has-video project-browse-btn" type="button" data-project-title="AirPoint" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/vmouse-demo.mp4&quot;, &quot;alt&quot;: &quot;AirPoint demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]" data-start="0" aria-label="View both AirPoint shots">
+                                <video muted loop playsinline preload="none" poster="assets/compvis-cover.jpg" data-src="assets/vmouse-demo.mp4" aria-hidden="true"></video>
                                 <span class="fx-pill" aria-hidden="true">View 2 shots</span>
                             </button>
                             <div class="fx-info">
-                                <p class="fx-num">03 / 05</p>
-                                <h3 class="fx-title" id="project-cv-title">Computer Vision &amp; Hand Tracking</h3>
+                                <p class="fx-num">03 / 06</p>
+                                <h3 class="fx-title" id="project-mouse-title">AirPoint</h3>
+                                <p class="fx-tag">Point in the air, and it clicks.</p>
                                 <p class="fx-kind">Computer vision</p>
-                                <p class="fx-desc">Three real-time hand-tracking experiments built with Python, OpenCV, and MediaPipe:</p>
-                                <ul class="deck-list">
-                                    <li><strong>Gesture-Controlled Mouse</strong>: cursor movement and clicks driven entirely by hand position and pinch gestures</li>
-                                    <li><strong>Particle Visuals</strong>: a GPU-rendered swarm of particles pulled into flowing, looping patterns by two-handed pinch gestures</li>
-                                    <li><strong>Hill Climb Racing Control</strong>: steering and acceleration mapped to hand-tracking input</li>
-                                </ul>
+                                <p class="fx-desc">A mouse controlled by hand, built with Python, OpenCV, and MediaPipe: the cursor
+                                    follows my hand and pinch gestures click, with no hardware in between. The same
+                                    tracking also plays Hill Climb Racing, with steering and acceleration mapped to
+                                    hand gestures.</p>
+                                <ul class="deck-stack" aria-label="Tech stack"><li>Python</li><li>OpenCV</li><li>MediaPipe</li></ul>
+                                <div class="fx-actions">
+                                    <a class="deck-btn" href="https://github.com/mukhaverse" target="_blank" rel="noopener noreferrer"><i class="devicon-github-original" aria-hidden="true"></i>GitHub</a>
+                                    <button class="fx-more project-browse-btn" type="button" data-project-title="AirPoint" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/vmouse-demo.mp4&quot;, &quot;alt&quot;: &quot;AirPoint demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]" data-start="0">View shots <span class="fx-more-n">2</span></button>
+                                </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li class="fx-item" id="project-visuals">
+                        <article class="fx-project" aria-labelledby="project-visuals-title">
+                            <button class="fx-thumb has-video project-browse-btn" type="button" data-project-title="Swarm" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/visuals-demo.mp4&quot;, &quot;alt&quot;: &quot;Swarm demo&quot;}]" data-start="0" aria-label="Watch the Swarm demo full screen">
+                                <video muted loop playsinline preload="none" poster="assets/compvis-cover.jpg" data-src="assets/visuals-demo.mp4" aria-hidden="true"></video>
+                                <span class="fx-pill" aria-hidden="true">Watch the demo</span>
+                            </button>
+                            <div class="fx-info">
+                                <p class="fx-num">04 / 06</p>
+                                <h3 class="fx-title" id="project-visuals-title">Swarm</h3>
+                                <p class="fx-tag">Pinch the air, and it flows.</p>
+                                <p class="fx-kind">Interactive visuals</p>
+                                <p class="fx-desc">A GPU-rendered swarm of particles that follows both hands in real time:
+                                    two-handed pinch gestures pull it into flowing, looping patterns. Hand tracking
+                                    runs on OpenCV and MediaPipe, and the particles render with ModernGL.</p>
                                 <ul class="deck-stack" aria-label="Tech stack"><li>Python</li><li>OpenCV</li><li>MediaPipe</li><li>ModernGL</li></ul>
                                 <div class="fx-actions">
                                     <a class="deck-btn" href="https://github.com/mukhaverse" target="_blank" rel="noopener noreferrer"><i class="devicon-github-original" aria-hidden="true"></i>GitHub</a>
-                                    <button class="fx-more project-browse-btn" type="button" data-project-title="Computer Vision &amp; Hand Tracking" data-media="[{&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/compvis-demo.mp4&quot;, &quot;alt&quot;: &quot;Hand-tracking demo&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/pyHill-mockup.png&quot;, &quot;alt&quot;: &quot;Hill Climb Racing steered by hand gestures&quot;}]" data-start="0">View shots <span class="fx-more-n">2</span></button>
                                 </div>
                             </div>
                         </article>
@@ -401,7 +422,7 @@
                                 <span class="fx-pill" aria-hidden="true">View 3 shots</span>
                             </button>
                             <div class="fx-info">
-                                <p class="fx-num">04 / 05</p>
+                                <p class="fx-num">05 / 06</p>
                                 <h3 class="fx-title" id="project-seedsync-title">SeedSync</h3>
                                 <p class="fx-kind">UX / system design</p>
                                 <p class="fx-desc">An IoT-based greenhouse management system designed to monitor and control environmental
@@ -423,7 +444,7 @@
                                 <span class="fx-pill" aria-hidden="true">View full size</span>
                             </button>
                             <div class="fx-info">
-                                <p class="fx-num">05 / 05</p>
+                                <p class="fx-num">06 / 06</p>
                                 <h3 class="fx-title" id="project-iot-title">IoT Exhibition Archive</h3>
                                 <p class="fx-kind">Frontend development</p>
                                 <p class="fx-desc">A digital exhibition platform designed to showcase student projects, combining

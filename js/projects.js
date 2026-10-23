@@ -1,10 +1,10 @@
 // Projects — "My Deck of Work"
-// The section pins and its cover thumbnails form one strip: a column on
-// desktop, a side-to-side rail on phones. Scrolling moves focus along the
-// strip: the focused thumbnail grows, the rest shrink, and the focused
-// project's info slides through masks into the bottom-left corner.
-// Clicking a thumbnail focuses it; clicking the focused one opens every
-// shot, with the full write-up, in the carousel (project-carousel.js).
+// The section pins and every cover sits in the same large frame (the right
+// side on desktop, under the heading on phones). Scrolling crossfades to
+// the next project's cover, and its info slides through masks into the
+// bottom-left corner.
+// Clicking the cover opens every shot, with the full write-up, in the
+// carousel (project-carousel.js).
 const { gsap, ScrollTrigger } = window;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -76,25 +76,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // wrap every info row in a mask; rows are listed top to bottom as shown
-    // (the title sits last, under its details)
+    // (the title, and its tagline if any, sit last, under the details)
     const rows = infos.map((info) => {
         const els = Array.from(info.children);
         els.forEach((el) => {
             const ln = document.createElement("div");
             ln.className = "fx-ln"
                 + (el.classList.contains("fx-title") ? " is-title" : "")
+                + (el.classList.contains("fx-tag") ? " is-tag" : "")
                 + (el.classList.contains("deck-list") ? " is-list" : "");
             info.insertBefore(ln, el);
             ln.appendChild(el);
         });
-        return [...els.filter((el) => !el.classList.contains("fx-title")), info.querySelector(".fx-title")];
+        const last = [info.querySelector(".fx-title"), info.querySelector(".fx-tag")].filter(Boolean);
+        return [...els.filter((el) => !last.includes(el)), ...last];
     });
 
     const index = document.createElement("ol");
     index.className = "fx-index";
     index.setAttribute("aria-label", "Jump to a project");
     index.innerHTML = items.map((li, i) =>
-        `<li><button type="button" data-i="${i}">${titles[i].replace("Computer Vision & ", "").replace(" Exhibition", "")}</button></li>`).join("");
+        `<li><button type="button" data-i="${i}">${titles[i].replace(" Exhibition", "")}</button></li>`).join("");
     const indexBtns = Array.from(index.querySelectorAll("button"));
 
 
@@ -110,24 +112,30 @@ document.addEventListener("DOMContentLoaded", () => {
         const topEdge = top.offsetTop + top.offsetHeight + 16;
 
         if (W < 700) {
-            // phones: a rail, focused card left-aligned, the next one peeking in
-            // centred in the space between the heading and the tallest info
+            // phones: the cover spans the width, centred in the space
+            // between the heading and the tallest info
             const infoTop = Math.min(...infos.map((info) => info.offsetTop)) - 20;
-            let bigW = W - 16 - 48;
+            let bigW = W - 32;
             let bigH = bigW / 1.6;
-            const cap = Math.min(H * 0.32, infoTop - topEdge);
+            const cap = infoTop - topEdge;
             if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
-            const railTop = topEdge + Math.max(0, (infoTop - topEdge - bigH) / 2);
-            G = { rail: true, x: 16, bottom: railTop + bigH, bigW, bigH, sMin: 0.42, gap: 8 };
+            const y = topEdge + Math.max(0, (infoTop - topEdge - bigH) / 2);
+            G = { x: (W - bigW) / 2, y, bigW, bigH };
         } else {
-            let bigW = W * 0.3;
+            // desktop: the cover fills the right side, from just past the
+            // info column to the gutter, between the heading and the index
+            const gutter = top.offsetLeft;
+            const bottomEdge = index.offsetTop - 24;
+            let bigW = W * 0.58 - gutter;
             let bigH = bigW / 1.6;
-            const cap = H * 0.46;
+            const cap = bottomEdge - topEdge;
             if (bigH > cap) { bigH = cap; bigW = bigH * 1.6; }
-            G = { rail: false, x: W * 0.44, focusY: H * 0.47, bigW, bigH, sMin: 0.4, gap: 10 };
+            const y = topEdge + Math.max(0, (bottomEdge - topEdge - bigH) / 2);
+            G = { x: W - gutter - bigW, y, bigW, bigH };
         }
         frame.style.setProperty("--fx-w", `${G.bigW}px`);
         frame.style.setProperty("--fx-h", `${G.bigH}px`);
+        thumbs.forEach((t) => { t.style.transform = `translate(${G.x}px, ${G.y}px)`; });
     };
 
     // the frame matches the visible height; the scroll length per project
@@ -150,35 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
         layout(st.progress * (N - 1));
     };
 
-    // f runs 0 → N-1 across the pin; whole numbers are a project in focus
-    const layout = (f) => {
-        const s = [];
-        const pos = [];
-        let p = 0;
-        for (let i = 0; i < N; i++) {
-            const k = Math.max(0, 1 - Math.abs(i - f));
-            s[i] = G.sMin + (1 - G.sMin) * k * k * (3 - 2 * k);
-            pos[i] = p;
-            p += (G.rail ? G.bigW : G.bigH) * s[i] + G.gap;
-        }
-        const a = Math.floor(f);
-        const b = Math.min(N - 1, a + 1);
-
-        if (G.rail) {
-            // left edges slide past the gutter; bottoms stay on one line
-            const off = G.x - (pos[a] + (pos[b] - pos[a]) * (f - a));
-            thumbs.forEach((t, i) => {
-                t.style.transform = `translate(${pos[i] + off}px, ${G.bottom - G.bigH * s[i]}px) scale(${s[i]})`;
-            });
-        } else {
-            const mid = (i) => pos[i] + (G.bigH * s[i]) / 2;
-            const off = G.focusY - (mid(a) + (mid(b) - mid(a)) * (f - a));
-            thumbs.forEach((t, i) => {
-                t.style.transform = `translate(${G.x}px, ${pos[i] + off}px) scale(${s[i]})`;
-            });
-        }
-        setActive(Math.round(f));
-    };
+    // f runs 0 → N-1 across the pin; whole numbers are a project in focus,
+    // and the cover crossfades once f passes the halfway mark
+    const layout = (f) => setActive(Math.round(f));
 
 
     // ─── Focus ───────────────────────────────────────────────
@@ -189,16 +171,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const setActive = (i) => {
         if (i === active) return;
         active = i;
-        thumbs.forEach((t, j) => {
-            t.classList.toggle("is-focus", j === i);
-            t.setAttribute("aria-label", j === i ? openLabels[j] : `Show ${titles[j]}`);
-        });
+        thumbs.forEach((t, j) => t.setAttribute("aria-label", j === i ? openLabels[j] : `Show ${titles[j]}`));
         indexBtns.forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
         if (countNow) countNow.textContent = pad(i);
         syncVideos();
 
         // mid-jump, skip the projects being passed and swap once on arrival
-        if (jumpTo === null || jumpTo === i) showInfo(i);
+        if (jumpTo === null || jumpTo === i) show(i);
+    };
+
+    // the incoming cover fades in on top; the outgoing one fades out under it
+    const show = (i) => {
+        thumbs.forEach((t, j) => t.classList.toggle("is-focus", j === i));
+        showInfo(i);
     };
 
 
@@ -237,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // whatever happened in between, the focused project's info ends up on screen
     const ensure = () => {
         if (!st || jumpTo !== null) return;
-        if (shown !== active) { showInfo(active); return; }
+        if (shown !== active) { show(active); return; }
         if (rows.some((r) => r.some((el) => gsap.isTweening(el)))) return;
         infos.forEach((info, j) => info.classList.toggle("is-on", j === shown));
         gsap.set(rows[shown], { y: 0 });
@@ -264,17 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else { window.scrollTo({ top: y, behavior: "smooth" }); }
     };
 
-    // a thumbnail out of focus scrolls to its project instead of opening
-    // the carousel (capture runs before the carousel's own listener)
-    frame.addEventListener("click", (e) => {
-        if (!st) return;
-        const t = e.target.closest(".fx-thumb");
-        if (!t || t.classList.contains("is-focus")) return;
-        e.stopPropagation();
-        go(thumbs.indexOf(t));
-    }, true);
-
-    // tabbing onto a thumbnail brings it into focus
+    // tabbing onto a hidden cover brings it into focus
     frame.addEventListener("focusin", (e) => {
         if (!st || e.target.matches(":not(:focus-visible)")) return;
         const t = e.target.closest(".fx-thumb");
