@@ -141,7 +141,7 @@ function setupIdentities(section, panels, cards, flat) {
 
         section.classList.add("is-pinned");
 
-        const parts = panels.map((p) => p.querySelectorAll(".id-title, .id-meta, .id-copy, .about-timeline"));
+        const parts = panels.map((p) => p.querySelectorAll(".id-title, .id-meta, .about-bio, .about-timeline"));
         gsap.set(panels.slice(1), { autoAlpha: 0 });
         gsap.set(fills, { scaleX: 0 });
         let active = 0;
@@ -172,18 +172,20 @@ function setupIdentities(section, panels, cards, flat) {
             });
         };
 
-        // the old copy lifts away, the new copy rises in out of a blur
+        // the same swap as the projects' info: each line slides out through
+        // its own mask and the next role's lines slide in after it
+        // (--my is in line heights, see about.css)
+        const slideIn = (els, dir, delay) => gsap.fromTo(els, { "--my": dir },
+            { "--my": 0, duration: 0.62, ease: "power3.out", stagger: 0.055, delay });
+
         const swapCopy = (from, to, dir) => {
             gsap.killTweensOf([...parts[from], ...parts[to]]);
             gsap.to(parts[from], {
-                opacity: 0, y: -dir * 22, filter: "blur(6px)",
-                duration: 0.3, ease: "power2.in", stagger: 0.03,
+                "--my": -dir, duration: 0.32, ease: "power2.in", stagger: 0.025,
                 onComplete: () => gsap.set(panels[from], { autoAlpha: 0 })
             });
             gsap.set(panels[to], { autoAlpha: 1 });
-            gsap.fromTo(parts[to],
-                { opacity: 0, y: dir * 26, filter: "blur(8px)" },
-                { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "expo.out", stagger: 0.06, delay: 0.18, clearProps: "filter" });
+            slideIn(parts[to], dir, 0.16);
             underline(to, 0.55);
         };
 
@@ -220,7 +222,7 @@ function setupIdentities(section, panels, cards, flat) {
 
         // Entrance: the badge lowers in once and the first copy rises
         gsap.set(rig, { y: -(rig.offsetHeight + 60) });
-        gsap.set(parts[0], { opacity: 0, y: 26 });
+        gsap.set(parts[0], { "--my": 1 });
         ScrollTrigger.create({
             trigger: stage,
             start: "top 65%",
@@ -239,10 +241,10 @@ function setupIdentities(section, panels, cards, flat) {
                         }, 0.5);
                 }
                 if (active === 0) {
-                    gsap.to(parts[0], { opacity: 1, y: 0, duration: 1, ease: "expo.out", stagger: 0.08, delay: 0.15 });
+                    slideIn(parts[0], 1, 0.15);
                     underline(0, 0.9);
                 } else {
-                    gsap.set(parts[0], { opacity: 1, y: 0 });
+                    gsap.set(parts[0], { "--my": 0 });
                 }
                 gsap.from(".about-track-fill", { scaleX: 0, duration: 1.4, ease: "expo.out", delay: 0.6 });
                 gsap.from(".about-now", { scale: 0, duration: 0.5, ease: "back.out(2)", delay: 1.3 });

@@ -353,6 +353,16 @@ html:not(.js) .id-lanyard {
     --hl: 0%;
 }
 
+/* pinned, every line of copy slides through its own mask like the
+   projects' info: about.js runs --my from ±1 (one full height and a gap
+   away) to 0, and the clip holds still over where the line rests */
+.about-section.is-pinned :is(.id-title, .id-meta, .about-bio, .about-timeline) {
+    --my: 0;
+    --my-y: calc(var(--my) * (100% + 12px));
+    transform: translateY(var(--my-y));
+    clip-path: inset(calc(-1 * var(--my-y) - 0.5rem) -0.5rem calc(var(--my-y) - 0.5rem) -0.5rem);
+}
+
 
 /* ─── Timeline: where "now" sits between 2023 and 2027 ────── */
 .about-timeline {
