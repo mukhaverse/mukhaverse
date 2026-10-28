@@ -15,6 +15,14 @@
 }
 
 #splash text {
-    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-    fill: #662020;
+    font-family: var(--font-body);
+    font-weight: 500;
+    fill: var(--mid, #3a3532);
+}
+
+/* counters speak in the hero title's face */
+#splash text.num {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: .04em;
 }

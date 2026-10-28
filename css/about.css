@@ -555,7 +555,8 @@ html:not(.js) .id-lanyard {
 
     .about-inner {
         display: block;
-        padding: clamp(9rem, 45svh, 24rem) 1rem clamp(9rem, 45svh, 24rem);
+        /* a longer run after the statement so it has a beat before contact */
+        padding: clamp(9rem, 45svh, 24rem) 1rem clamp(14rem, 70svh, 34rem);
     }
 
     .about-statement {

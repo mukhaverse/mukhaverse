@@ -12,11 +12,21 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 
 
 const w = window.innerWidth;
+// where the title comes to rest
+const titleY = () => {
+    if (w < 576) return -200;
+    if (w < 992) return -250;
+    return -40;
+};
+// js/keyboard-splash.js types the name and grows it into place itself, landing it here
+const nameHandoff = document.documentElement.classList.contains("splash-name");
 
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-gsap.set(".hero-title", { opacity: 0, y: 150, scale:1.5});
+if (nameHandoff) gsap.set(".hero-title", { y: titleY() });
+else gsap.set(".hero-title", { opacity: 0, y: 150, scale:1.5});
 gsap.set(".hero-divider", { opacity: 0, y: -20 });
-gsap.set(".navbar", { opacity: 0, y: -20 });
+// after the splash the navbar must already sit in place: its corner labels slide onto it
+gsap.set(".navbar", { opacity: 0, y: document.documentElement.classList.contains("splash-on") ? 0 : -20 });
 // gsap.set(".hero-cards .card", { x: 70, opacity: 0 });
 gsap.set(".hero-description", { opacity: 0, x: -20,  y: () => {    
         if (w < 576) return 85;
@@ -29,7 +39,7 @@ gsap.set(".hero-cards .card", { y: 10, opacity: 0,force3D: true,
 
 
 const reduceHero = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-// js/splash.js covers the page on first visit; start the intro as it lifts
+// js/keyboard-splash.js covers the page on first visit; start the intro as it lifts
 const splashOn = document.documentElement.classList.contains("splash-on");
 const tl = gsap.timeline({
     defaults: { ease: "power2.out" },
@@ -38,26 +48,23 @@ const tl = gsap.timeline({
 if (splashOn && !reduceHero) window.addEventListener("splash:done", () => tl.play(), { once: true });
 
 
+if (!nameHandoff) {
 tl.to(".hero-title", {
     scale: 1,
     opacity: 1,
     duration: 0.7,
     ease: "power4.out",
-    delay:.7
+    delay: splashOn ? .3 : .7
 });
 
 
 
 
 tl.to(".hero-title", {
-   y: () => {
-
-        if (w < 576) return -200;    
-        if (w < 992) return -250;    
-        return -40;                  
-    },
+   y: titleY,
     duration: 0.6
 });
+}
 
 
 
@@ -66,13 +73,13 @@ tl.to(".hero-divider", {
     opacity: 1,
     y: 0,
     duration: 0.6
-}, "-=0.2");
+}, nameHandoff ? 0 : "-=0.2");
 
 tl.to(".navbar", {
     opacity: 1,
     y: 0,
     duration: 0.6
-}, "-=0.5");
+}, splashOn ? 0 : "-=0.5");
 
 
 
@@ -94,7 +101,7 @@ tl.to(".hero-cards .card", {
     stagger: 0.09,
     duration: 0.35,
     ease: "back.out(2)"
-}, "-=1.2");
+}, nameHandoff ? 0.1 : "-=1.2");
 
 
 
@@ -167,3 +174,6 @@ gsap.utils.toArray(".hero-card-float").forEach((card, i) => {
     })
 
 })
+// the keyboard splash waits for this before it measures where the title rests
+window.__heroReady = true;
+window.dispatchEvent(new Event("hero:ready"));

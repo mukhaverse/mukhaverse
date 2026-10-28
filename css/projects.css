@@ -1,4 +1,4 @@
-/* ─── Projects: "My Deck of Work" ─────────────────────────────
+/* ─── Projects ────────────────────────────────────────────────
    One cover thumbnail per project. Without JS (or with reduced motion,
    or on very short screens) it is a plain list. With JS the section
    pins: every cover sits in one large frame and they crossfade as the
@@ -26,8 +26,19 @@
     gap: 1rem;
 }
 
+/* the heading is kept for screen readers and the outline only */
+.fx-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 .fx-count {
     display: none;
+    margin-left: auto;
 }
 
 .fx-count-now {
@@ -315,10 +326,6 @@
     right: var(--fx-gutter);
 }
 
-.fx-on .fx-heading {
-    font-size: clamp(1.8rem, 2.6vw, 2.6rem);
-}
-
 /* the counter top-right replaces each project's own number */
 .fx-on .fx-ln:has(> .fx-num) {
     display: none;
@@ -478,10 +485,6 @@
 }
 
 @media (max-width: 699px) {
-    .fx-on .fx-heading {
-        font-size: 1.6rem;
-    }
-
     .fx-on .fx-top {
         top: clamp(1.25rem, 4vh, 2.25rem);
     }

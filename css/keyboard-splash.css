@@ -1,0 +1,102 @@
+/* keyboard splash, built by js/keyboard-splash.js */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    cursor: pointer;
+    --splash-m: clamp(12px, 3.5vmin, 40px);
+    --splash-line: rgba(22, 20, 18, .14);
+}
+
+#splash .sheet {
+    position: absolute;
+    inset: 0;
+    background: var(--cream, #F9F4EB);
+
+    /* hairline's palette on the cream: warm greys, and the pressed key in the cards' red */
+    --hairline-plate: var(--cream, #F9F4EB);
+    --hairline-hi: var(--suit-red, #EB1C24);
+    --hairline-edge: #5f5750;
+    --hairline-mid: #a99e93;
+    --hairline-lo: #e3dace;
+    --hairline-stroke: 1.2;
+}
+
+#splash .sheet::before {
+    content: "";
+    position: absolute;
+    inset: var(--splash-m);
+    border: 1px solid var(--splash-line);
+}
+
+#splash .corner {
+    position: absolute;
+    top: calc(var(--splash-m) + 1.6em);
+    font-family: var(--font-body);
+    font-size: clamp(9px, .9vw, 13px);
+    font-weight: 500;
+    letter-spacing: .14em;
+    color: var(--mid, #3a3532);
+}
+#splash .corner.l { left: calc(var(--splash-m) + 1.2em); }
+#splash .corner.r { right: calc(var(--splash-m) + 1.2em); }
+
+#splash .kb {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    width: min(58vw, 760px);
+    transform: translate(-50%, -50%);
+}
+
+#splash .loader {
+    position: absolute;
+    left: calc(var(--splash-m) + 1.2em);
+    right: calc(var(--splash-m) + 1.2em);
+    bottom: calc(var(--splash-m) + 1.2em);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: clamp(9px, .9vw, 13px);
+}
+#splash .loader b {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.6em;
+    color: var(--dark, #161412);
+    min-width: 3.2ch;
+    font-variant-numeric: tabular-nums;
+}
+#splash .track { flex: 1; height: 1px; background: var(--splash-line); position: relative; }
+#splash .track i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--suit-red, #EB1C24); }
+
+/* the caret, inside the hero title while it is typed */
+.splash-caret {
+    position: absolute;
+    width: .06em;
+    height: .7em;
+    background: var(--suit-red, #EB1C24);
+    animation: splash-blink 1s steps(1) infinite;
+    pointer-events: none;
+}
+@keyframes splash-blink { 50% { opacity: 0; } }
+
+/* the letter spans must stay plain text (cards.css styles every span) */
+.hero-title .ch {
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: inherit;
+    white-space: pre;
+}
+.hero-title .splash-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    #splash .kb { width: 92vw; top: 42%; }
+}
