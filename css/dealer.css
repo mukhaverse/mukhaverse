@@ -1,0 +1,84 @@
+/* the dealer, built by js/dealer.js: the shoe takes the fan's place and gets the bigger column */
+.contact-inner.has-dealer {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr);
+    max-width: 1240px;
+    gap: 3rem;
+}
+
+.dealer {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+}
+
+/* the table runs wider than its column and off past the page's right edge */
+.contact-section:has(.dealer) { overflow-x: clip; }
+
+.dealer-fig {
+    position: relative;
+    justify-self: start;
+    width: 128%;
+    max-width: 980px;
+    aspect-ratio: 400 / 256;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+
+    --dl-plate: var(--cream, #F9F4EB);
+    --dl-edge: #5f5750;
+    --dl-mid: #a99e93;
+    --dl-lo: #d9cfc2;
+    --dl-hi: var(--suit-red, #EB1C24);
+}
+.dealer-fig svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dealer-fig path {
+    fill: var(--dl-plate);
+    stroke: var(--dl-edge);
+    stroke-width: 1.3;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke .2s ease;
+}
+.dealer-fig .nf { fill: none; }
+.dealer-fig .fo { stroke: none; }
+.dealer-fig .mid { stroke: var(--dl-mid); }
+.dealer-fig .lo { stroke: var(--dl-lo); }
+.dealer-fig .hi { stroke: var(--dl-hi); stroke-width: 2; }
+.dealer-fig .chip-line { stroke: rgba(255, 255, 255, .85); stroke-dasharray: 3 3; }
+.dealer-fig text { font-family: var(--font-display); fill: var(--dark, #161412); stroke: none; }
+.dealer-fig text.faint { fill: var(--dl-lo); letter-spacing: .08em; }
+.dealer-fig text.spot-on { fill: var(--dl-hi); letter-spacing: .08em; }
+.dealer-fig text.card-label { letter-spacing: .1em; }
+.dealer-fig text.card-handle { font-family: var(--font-body); font-weight: 500; fill: var(--mid, #3a3532); }
+
+/* real buttons and links laid over the drawing, cut to its shapes */
+.dealer-hits { position: absolute; inset: 0; }
+.dealer-hit {
+    position: absolute;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    outline: none;            /* focus shows in the drawing as the red outline */
+}
+
+.dealer-hint {
+    margin: 0;
+    min-height: 1.6em;
+    font-size: .95rem;
+    color: var(--mid, #3a3532);
+    text-align: center;
+}
+
+/* without the script (or before it runs) the links are a plain list */
+.dealer-links { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; list-style: none; margin: 0; padding: 0; }
+.dealer-links a { color: var(--dark, #161412); }
+.dealer-on .dealer-links { display: none; }
+
+@media (max-width: 992px) {
+    .contact-inner.has-dealer { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .dealer-fig { width: 122%; margin-left: -4%; }
+}
