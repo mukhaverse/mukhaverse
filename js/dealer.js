@@ -9,19 +9,23 @@
     /* ---------- choose the dealer's setup here ---------- */
 
     const DEALER = {
-        pick: "spots",     // how visitors pick:   "spots" four printed spots, every card stays on the table
+        pick: "tray",      // how visitors pick:   "spots" four printed spots, every card stays on the table
                            //                      "chips" four chip stacks, one card on the table at a time
+                           //                      "tray"  a tray with a button for each card, its logo on the face,
+                           //                              one card on the table at a time
         move: "above",     // the camera move while the section is pinned:
                            //                      "above" a flat plan from overhead tips into the angled view
                            //                      "eye"   from table height up to the angled view
                            //                      "orbit" the table swings round most of a quarter turn
                            //                      "tour"  close on the shoe, along the table, then pull back
         length: "short",   // how long the section stays pinned: "short" (under a screen) or "long" (about two)
-        sweep: "flick",    // chips only, what the last card does when another chip is picked:
+        sweep: "flick",    // chips and tray, what the last card does when another one is picked:
                            //                      "flick"   spins off the table
                            //                      "discard" flips face down onto a pile
     };
     const PIN_SCREENS = { short: .8, long: 1.8 };
+    // the end of the pin where the table sits at rest before the footer comes up, longer on phones
+    const PIN_HOLD = { phone: .45, wide: .2 };
 
     const root = document.getElementById("dealer");
     if (!root) return;
@@ -36,6 +40,7 @@
     const tok = (name, fallback) => tokens.getPropertyValue(name).trim() || fallback;
     const RED = tok("--suit-red", "#EB1C24");
     const SLOT = "#2a2522";
+    const INK = tok("--dark", "#161412");
     // the links come from the plain list in the markup, so they live in one place
     const SUITS = { email: ["E", "✉︎", "--accent-1", "write to me"], linkedin: ["in", "◈", "--accent-2", "open my profile"], github: ["GH", "◆", "--accent-3", "see my code"], x: ["X", "♠", "--accent-4", "follow along"] };
     const CARDS = [...root.querySelectorAll(".dealer-links a")].map(a => {
@@ -204,8 +209,11 @@
         } else {
             const inner = band(rrect(w - 8, h - 8, 2).map(([a, b]) => [a + 4, b + 4]));
             if (inner.length > 2) cv.path(inner.map(at), "nf lo", { alpha });
-            const d = band([[w / 2, h / 2 - 7], [w / 2 + 5, h / 2], [w / 2, h / 2 + 7], [w / 2 - 5, h / 2]]);
-            if (d.length > 2 && (o.b0 == null || h / 2 >= o.b0)) cv.path(d.map(at), "fo", { fill: RED, alpha });
+            const [shapes, red] = PIPS[o.back] || PIPS.diamond;
+            for (const pts of shapes) {
+                const d = band(pts.map(([a, b]) => [w / 2 + a, h / 2 + b]));
+                if (d.length > 2 && (o.b0 == null || h / 2 >= o.b0)) cv.path(d.map(at), "fo", { fill: red ? RED : INK, alpha });
+            }
         }
     }
 
@@ -216,7 +224,46 @@
     const SINGLE = [150, 160];
     const DISCARD = [44, 168];
     const CHIPS = [[100, 14], [136, 14], [100, 50], [136, 50]];
-    const spots = PICK === "spots";
+    const spots = PICK === "spots", tray = PICK === "tray";
+    const TRAY_H = 7, BTN = 26;           // the tray's height, and its buttons' size (they sit where the chips do)
+
+    // each card's logo on its button, in a square from -1 to 1 (y towards the front of the table)
+    const circle = r => Array.from({ length: 28 }, (_, i) => [Math.cos(i / 28 * Math.PI * 2) * r, Math.sin(i / 28 * Math.PI * 2) * r]);
+    const LOGOS = {
+        email: [                                          // an envelope
+            { pts: [[-1, -.7], [1, -.7], [1, .7], [-1, .7]], fill: true },
+            { pts: [[-1, -.7], [0, .15], [1, -.7]], open: true },
+        ],
+        linkedin: [                                       // "in" on a rounded square
+            { pts: rrect(1.8, 1.8, .35).map(([a, b]) => [a - .9, b - .9]), fill: true },
+            { text: "in", at: [0, .05], size: 1.25 },
+        ],
+        github: [                                         // the cat's head in a disc
+            { pts: circle(1), fill: true },
+            { pts: [[0, .62], [-.42, .5], [-.6, .12], [-.56, -.22], [-.6, -.62], [-.28, -.46], [0, -.5], [.28, -.46], [.6, -.62], [.56, -.22], [.6, .12], [.42, .5]] },
+        ],
+        x: [                                              // a thin stroke under a thick one
+            { pts: [[.78, -.85], [-.78, .85]], open: true },
+            { pts: [[-.9, -.85], [-.4, -.85], [.9, .85], [.4, .85]], fill: true },
+        ],
+    };
+
+    // the suit in the middle of a card's back, as shapes around the centre, and whether it's red
+    const heart = (k, up) => Array.from({ length: 24 }, (_, i) => {
+        const t = i / 24 * Math.PI * 2;
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) - 2.6;
+        return [16 * Math.sin(t) ** 3 * k, y * k * (up ? -1 : 1)];
+    });
+    const shift = (pts, dx, dy) => pts.map(([a, b]) => [a + dx, b + dy]);
+    const PIPS = {
+        heart: [[heart(.36)], true],
+        diamond: [[[[0, -7], [5, 0], [0, 7], [-5, 0]]], true],
+        spade: [[shift(heart(.32, true), 0, -1.2), [[0, 1], [2.4, 6.5], [-2.4, 6.5]]], false],
+        club: [[shift(circle(2.7), 0, -3.2), shift(circle(2.7), -3, 1.2), shift(circle(2.7), 3, 1.2), [[0, 0], [2.2, 6.5], [-2.2, 6.5]]], false],
+    };
+    // each card out of the shoe gets the next suit on its back
+    const BACKS = ["spade", "heart", "club", "diamond"];
+    let backs = 0;
 
     // the shoe as a solid: its corners, and each face with its outward direction
     const SV = [[0, 0, 0], [56, 0, 0], [56, FRONT, 0], [0, FRONT, 0], [0, 0, 46], [56, 0, 46], [56, FRONT, 24], [0, FRONT, 24]];
@@ -229,7 +276,7 @@
     ];
     const top = (x, y, dz = 0) => [x, y, 46 - 22 * y / FRONT + dz];
 
-    const fresh = () => ({ info: null, cx: 28, cy: FRONT - L / 2, cz: 6, yaw: 0, flip: 0, alpha: 1, inShoe: true, hover: spring(0, 220, 18), link: null });
+    const fresh = () => ({ back: BACKS[backs++ % BACKS.length], info: null, cx: 28, cy: FRONT - L / 2, cz: 6, yaw: 0, flip: 0, alpha: 1, inShoe: true, hover: spring(0, 220, 18), link: null });
     let cur = fresh(), dealt = [], pile = [], busy = false, picked = false, hover = null, now = 0;
     const peek = spring(0, 140, 18);
     const chipLift = CARDS.map(() => spring(0, 260, 16));
@@ -242,7 +289,7 @@
     const corners = c => { const [O, U, V] = pose(c); return [[0, 0], [W, 0], [W, L], [0, L]].map(onPlane(O, U, V)); };
     const drawOne = (c, inShoe) => {
         const [O, U, V] = pose(c);
-        drawCard(O, U, V, c.info, { w: W, h: L, flip: true, alpha: c.alpha, hi: c.hover.v > .3, b0: inShoe ? FRONT - O[1] : undefined });
+        drawCard(O, U, V, c.info, { w: W, h: L, flip: true, back: c.back, alpha: c.alpha, hi: c.hover.v > .3, b0: inShoe ? FRONT - O[1] : undefined });
     };
 
     // the resting view: the whole table fitted to the drawing, in the isometric angle
@@ -298,6 +345,44 @@
         cv.text(info.v, face, X, Y, 10.5);
     }
 
+    // a box standing on the table: the sides facing the camera, then the top
+    function box(x0, y0, x1, y1, z0, z1, cls = "") {
+        for (const [[a0, a1], [b0, b1], nrm] of [[[x0, y0], [x1, y0], [0, -1, 0]], [[x1, y0], [x1, y1], [1, 0, 0]], [[x1, y1], [x0, y1], [0, 1, 0]], [[x0, y1], [x0, y0], [-1, 0, 0]]])
+            if (facing(nrm)) cv.path([[a0, a1, z0], [b0, b1, z0], [b0, b1, z1], [a0, a1, z1]], cls);
+        cv.path([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], cls);
+    }
+
+    // a button pressed in by hovering or clicking, and in turn while nothing has been picked yet
+    const press = i => clamp(chipLift[i].v + (!picked && !reduce ? .35 * Math.max(0, Math.sin(now * 2.4 - i * .8)) : 0), 0, 1);
+    const capZ = i => TRAY_H + .3 + 1.6 * (1 - press(i));
+    const capCorners = i => {
+        const [x, y] = CHIPS[i], h = BTN / 2;
+        return [TRAY_H, capZ(i)].flatMap(z => [[x - h, y - h, z], [x + h, y - h, z], [x + h, y + h, z], [x - h, y + h, z]]);
+    };
+
+    // the logo in outline, filled with the card's colour only while its button is under the pointer
+    function drawMark(info, c, r, on) {
+        const at = ([a, b]) => [c[0] + a * r, c[1] + b * r, c[2] + .05];
+        const marks = LOGOS[info.key];
+        if (!marks) return cv.text(info.v, c, X, Y, r * 1.2);
+        for (const m of marks) {
+            if (m.text) cv.text(m.text, at(m.at), X, Y, m.size * r);
+            else cv.path(m.pts.map(at), m.open ? "nf" : "", { fill: m.fill && on ? info.fill : undefined, closed: !m.open });
+        }
+    }
+
+    // the tray: a low block on the felt with each card's button set into a groove in its top
+    function drawTray() {
+        const h = BTN / 2, pad = 8;
+        box(CHIPS[0][0] - h - pad, CHIPS[0][1] - h - pad, CHIPS[3][0] + h + pad, CHIPS[3][1] + h + pad, 0, TRAY_H);
+        CARDS.map((_, i) => i).sort((a, b) => depth([...CHIPS[a], 0]) - depth([...CHIPS[b], 0])).forEach(i => {
+            const [x, y] = CHIPS[i], z = capZ(i), on = hover === "btn" + i;
+            cv.path(rrect(BTN + 3, BTN + 3, 3).map(([a, b]) => [x - h - 1.5 + a, y - h - 1.5 + b, TRAY_H]), "nf lo");
+            box(x - h, y - h, x + h, y + h, TRAY_H, z, on ? "hi" : "mid");
+            drawMark(CARDS[i], [x, y, z], h * .5, on);
+        });
+    }
+
     function draw() {
         n = 0;
         cv.frame();
@@ -321,7 +406,8 @@
 
         // everything standing on the felt, back to front for wherever the camera is
         const stand = [{ d: depth([28, 39, 15]), f: drawShoe }];
-        if (!spots) CHIPS.forEach((c, i) => stand.push({ d: depth([c[0], c[1], 5]), f: () => drawChips(i) }));
+        if (tray) stand.push({ d: depth([118, 32, 4]), f: drawTray });
+        else if (!spots) CHIPS.forEach((c, i) => stand.push({ d: depth([c[0], c[1], 5]), f: () => drawChips(i) }));
         for (const c of [...pile.slice(-8), ...dealt]) if (c) stand.push({ d: depth([c.cx, c.cy, 0]) + c.cz * 5, f: () => drawOne(c) });
         stand.sort((a, b) => a.d - b.d).forEach(x => x.f());
 
@@ -418,7 +504,8 @@
 
     if (!spots) CARDS.forEach((info, i) => {
         const [x, y] = CHIPS[i];
-        const h = hit("button", `Deal the ${info.label} card`, "chip" + i, () => {
+        // chips lift as they're picked, buttons press in
+        const h = hit("button", `Deal the ${info.label} card`, (tray ? "btn" : "chip") + i, tray ? () => hull(capCorners(i).map(cv.view)) : () => {
             const pts = [];
             for (const z of [0, 7.2 + 3.4 + chipLift[i].v * 6]) for (const p of ring([x, y, z], X, Y, 14, 16)) pts.push(cv.view(p));
             return hull(pts);
@@ -427,7 +514,7 @@
             setTimeout(() => { chipLift[i].t = 0; }, 260);
             await deal(i, SINGLE, -.32);
         });
-        h.el.addEventListener("pointerenter", () => { chipLift[i].t = .5; });
+        h.el.addEventListener("pointerenter", () => { chipLift[i].t = tray ? .3 : .5; });
         h.el.addEventListener("pointerleave", () => { chipLift[i].t = 0; });
     });
     else CARDS.forEach((info, i) => {
@@ -441,7 +528,7 @@
             });
     });
 
-    say(spots ? "Pick a spot on the table." : "Pick a chip and I'll deal you a card.");
+    say(spots ? "Pick a spot on the table." : tray ? "Press a button and I'll deal you a card." : "Pick a chip and I'll deal you a card.");
 
     /* ---------- the camera move while the section is pinned ---------- */
 
@@ -496,14 +583,17 @@
     if (!reduce && section && window.gsap && window.ScrollTrigger) {
         target = 0;
         gsap.registerPlugin(ScrollTrigger);
+        const phone = matchMedia("(max-width: 768px)");
+        const hold = () => phone.matches ? PIN_HOLD.phone : PIN_HOLD.wide;
         ScrollTrigger.create({
             trigger: section,
             // a section taller than the screen pins once its bottom is in view, so nothing is cut off
             start: () => section.offsetHeight > innerHeight ? "bottom bottom" : "top top",
-            end: () => "+=" + innerHeight * (PIN_SCREENS[DEALER.length] || PIN_SCREENS.short),
+            // the move keeps its length and the hold is added after it
+            end: () => "+=" + innerHeight * (PIN_SCREENS[DEALER.length] || PIN_SCREENS.short) / (1 - hold()),
             pin: true,
             refreshPriority: -1,           // the last section on the page: measure it after the pins above
-            onUpdate: self => { target = self.progress; },
+            onUpdate: self => { target = Math.min(1, self.progress / (1 - hold())); },
         });
     }
     let sp = target;
