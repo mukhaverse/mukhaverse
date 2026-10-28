@@ -9,7 +9,7 @@
     /* ---------- choose the dealer's setup here ---------- */
 
     const DEALER = {
-        pick: "tray",      // how visitors pick:   "spots" four printed spots, every card stays on the table
+        pick: "chips",      // how visitors pick:   "spots" four printed spots, every card stays on the table
                            //                      "chips" four chip stacks, one card on the table at a time
                            //                      "tray"  a tray with a button for each card, its logo on the face,
                            //                              one card on the table at a time
@@ -225,7 +225,8 @@
     const DISCARD = [44, 168];
     const CHIPS = [[100, 14], [136, 14], [100, 50], [136, 50]];
     const spots = PICK === "spots", tray = PICK === "tray";
-    const TRAY_H = 7, BTN = 26;           // the tray's height, and its buttons' size (they sit where the chips do)
+    const TRAY_H = 3.5, BTN = 20;         // the tray's height, and its buttons' size (they sit where the chips do)
+    const BTN_RISE = 1.2, TRAY_PAD = 5;   // how far a button stands up out of the tray, and the tray's margin round them
 
     // each card's logo on its button, in a square from -1 to 1 (y towards the front of the table)
     const circle = r => Array.from({ length: 28 }, (_, i) => [Math.cos(i / 28 * Math.PI * 2) * r, Math.sin(i / 28 * Math.PI * 2) * r]);
@@ -354,7 +355,7 @@
 
     // a button pressed in by hovering or clicking, and in turn while nothing has been picked yet
     const press = i => clamp(chipLift[i].v + (!picked && !reduce ? .35 * Math.max(0, Math.sin(now * 2.4 - i * .8)) : 0), 0, 1);
-    const capZ = i => TRAY_H + .3 + 1.6 * (1 - press(i));
+    const capZ = i => TRAY_H + .3 + BTN_RISE * (1 - press(i));
     const capCorners = i => {
         const [x, y] = CHIPS[i], h = BTN / 2;
         return [TRAY_H, capZ(i)].flatMap(z => [[x - h, y - h, z], [x + h, y - h, z], [x + h, y + h, z], [x - h, y + h, z]]);
@@ -373,11 +374,11 @@
 
     // the tray: a low block on the felt with each card's button set into a groove in its top
     function drawTray() {
-        const h = BTN / 2, pad = 8;
+        const h = BTN / 2, pad = TRAY_PAD;
         box(CHIPS[0][0] - h - pad, CHIPS[0][1] - h - pad, CHIPS[3][0] + h + pad, CHIPS[3][1] + h + pad, 0, TRAY_H);
         CARDS.map((_, i) => i).sort((a, b) => depth([...CHIPS[a], 0]) - depth([...CHIPS[b], 0])).forEach(i => {
             const [x, y] = CHIPS[i], z = capZ(i), on = hover === "btn" + i;
-            cv.path(rrect(BTN + 3, BTN + 3, 3).map(([a, b]) => [x - h - 1.5 + a, y - h - 1.5 + b, TRAY_H]), "nf lo");
+            cv.path(rrect(BTN + 2.4, BTN + 2.4, 2.5).map(([a, b]) => [x - h - 1.2 + a, y - h - 1.2 + b, TRAY_H]), "nf lo");
             box(x - h, y - h, x + h, y + h, TRAY_H, z, on ? "hi" : "mid");
             drawMark(CARDS[i], [x, y, z], h * .5, on);
         });
