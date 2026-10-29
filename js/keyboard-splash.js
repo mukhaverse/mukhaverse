@@ -16,10 +16,10 @@
     root.classList.add("splash-on", "splash-name");
 
     // the handoff, in ms from the moment Enter is pressed
-    const T = { caret: 120, drop: 520, fly: 1000, sheetAt: 150, sheet: 650, heroAt: 520, labels: 650 };
+    const T = { caret: 100, drop: 420, fly: 700, sheetAt: 100, sheet: 500, heroAt: 380, labels: 550 };
     const EASE = {
         io: "cubic-bezier(.65,0,.35,1)",
-        fly: "cubic-bezier(.7,0,.25,1)",
+        fly: "cubic-bezier(.6,0,.15,1)",
         in: "cubic-bezier(.55,0,1,.45)",
         draw: "cubic-bezier(.6,0,.2,1)",
     };

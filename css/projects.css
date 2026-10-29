@@ -1,64 +1,117 @@
 /* ─── Projects ────────────────────────────────────────────────
-   One cover thumbnail per project. Without JS (or with reduced motion,
-   or on very short screens) it is a plain list. With JS the section
-   pins: every cover sits in one large frame and they crossfade as the
-   focus moves, while the title and info swap in the bottom-left
-   corner. Every thumbnail opens
-   the project's full set of shots in the carousel. */
+   The projects scroll as a plain list: a cover, then a short write-up.
+   Beside them sits a sticky panel with the heading and Hairline's
+   Riffle, cropped in the bottom corner with the current project's
+   number set over it (projects.js pulls a card for each project).
+   On phones the panel becomes a slim strip stuck to the top.
+   Every cover opens the project's full set of shots in the carousel,
+   which reuses the .fx-* and .deck-* styles below. */
 
 .projects-section {
     --fx-gutter: clamp(1rem, 4vw, 3rem);
+    /* the Riffle's lines, drawn on the section's own ground */
+    --hairline-plate: var(--cream-2);
+    --hairline-hi: var(--wine);
+    --hairline-edge: #4a433e;
+    --hairline-mid: #a79e94;
+    --hairline-lo: #dbd3c8;
+    --hairline-stroke: 1;
     background-color: var(--cream-2);
+    overflow-x: clip;
 }
 
-
-/* ─── Plain list ──────────────────────────────────────────── */
 .fx {
-    max-width: 1280px;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2rem, 6vw, 6rem);
+    max-width: 1320px;
     margin: 0 auto;
-    padding: clamp(6rem, 14vh, 9rem) var(--fx-gutter) clamp(6rem, 14vh, 10rem);
+    padding: 0 var(--fx-gutter);
 }
 
-.fx-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
+
+/* ─── The sticky panel ────────────────────────────────────── */
+.fx-side-in {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    padding-top: clamp(5rem, 13vh, 8rem);
 }
 
-/* the heading is kept for screen readers and the outline only */
 .fx-heading {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    line-height: 0.9;
+    color: var(--dark);
+}
+
+/* the tray bleeds off the left edge; the number sits over its far end */
+.fx-deck {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    left: calc(var(--fx-gutter) * -1 - 7vw);
+    bottom: -4vh;
+    width: min(50vw, 720px);
+}
+
+.fx-riffle {
+    width: 100%;
+    pointer-events: none;
+}
+
+.fx-now {
+    position: absolute;
+    top: 6%;
+    right: 12%;
+    display: grid;
+    justify-items: end;
+    gap: 0.35rem;
+    margin: 0;
+    color: var(--dark);
+    /* a cream edge so the number sits cleanly on the lines */
+    text-shadow: 0 0 6px var(--cream-2), 0 0 2px var(--cream-2);
 }
 
 .fx-count {
-    display: none;
-    margin-left: auto;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 9vw, 8.5rem);
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
 }
 
+/* (every span on the page is small caps by default, see cards.css) */
 .fx-count-now {
-    font: inherit;
-    text-transform: none;
+    font-size: inherit;
 }
 
+.fx-count-of {
+    font-size: 0.32em;
+    color: var(--muted);
+}
+
+.fx-now-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+}
+
+
+/* ─── The list ────────────────────────────────────────────── */
 .fx-list {
-    list-style: none;
-    margin: clamp(2.5rem, 6vh, 3.5rem) 0 0;
-    padding: 0;
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: clamp(3rem, 8vh, 5rem);
+    gap: clamp(6rem, 18vh, 11rem);
+    margin: 0;
+    padding: clamp(5rem, 13vh, 8rem) 0 clamp(6rem, 22vh, 13rem);
+    list-style: none;
 }
 
 .fx-project {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(1.5rem, 4vw, 4rem);
+    gap: 1.6rem;
 }
 
 .fx-thumb {
@@ -70,7 +123,7 @@
     border: 0;
     border-radius: 6px;
     overflow: hidden;
-    background: #ebe6de;
+    background: #e7e1d7;
     cursor: pointer;
 }
 
@@ -80,6 +133,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.fx-thumb:hover img,
+.fx-thumb:hover video {
+    transform: scale(1.02);
 }
 
 /* a play mark on video covers whenever the clip isn't running,
@@ -138,17 +197,12 @@
 }
 
 
-/* ─── Info ────────────────────────────────────────────────── */
+/* ─── Info (also copied into the carousel) ────────────────── */
 .fx-info {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     min-width: 0;
-}
-
-/* mask rows are added by projects.js; they stay invisible to layout here */
-.fx-ln {
-    display: contents;
 }
 
 .fx-num {
@@ -297,287 +351,162 @@
     outline-offset: 3px;
 }
 
-@media (max-width: 760px) {
-    .fx-project {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-    }
-}
 
-
-/* ─── Focus column (class added by projects.js) ───────────── */
-.fx-on .fx {
-    position: relative;
-    max-width: none;
-    /* projects.js keeps --fx-vh at the visible height, so the frame
-       grows when a phone's browser bars slide away */
-    height: 100vh;
-    height: var(--fx-vh, 100svh);
-    padding: 0;
-    overflow: hidden;
-    background-color: var(--cream-2);
-}
-
-.fx-on .fx-top {
-    position: absolute;
-    z-index: 4;
-    top: clamp(1.25rem, 3vh, 2rem);
-    left: var(--fx-gutter);
-    right: var(--fx-gutter);
-}
-
-/* the counter top-right replaces each project's own number */
-.fx-on .fx-ln:has(> .fx-num) {
-    display: none;
-}
-
-.fx-on .fx-count {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    color: var(--mid);
-}
-
-.fx-on .fx-list,
-.fx-on .fx-item,
-.fx-on .fx-project {
-    display: block;
-    margin: 0;
-}
-
-/* script sets --fx-w / --fx-h and places every cover in the same spot.
-   The focused one fades in on top; the one it replaces waits, then
-   fades out underneath, so the swap never dips to the background */
-.fx-on .fx-thumb {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: var(--fx-w, 52vw);
-    height: var(--fx-h, 32.5vw);
-    aspect-ratio: auto;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease 0.4s;
-}
-
-.fx-on .fx-thumb.is-focus {
-    z-index: 2;
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* the incoming cover also settles from a slight zoom */
-.fx-on .fx-thumb img,
-.fx-on .fx-thumb video {
-    transform: scale(1.04);
-    transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.4s;
-}
-
-.fx-on .fx-thumb.is-focus img,
-.fx-on .fx-thumb.is-focus video {
-    transform: none;
-    transition-delay: 0s;
-}
-
-.fx-on .fx-thumb:not(.is-focus) .fx-pill {
-    display: none;
-}
-
-/* every project's info sits in the same corner; only the focused one shows */
-.fx-on .fx-info {
-    position: absolute;
-    z-index: 3;
-    left: var(--fx-gutter);
-    bottom: clamp(1.5rem, 4vh, 2.5rem);
-    width: min(36vw, 520px);
-    max-height: calc(100% - 7rem);
-    justify-content: flex-end;
-    gap: 0.55rem;
-    visibility: hidden;
-}
-
-.fx-on .fx-info.is-on {
-    visibility: visible;
-}
-
-/* each row slides through its own mask; the padding keeps focus rings unclipped */
-.fx-on .fx-ln {
-    display: block;
-    flex: none;
-    overflow: hidden;
-    padding: 0.4rem;
-    margin: -0.4rem;
-}
-
-.fx-on .fx-ln > * {
-    will-change: transform;
-}
-
-/* the title takes the big bottom-left slot, under its details */
-.fx-on .fx-ln.is-title {
-    order: 9;
-}
-
-.fx-on .fx-ln.is-tag {
-    order: 10;
-}
-
-.fx-on .fx-title {
-    font-size: clamp(3.4rem, 6vw, 6.5rem);
-    line-height: 0.84;
-}
-
-.fx-on .fx-desc,
-.fx-on .deck-list {
-    font-size: 0.9rem;
-    line-height: 1.55;
-}
-
-.fx-on .fx-actions {
-    margin-top: 0.25rem;
-}
-
-.fx-index {
-    position: absolute;
-    z-index: 4;
-    right: var(--fx-gutter);
-    bottom: clamp(1.5rem, 4vh, 2.5rem);
+/* ─── Info in the section: quiet, like About ──────────────── */
+/* the number and type share the first line; the rest runs under it */
+.projects-section .fx-info {
     display: grid;
-    gap: 2px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-align: right;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.9rem;
+    row-gap: 0.7rem;
+    align-items: baseline;
 }
 
-.fx-index button {
+.projects-section .fx-info > * {
+    grid-column: 1 / -1;
+}
+
+.projects-section .fx-num {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--wine);
+}
+
+.projects-section .fx-kind {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 0.72rem;
+}
+
+.projects-section .fx-title {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 3.4vw, 3.1rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+}
+
+.projects-section .fx-tag {
+    margin-top: -0.35rem;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--ink-soft);
+}
+
+/* the stack as one line of text: Node.js · Express · MySQL */
+.projects-section .deck-stack {
+    gap: 0 0.5rem;
+    margin: 0;
+}
+
+.projects-section .deck-stack li {
     padding: 0;
-    font: inherit;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: #a39b92;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
     background: none;
     border: 0;
-    cursor: pointer;
-    transition: color 0.25s ease;
+    border-radius: 0;
 }
 
-.fx-index button:hover,
-.fx-index button[aria-current="true"] {
+.projects-section .deck-stack li + li::before {
+    content: "·";
+    margin-right: 0.5rem;
+    color: var(--muted);
+}
+
+/* buttons as underlined text links, like the links in About */
+.projects-section .fx-actions {
+    gap: 1.5rem;
+    margin-top: 0.2rem;
+}
+
+.projects-section .deck-btn,
+.projects-section .fx-more {
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
     color: var(--dark);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+    transition: text-decoration-color 0.2s ease;
 }
 
-.fx-index button:focus-visible {
-    outline: 1.5px solid var(--dark);
-    outline-offset: 2px;
+.projects-section .deck-btn:hover,
+.projects-section .fx-more:hover {
+    color: var(--dark);
+    background: none;
+    text-decoration-color: var(--wine);
+}
+
+.projects-section .deck-btn i {
+    font-size: 0.95rem;
 }
 
 
-/* ─── Focus rail on phones ───────────────────────────────
-   Same editorial frame: the covers crossfade full-width under the
-   heading, and the giant title keeps the bottom-left corner. Details become plain text instead of chips and
-   pills, and "Read more" opens the full write-up with the shots. */
-.fx-read {
-    display: none;
-}
-
-@media (max-width: 699px) {
-    .fx-on .fx-top {
-        top: clamp(1.25rem, 4vh, 2.25rem);
+/* ─── Phones: the panel becomes a strip stuck to the top ─── */
+@media (max-width: 760px) {
+    .fx {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .fx-on .fx-info {
-        left: var(--fx-gutter);
-        right: var(--fx-gutter);
-        bottom: calc(clamp(1.5rem, 5vh, 2.75rem) + env(safe-area-inset-bottom, 0px));
+    /* the heading and the strip become rows of the grid, so the strip
+       stays stuck for the whole list */
+    .fx-side,
+    .fx-side-in {
+        display: contents;
+    }
+
+    .fx-heading {
+        padding-top: clamp(4.5rem, 12vh, 6rem);
+        font-size: clamp(3rem, 14vw, 4rem);
+    }
+
+    .fx-deck {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        left: auto;
+        bottom: auto;
         width: auto;
-        max-height: 50%;
-        gap: 0.65rem;
-    }
-
-    .fx-on .fx-title {
-        font-size: clamp(3rem, 15vw, 4.4rem);
-        line-height: 0.84;
-    }
-
-    .fx-on .fx-kind {
-        font-size: 0.7rem;
-    }
-
-    .fx-on .fx-desc {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        height: 76px;
+        margin: 1.25rem calc(var(--fx-gutter) * -1) 0;
         overflow: hidden;
-        font-size: 0.88rem;
+        background: var(--cream-2);
+        border-bottom: 1px solid var(--hairline);
     }
 
-    .fx-on .fx-ln.is-list,
-    .fx-on .fx-pill,
-    .fx-on .fx-more,
-    .fx-on .fx-index {
-        display: none;
+    .fx-riffle {
+        position: absolute;
+        right: -10vw;
+        top: -24px;
+        width: min(56vw, 260px);
     }
 
-    /* stack as one line of text: Node.js / Express / MySQL */
-    .fx-on .deck-stack {
-        gap: 0 0.4rem;
-        margin: 0;
+    .fx-now {
+        top: 50%;
+        right: auto;
+        left: var(--fx-gutter);
+        translate: 0 -50%;
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
     }
 
-    .fx-on .deck-stack li {
-        padding: 0;
-        font-size: 0.8rem;
-        background: none;
-        border: 0;
-        border-radius: 0;
+    .fx-count {
+        font-size: 2.6rem;
     }
 
-    .fx-on .deck-stack li + li::before {
-        content: "/";
-        margin-right: 0.4rem;
-        color: #a39b92;
+    .fx-list {
+        padding-top: 2.5rem;
+        gap: 5rem;
     }
 
-    /* buttons as underlined text links */
-    .fx-on .fx-actions {
+    .fx-project {
         gap: 1.25rem;
-        margin-top: 0.15rem;
-    }
-
-    .fx-on .deck-btn,
-    .fx-on .fx-read {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.25rem 0;
-        font: inherit;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--dark);
-        background: none;
-        border: 0;
-        border-radius: 0;
-        cursor: pointer;
-        text-decoration: underline;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 4px;
-    }
-
-    .fx-on .deck-btn:hover {
-        color: var(--dark);
-        background: none;
-    }
-
-    .fx-on .fx-read:focus-visible {
-        outline: 2.5px solid var(--dark);
-        outline-offset: 3px;
-    }
-
-    .fx-on .deck-btn i {
-        font-size: 0.95rem;
     }
 }

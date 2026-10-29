@@ -14,6 +14,13 @@
     --red:  #662020;
     --red-light: rgba(102, 32, 32, 0.08);
     --suit-red: #EB1C24;
+    /* the contact wheel's slices and the cards they deal, red suits and
+       black suits in turn. Quiet: two creams. (Muted deck colours were
+       #b8726b / #d8a39a for red and #9b938a / #c6bdb2 for black.) */
+    --wheel-red:   #f9f4eb;
+    --wheel-red-2: #f9f4eb;
+    --wheel-ink:   #ece5da;
+    --wheel-ink-2: #ece5da;
     --wine: #662020;  /* the one accent: footer red */
     --ink-soft: #5b534d;
     --hairline: rgba(22, 20, 18, 0.12);
@@ -45,7 +52,9 @@ body {
     background-color: var(--cream);
     color: var(--mid);
     line-height: 1.6;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden turns the body into a scroll container
+       that never scrolls, and position: sticky stops working under it */
+    overflow-x: clip;
     overscroll-behavior-x: none;
     touch-action: pan-y;
 }

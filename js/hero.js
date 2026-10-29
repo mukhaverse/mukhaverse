@@ -52,9 +52,9 @@ if (!nameHandoff) {
 tl.to(".hero-title", {
     scale: 1,
     opacity: 1,
-    duration: 0.7,
+    duration: 0.5,
     ease: "power4.out",
-    delay: splashOn ? .3 : .7
+    delay: splashOn ? .2 : .35
 });
 
 
@@ -62,8 +62,9 @@ tl.to(".hero-title", {
 
 tl.to(".hero-title", {
    y: titleY,
-    duration: 0.6
-});
+    duration: 0.45,
+    ease: "power3.out"
+}, "-=0.1");
 }
 
 

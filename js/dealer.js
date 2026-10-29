@@ -9,11 +9,17 @@
     /* ---------- choose the dealer's setup here ---------- */
 
     const DEALER = {
-        pick: "chips",      // how visitors pick:   "spots" four printed spots, every card stays on the table
-                           //                      "chips" four chip stacks, one card on the table at a time
-                           //                      "tray"  a tray with a button for each card, its logo on the face,
-                           //                              one card on the table at a time
-        move: "above",     // the camera move while the section is pinned:
+        pick: "wheel",      // how visitors pick:   "spots"  four printed spots, every card stays on the table
+                           //                      "shoe"   press the shoe and it deals the next card onto the spots,
+                           //                               every card stays on the table
+                           //                      "spread" the cards are laid face down on the spots as the table
+                           //                               comes to rest, turn one over
+                           //                      "chips"  four chip stacks, one card on the table at a time
+                           //                      "tray"   a tray with a button for each card, its logo on the face,
+                           //                               one card on the table at a time
+                           //                      "wheel"  a wheel of the four colours spins the one picked round to
+                           //                               its pointer, one card on the table at a time
+        move: "eye",     // the camera move while the section is pinned:
                            //                      "above" a flat plan from overhead tips into the angled view
                            //                      "eye"   from table height up to the angled view
                            //                      "orbit" the table swings round most of a quarter turn
@@ -24,8 +30,10 @@
                            //                      "discard" flips face down onto a pile
     };
     const PIN_SCREENS = { short: .8, long: 1.8 };
-    // the end of the pin where the table sits at rest before the footer comes up, longer on phones
-    const PIN_HOLD = { phone: .45, wide: .2 };
+    // the start of the pin where the table waits before the camera moves, and the end where it sits at rest
+    // before the footer comes up (longer on phones), as parts of the whole pin
+    const PIN_LEAD = { phone: .12, wide: .18 };
+    const PIN_HOLD = { phone: .45, wide: .3 };
 
     const root = document.getElementById("dealer");
     if (!root) return;
@@ -42,7 +50,8 @@
     const SLOT = "#2a2522";
     const INK = tok("--dark", "#161412");
     // the links come from the plain list in the markup, so they live in one place
-    const SUITS = { email: ["E", "✉︎", "--accent-1", "write to me"], linkedin: ["in", "◈", "--accent-2", "open my profile"], github: ["GH", "◆", "--accent-3", "see my code"], x: ["X", "♠", "--accent-4", "follow along"] };
+    // each card takes its slice's colour, red suits and black suits in turn round the wheel (base.css)
+    const SUITS = { email: ["E", "✉︎", "--wheel-red", "write to me"], linkedin: ["in", "◈", "--wheel-ink", "open my profile"], github: ["GH", "◆", "--wheel-red-2", "see my code"], x: ["X", "♠", "--wheel-ink-2", "follow along"] };
     const CARDS = [...root.querySelectorAll(".dealer-links a")].map(a => {
         const [v, s, accent, verb] = SUITS[a.dataset.key];
         return { key: a.dataset.key, v, s, fill: tok(accent, "#eee"), label: a.dataset.label, handle: a.dataset.handle, href: a.href, external: a.target === "_blank", verb };
@@ -175,6 +184,7 @@
         view: p => { const q = P(p); return [q[0] * s + tx, q[1] * s + ty]; },
         path(pts, cls = "", o = {}) {
             const e = take("path");
+            e.removeAttribute("transform");
             e.setAttribute("d", "M" + pts.map(P).map(p => p[0].toFixed(2) + " " + p[1].toFixed(2)).join("L") + (o.closed === false ? "" : "Z"));
             paint(e, cls, o);
         },
@@ -186,6 +196,13 @@
             e.setAttribute("dominant-baseline", "central");
             paint(e, cls, o);
             if (e.textContent !== str) e.textContent = str;
+        },
+        // a flat SVG path laid on the plane O + xU + yV, scaled by k; the camera's flat, so it maps straight through
+        icon(d, O, U, V, k) {
+            const e = take("path"), p = P(O), u = P(U), v = P(V);
+            e.setAttribute("transform", `matrix(${u[0] * k} ${u[1] * k} ${v[0] * k} ${v[1] * k} ${p[0]} ${p[1]})`);
+            if (e.getAttribute("d") !== d) e.setAttribute("d", d);
+            paint(e, "fo icon", {});
         },
     };
 
@@ -224,7 +241,8 @@
     const SINGLE = [150, 160];
     const DISCARD = [44, 168];
     const CHIPS = [[100, 14], [136, 14], [100, 50], [136, 50]];
-    const spots = PICK === "spots", tray = PICK === "tray";
+    const spots = PICK === "spots", tray = PICK === "tray", wheel = PICK === "wheel", spread = PICK === "spread", fromShoe = PICK === "shoe";
+    const row = spots || spread || fromShoe;   // every card stays on the table, one to a spot
     const TRAY_H = 3.5, BTN = 20;         // the tray's height, and its buttons' size (they sit where the chips do)
     const BTN_RISE = 1.2, TRAY_PAD = 5;   // how far a button stands up out of the tray, and the tray's margin round them
 
@@ -247,6 +265,13 @@
             { pts: [[.78, -.85], [-.78, .85]], open: true },
             { pts: [[-.9, -.85], [-.4, -.85], [.9, .85], [.4, .85]], fill: true },
         ],
+    };
+    // the real logos, as 24 × 24 paths: Simple Icons (CC0) for the brands, Material Icons' envelope for email
+    const ICONS = {
+        email: "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z",
+        linkedin: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z",
+        github: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+        x: "M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z",
     };
 
     // the suit in the middle of a card's back, as shapes around the centre, and whether it's red
@@ -284,7 +309,7 @@
     const pose = c => {
         const U0 = [Math.cos(c.yaw), Math.sin(c.yaw), 0], V0 = [-Math.sin(c.yaw), Math.cos(c.yaw), 0];
         const U = add(mul(U0, Math.cos(c.flip)), [0, 0, Math.sin(c.flip)]);
-        const centre = [c.cx, c.cy, c.cz + Math.abs(Math.sin(c.flip)) * W / 2 + c.hover.v * 3];
+        const centre = [c.cx, c.cy, c.cz + Math.abs(Math.sin(c.flip)) * W / 2 + c.hover.v * 3 + (c.bob || 0)];
         return [add(centre, add(mul(U, -W / 2), mul(V0, -L / 2))), U, V0];
     };
     const corners = c => { const [O, U, V] = pose(c); return [[0, 0], [W, 0], [W, L], [0, L]].map(onPlane(O, U, V)); };
@@ -309,7 +334,7 @@
         if (!front) drawOne(cur, true);
         for (const f of SHOE) {
             if (!facing(f.n)) continue;
-            cv.path(f.i.map(k => SV[k]));
+            cv.path(f.i.map(k => SV[k]), hover === "shoe" ? "hi" : "");
             if (f.k === "top") {
                 cv.path([top(5, 5), top(51, 5), top(51, FRONT - 5), top(5, FRONT - 5)], "nf mid");
                 for (let k = 1; k < 6; k++) {
@@ -361,13 +386,14 @@
         return [TRAY_H, capZ(i)].flatMap(z => [[x - h, y - h, z], [x + h, y - h, z], [x + h, y + h, z], [x - h, y + h, z]]);
     };
 
-    // the logo in outline, filled with the card's colour only while its button is under the pointer
-    function drawMark(info, c, r, on) {
-        const at = ([a, b]) => [c[0] + a * r, c[1] + b * r, c[2] + .05];
+    // the logo in outline, filled with the card's colour only while its button is under the pointer;
+    // U and V turn it on the table
+    function drawMark(info, c, r, on, U = X, V = Y) {
+        const at = ([a, b]) => add(c, [U[0] * a * r + V[0] * b * r, U[1] * a * r + V[1] * b * r, .05]);
         const marks = LOGOS[info.key];
-        if (!marks) return cv.text(info.v, c, X, Y, r * 1.2);
+        if (!marks) return cv.text(info.v, c, U, V, r * 1.2);
         for (const m of marks) {
-            if (m.text) cv.text(m.text, at(m.at), X, Y, m.size * r);
+            if (m.text) cv.text(m.text, at(m.at), U, V, m.size * r);
             else cv.path(m.pts.map(at), m.open ? "nf" : "", { fill: m.fill && on ? info.fill : undefined, closed: !m.open });
         }
     }
@@ -384,6 +410,42 @@
         });
     }
 
+    // the wheel: a low drum on the felt, its top cut into a slice for each card, turning under a pointer
+    // that stands on the side facing the resting camera
+    const WHEEL = [118, 32], WR = 34, WH = 6, TAU = Math.PI * 2, SLICE = TAU / CARDS.length, POINTER = Math.PI / 4;
+    const spin = { a: -.4 };
+    const slice = i => {
+        const pts = [[WHEEL[0], WHEEL[1], WH]];
+        for (let k = 0; k <= 8; k++) {
+            const a = spin.a + (i + k / 8) * SLICE;
+            pts.push([WHEEL[0] + Math.cos(a) * WR, WHEEL[1] + Math.sin(a) * WR, WH]);
+        }
+        return pts;
+    };
+    function drawWheel() {
+        const [x, y] = WHEEL, mid = Math.atan2(TOW[1], TOW[0]);
+        const ux = Math.cos(POINTER), uy = Math.sin(POINTER), px = x + ux * (WR + 5), py = y + uy * (WR + 5);
+        const post = () => box(px - 1.5, py - 1.5, px + 1.5, py + 1.5, 0, WH + 2, "mid");
+        const postBehind = depth([px, py, 0]) < depth([x, y, 0]);
+        if (postBehind) post();
+        const side = [];
+        for (let j = 0; j <= 16; j++) { const a = mid - Math.PI / 2 + j / 16 * Math.PI; side.push([x + Math.cos(a) * WR, y + Math.sin(a) * WR, WH]); }
+        for (let j = 16; j >= 0; j--) { const a = mid - Math.PI / 2 + j / 16 * Math.PI; side.push([x + Math.cos(a) * WR, y + Math.sin(a) * WR, 0]); }
+        cv.path(side);
+        // the slice under the pointer last, so its outline isn't drawn over
+        CARDS.map((_, i) => i).sort((a, b) => (hover === "slice" + a) - (hover === "slice" + b)).forEach(i => {
+            cv.path(slice(i), hover === "slice" + i ? "hi" : "", { fill: CARDS[i].fill });
+            // each logo turns with its slice, its foot towards the rim, in the ink colour
+            // (to keep them upright to the camera instead, use `mid` for `m` in U and V)
+            const m = spin.a + (i + .5) * SLICE, r = WR * .55, U = [Math.sin(m), -Math.cos(m), 0], V = [Math.cos(m), Math.sin(m), 0];
+            if (ICONS[CARDS[i].key]) cv.icon(ICONS[CARDS[i].key], add([x + Math.cos(m) * r, y + Math.sin(m) * r, WH + .05], add(mul(U, -6), mul(V, -6))), U, V, 12 / 24);
+            else cv.text(CARDS[i].v, [x + Math.cos(m) * r, y + Math.sin(m) * r, WH], U, V, 9);
+        });
+        cv.path(ring([x, y, WH], X, Y, WR * .2, 16), "mid");
+        if (!postBehind) post();
+        cv.path([[x + ux * (WR - 5), y + uy * (WR - 5), WH + 2], [px - uy * 3.5, py + ux * 3.5, WH + 2], [px + uy * 3.5, py - ux * 3.5, WH + 2]], "fo", { fill: RED });
+    }
+
     function draw() {
         n = 0;
         cv.frame();
@@ -391,11 +453,12 @@
         cv.path(rrect(272, 226, 16).map(([a, b]) => [a - 22, b - 14, 0]), "nf lo", { alpha: .6 });
         cv.text("DEAL ME IN", [-12, 112, 0], [0, -1, 0], X, 12, "faint");
 
-        if (spots) SPOTS.forEach(([x, y], i) => {
-            const on = hover === "spot" + i && !dealt[i];
-            const pulse = !picked && !reduce ? .55 + .45 * Math.max(0, Math.sin(now * 2.6 - i * .9)) : 1;
-            cv.path(rrect(54, 72, 5).map(([a, b]) => [x - 27 + a, y - 36 + b, 0]), on ? "nf hi" : "nf mid", { alpha: on ? 1 : pulse });
-            cv.text(CARDS[i].label.toUpperCase(), [x, y, 0], X, Y, 7.5, on ? "spot-on" : "faint", { alpha: pulse });
+        // in the spread the cards cover their spots, so each name is printed in front of its card
+        if (row) SPOTS.forEach(([x, y], i) => {
+            const on = hover === "spot" + i && !(spread ? dealt[i]?.up : dealt[i]);
+            const pulse = spots && !picked && !reduce ? .55 + .45 * Math.max(0, Math.sin(now * 2.6 - i * .9)) : 1;
+            cv.path(rrect(54, 72, 5).map(([a, b]) => [x - 27 + a, y - 36 + b, 0]), on && !spread ? "nf hi" : "nf mid", { alpha: on ? 1 : pulse });
+            cv.text(CARDS[i].label.toUpperCase(), [x, spread ? y + 41 : y, 0], X, Y, spread ? 6.5 : 7.5, on ? "spot-on" : "faint", { alpha: pulse });
         });
         else {
             cv.path(rrect(58, 76, 5).map(([a, b]) => [SINGLE[0] - 29 + a, SINGLE[1] - 38 + b, 0]), "nf lo");
@@ -408,7 +471,8 @@
         // everything standing on the felt, back to front for wherever the camera is
         const stand = [{ d: depth([28, 39, 15]), f: drawShoe }];
         if (tray) stand.push({ d: depth([118, 32, 4]), f: drawTray });
-        else if (!spots) CHIPS.forEach((c, i) => stand.push({ d: depth([c[0], c[1], 5]), f: () => drawChips(i) }));
+        else if (wheel) stand.push({ d: depth([...WHEEL, 4]), f: drawWheel });
+        else if (!row) CHIPS.forEach((c, i) => stand.push({ d: depth([c[0], c[1], 5]), f: () => drawChips(i) }));
         for (const c of [...pile.slice(-8), ...dealt]) if (c) stand.push({ d: depth([c.cx, c.cy, 0]) + c.cz * 5, f: () => drawOne(c) });
         stand.sort((a, b) => a.d - b.d).forEach(x => x.f());
 
@@ -472,38 +536,94 @@
         pile.push(c);
         if (SWEEP === "flick") {
             // flicked off the far edge of the table with a spin
-            return animate(c, { cx: c.cx + 230, cy: c.cy - 150, cz: 14, yaw: c.yaw + 2.6 }, 420, E.in)
+            return animate(c, { cx: c.cx + 230, cy: c.cy - 150, cz: 14, yaw: c.yaw + 2.6 }, 300, E.in)
                 .then(() => { pile = pile.filter(p => p !== c); });
         }
         // turned face down and slid onto the discard pile
         const k = pile.length - 1;
-        return animate(c, { cx: DISCARD[0] + (Math.random() - .5) * 4, cy: DISCARD[1] + (Math.random() - .5) * 4, cz: .6 + Math.min(k, 7) * .7, yaw: (Math.random() - .5) * .5, flip: Math.PI * 2 }, 460, E.io);
+        return animate(c, { cx: DISCARD[0] + (Math.random() - .5) * 4, cy: DISCARD[1] + (Math.random() - .5) * 4, cz: .6 + Math.min(k, 7) * .7, yaw: (Math.random() - .5) * .5, flip: Math.PI * 2 }, 360, E.io);
     }
 
-    async function deal(i, at, yaw, index) {
+    // `up` false lays the card face down, quicker, and without saying which it is
+    async function deal(i, at, yaw, index, up = true) {
         if (busy) return;
         busy = true;
-        picked = true;
         const info = CARDS[i];
-        say(`Dealing ${info.label}…`);
-        if (!spots) dealt.slice().forEach(retire);
+        if (up) { picked = true; say(`Dealing ${info.label}…`); }
+        if (!row) dealt.slice().forEach(retire);
         const c = cur;
         c.info = info;
-        await animate(c, { cy: FRONT + L / 2 + 4 }, 240, E.in);
+        await animate(c, { cy: FRONT + L / 2 + 4 }, up ? 160 : 130, E.in);
         c.inShoe = false;
-        if (spots) dealt[index] = c; else dealt.push(c);
+        if (row) dealt[index] = c; else dealt.push(c);
         cur = fresh();
         cur.alpha = 0;
         peek.v = 0;
-        await animate(c, { cx: at[0], cy: at[1], cz: .6, yaw }, 460, E.out);
-        await animate(c, { flip: Math.PI }, 400);
-        linkCard(c);
+        await animate(c, { cx: at[0], cy: at[1], cz: .6, yaw }, up ? 340 : 260, E.out);
+        if (up) await turnUp(c);
         animate(cur, { alpha: 1 }, 250);
-        say(`${info.label} · click the card to ${info.verb}`);
         busy = false;
+        return c;
+    }
+    async function turnUp(c) {
+        c.up = true;
+        await animate(c, { flip: Math.PI }, 300);
+        linkCard(c);
+        say(`${c.info.label} · click the card to ${c.info.verb}`);
     }
 
-    if (!spots) CARDS.forEach((info, i) => {
+    // spread: the cards go out face down as the table comes to rest, and each one is its own button
+    let laidOut = false;
+    async function layOut() {
+        for (let i = 0; i < CARDS.length; i++) {
+            const c = await deal(i, SPOTS[i], (i - 1.5) * .04, i, false), info = CARDS[i];
+            const h = hit("button", `Turn over the ${info.label} card`, "spot" + i, () => corners(c).map(cv.view), async () => {
+                if (c.up) return;
+                picked = true;
+                const had = document.activeElement === h.el;
+                unhit(h);
+                c.hover.t = 0;
+                await turnUp(c);
+                if (had) c.link.el.focus();
+            });
+            h.el.addEventListener("pointerenter", () => { c.hover.t = 1; });
+            h.el.addEventListener("pointerleave", () => { c.hover.t = 0; });
+            h.el.addEventListener("focus", () => { c.hover.t = 1; });
+            h.el.addEventListener("blur", () => { c.hover.t = 0; });
+        }
+        say("Four cards, face down. Turn one over.");
+    }
+
+    if (fromShoe) {
+        // the shoe deals the cards in order, one a press, until it's given out all four
+        let next = 0;
+        const label = () => `Deal the next card: ${CARDS[next].label}`;
+        const h = hit("button", label(), "shoe", () => hull(SV.map(cv.view)), async () => {
+            if (busy || next >= CARDS.length) return;
+            const i = next++;
+            const c = await deal(i, SPOTS[i], (i - 1.5) * .04, i);
+            if (next < CARDS.length) return h.el.setAttribute("aria-label", label());
+            const had = document.activeElement === h.el;
+            unhit(h);
+            if (had) c.link.el.focus();
+        });
+    }
+    else if (wheel) CARDS.forEach((info, i) => {
+        hit("button", `Deal the ${info.label} card`, "slice" + i, () => slice(i).map(cv.view), async () => {
+            if (busy) return;
+            busy = picked = true;
+            say(`Spinning to ${info.label}…`);
+            dealt.slice().forEach(retire);           // the last card makes way while the wheel turns
+            // at least one full turn forwards, ending with the slice's middle under the pointer
+            const want = POINTER - (i + .5) * SLICE;
+            const turn = animate(spin, { a: want + Math.ceil((spin.a - want) / TAU + 1) * TAU }, 1100, E.out);
+            // the card sets off from the shoe while the wheel eases the last few degrees into place
+            await Promise.race([turn, new Promise(r => setTimeout(r, reduce ? 0 : 750))]);
+            busy = false;
+            await deal(i, SINGLE, -.32);
+        });
+    });
+    else if (!row) CARDS.forEach((info, i) => {
         const [x, y] = CHIPS[i];
         // chips lift as they're picked, buttons press in
         const h = hit("button", `Deal the ${info.label} card`, (tray ? "btn" : "chip") + i, tray ? () => hull(capCorners(i).map(cv.view)) : () => {
@@ -518,7 +638,7 @@
         h.el.addEventListener("pointerenter", () => { chipLift[i].t = tray ? .3 : .5; });
         h.el.addEventListener("pointerleave", () => { chipLift[i].t = 0; });
     });
-    else CARDS.forEach((info, i) => {
+    else if (spots) CARDS.forEach((info, i) => {
         const [x, y] = SPOTS[i];
         const h = hit("button", `Deal the ${info.label} card`, "spot" + i,
             () => [[x - 27, y - 36, 0], [x + 27, y - 36, 0], [x + 27, y + 36, 0], [x - 27, y + 36, 0]].map(cv.view),
@@ -529,7 +649,13 @@
             });
     });
 
-    say(spots ? "Pick a spot on the table." : tray ? "Press a button and I'll deal you a card." : "Pick a chip and I'll deal you a card.");
+    say({
+        spots: "Pick a spot on the table.",
+        shoe: "Press the shoe and I'll deal you a card.",
+        spread: "Four cards are about to be dealt face down.",
+        tray: "Press a button and I'll deal you a card.",
+        wheel: "Pick a colour on the wheel and I'll spin it round to you.",
+    }[PICK] || "Pick a chip and I'll deal you a card.");
 
     /* ---------- the camera move while the section is pinned ---------- */
 
@@ -551,7 +677,7 @@
             [1, {}],
         ],
         // close on the shoe's mouth, along to the chips (or spots), down to where cards land, then back out
-        tour: spots ? [
+        tour: row ? [
             [0, { zoom: 2.4, fx: 28, fy: 84, fz: 8, dx: 0, dy: 10 }],
             [.3, { zoom: 2.1, fx: 60, fy: 166, fz: 0, dx: 0, dy: 0 }],
             [.62, { zoom: 2.1, fx: 190, fy: 166, fz: 0, dx: 0, dy: 0 }],
@@ -585,16 +711,21 @@
         target = 0;
         gsap.registerPlugin(ScrollTrigger);
         const phone = matchMedia("(max-width: 768px)");
+        const lead = () => phone.matches ? PIN_LEAD.phone : PIN_LEAD.wide;
         const hold = () => phone.matches ? PIN_HOLD.phone : PIN_HOLD.wide;
         ScrollTrigger.create({
             trigger: section,
-            // a section taller than the screen pins once its bottom is in view, so nothing is cut off
-            start: () => section.offsetHeight > innerHeight ? "bottom bottom" : "top top",
-            // the move keeps its length and the hold is added after it
-            end: () => "+=" + innerHeight * (PIN_SCREENS[DEALER.length] || PIN_SCREENS.short) / (1 - hold()),
+            // pins with the table in the middle of the screen; a section taller than the screen pins part way
+            // in, but never so far that its end has scrolled up past the bottom of the screen
+            start: () => {
+                const f = figEl.getBoundingClientRect(), into = f.top - section.getBoundingClientRect().top;
+                return "top+=" + clamp(into + f.height / 2 - innerHeight / 2, 0, Math.max(0, section.offsetHeight - innerHeight)) + " top";
+            },
+            // the move keeps its length and the lead and hold are added round it
+            end: () => "+=" + innerHeight * (PIN_SCREENS[DEALER.length] || PIN_SCREENS.short) / (1 - lead() - hold()),
             pin: true,
             refreshPriority: -1,           // the last section on the page: measure it after the pins above
-            onUpdate: self => { target = Math.min(1, self.progress / (1 - hold())); },
+            onUpdate: self => { target = clamp((self.progress - lead()) / (1 - lead() - hold()), 0, 1); },
         });
     }
     let sp = target;
@@ -616,8 +747,15 @@
         moveTo(sp);
         const p = figEl._ptr, m = cv.view([28, FRONT, 6]);
         const near = p ? clamp(1 - Math.hypot(p[0] - m[0], p[1] - m[1]) / 120, 0, 1) : 0;
-        if (!busy) peek.t = near * 18;
+        const idle = !picked && !busy && !reduce;
+        // when the shoe is the button, its card peeks out in turn until it's first pressed
+        if (!busy) peek.t = fromShoe && hover === "shoe" ? 18 : Math.max(near * 18, fromShoe && idle ? Math.max(0, Math.sin(now * 2.4)) * 8 : 0);
         peek.step(dt);
+        if (spread) {
+            if (!laidOut && sp > .35) { laidOut = true; layOut(); }
+            dealt.forEach((c, i) => { c.bob = idle && !c.up ? Math.max(0, Math.sin(now * 2.4 - i * .8)) * 1.4 : 0; });
+        }
+        if (wheel && idle && !String(hover).startsWith("slice")) spin.a += dt * .25;
         if (cur.inShoe && !busy) cur.cy = FRONT - L / 2 + peek.v;
         for (const c of chipLift) c.step(dt);
         for (const c of [cur, ...dealt, ...pile]) if (c) c.hover.step(dt);
@@ -626,9 +764,10 @@
         if (visible) requestAnimationFrame(frame);
     }
 
-    new IntersectionObserver(([e]) => {
+    // a fast scroll can bring out-then-in in one batch, so the latest entry is the one that counts
+    new IntersectionObserver(entries => {
         const was = visible;
-        visible = e.isIntersecting;
+        visible = entries[entries.length - 1].isIntersecting;
         if (!visible || was) return;
         last = performance.now();
         frame(last);

@@ -17,7 +17,8 @@
 .dealer-fig {
     position: relative;
     justify-self: start;
-    width: 128%;
+    /* never taller than the screen, so the pinned table shows whole top to bottom */
+    width: min(128%, (100svh - 3rem) * 400 / 256);
     max-width: 980px;
     aspect-ratio: 400 / 256;
     touch-action: manipulation;
@@ -45,6 +46,7 @@
 .dealer-fig .mid { stroke: var(--dl-mid); }
 .dealer-fig .lo { stroke: var(--dl-lo); }
 .dealer-fig .hi { stroke: var(--dl-hi); stroke-width: 2; }
+.dealer-fig .icon { fill: var(--dark, #161412); opacity: .55; }
 .dealer-fig .chip-line { stroke: rgba(255, 255, 255, .85); stroke-dasharray: 3 3; }
 .dealer-fig text { font-family: var(--font-display); fill: var(--dark, #161412); stroke: none; }
 .dealer-fig text.faint { fill: var(--dl-lo); letter-spacing: .08em; }

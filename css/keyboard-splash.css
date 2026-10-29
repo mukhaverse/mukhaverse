@@ -22,13 +22,6 @@
     --hairline-stroke: 1.2;
 }
 
-#splash .sheet::before {
-    content: "";
-    position: absolute;
-    inset: var(--splash-m);
-    border: 1px solid var(--splash-line);
-}
-
 #splash .corner {
     position: absolute;
     top: calc(var(--splash-m) + 1.6em);
