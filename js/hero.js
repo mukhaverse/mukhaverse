@@ -25,8 +25,7 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 if (nameHandoff) gsap.set(".hero-title", { y: titleY() });
 else gsap.set(".hero-title", { opacity: 0, y: 150, scale:1.5});
 gsap.set(".hero-divider", { opacity: 0, y: -20 });
-// after the splash the navbar must already sit in place: its corner labels slide onto it
-gsap.set(".navbar", { opacity: 0, y: document.documentElement.classList.contains("splash-on") ? 0 : -20 });
+gsap.set(".navbar", { opacity: 0, y: -20 });
 // gsap.set(".hero-cards .card", { x: 70, opacity: 0 });
 gsap.set(".hero-description", { opacity: 0, x: -20,  y: () => {    
         if (w < 576) return 85;

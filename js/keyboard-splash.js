@@ -16,7 +16,7 @@
     root.classList.add("splash-on", "splash-name");
 
     // the handoff, in ms from the moment Enter is pressed
-    const T = { caret: 100, drop: 420, fly: 700, sheetAt: 100, sheet: 500, heroAt: 380, labels: 550 };
+    const T = { caret: 100, drop: 420, fly: 700, sheetAt: 100, sheet: 500, heroAt: 380 };
     const EASE = {
         io: "cubic-bezier(.65,0,.35,1)",
         fly: "cubic-bezier(.6,0,.15,1)",
@@ -29,8 +29,7 @@
     splash.setAttribute("aria-hidden", "true");
     splash.innerHTML =
         '<div class="sheet"><div class="kb"></div>' +
-        '<div class="loader"><b>000%</b><div class="track"><i></i></div></div></div>' +
-        '<span class="corner l">S. ALSHARIF</span><span class="corner r">2026</span>';
+        '<div class="loader"><b>000%</b><div class="track"><i></i></div></div></div>';
     document.body.prepend(splash);
     const $ = s => splash.querySelector(s);
     const sheet = $(".sheet"), kbBox = $(".kb"), num = $(".loader b"), bar = $(".track i");
@@ -154,17 +153,6 @@
         leave();
     }
 
-    // the corner labels travel onto the navbar items fading in under them; phones hide the navbar
-    function labelsToNav() {
-        for (const [corner, sel, edge] of [[".corner.l", ".navbar .nav-logo", "left"], [".corner.r", ".navbar .year", "right"]]) {
-            const t = $(corner), a = t.getBoundingClientRect(), b = document.querySelector(sel)?.getBoundingClientRect();
-            const ok = b && b.width;
-            const dx = ok ? b[edge] - a[edge] : 0, dy = ok ? (b.top + b.height / 2) - (a.top + a.height / 2) : 0;
-            anim(t, [{ transform: "none", opacity: 1 }, { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }],
-                { duration: ok ? T.labels : 300, easing: EASE.io });
-        }
-    }
-
     // the caret sits after the last shown letter
     function placeCaret(n) {
         const ref = chars[0], last = chars[n - 1];
@@ -260,10 +248,7 @@
             { transform: "translate(-50%, -30%) scale(.94)", opacity: 0 },
         ], { duration: T.drop, easing: EASE.in });
         anim(sheet, [{ opacity: 1 }, { opacity: 0 }], { delay: T.sheetAt, duration: T.sheet, easing: "ease-out" });
-        setTimeout(() => {
-            labelsToNav();
-            dispatchEvent(new Event("splash:done"));
-        }, T.heroAt);
+        setTimeout(() => dispatchEvent(new Event("splash:done")), T.heroAt);
 
         await anim(title, [
             { translate: title.style.translate, scale: title.style.scale },
@@ -271,9 +256,6 @@
         ], { duration: T.fly, easing: EASE.fly, fill: "forwards" }).finished;
         title.style.translate = title.style.scale = "";
         title.getAnimations().forEach(a => a.cancel());
-
-        // let the labels finish their trip before the overlay goes
-        await wait(T.heroAt + T.labels - T.fly);
         leave();
     }
 
