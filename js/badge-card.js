@@ -14,17 +14,18 @@ const SANS = '"SN Pro", "Segoe UI", system-ui, sans-serif';
 
 // colours per data-theme
 const THEMES = {
-    // Shumokh's own card: cream with a wine band
-    student: { bg: "#ece4d6", ink: "#161412", soft: "rgba(22, 20, 18, 0.66)", band: "#662020", bandInk: "#f4efe6",
-               title: "#662020", photo: "rgba(102, 32, 32, 0.08)", rule: "rgba(22, 20, 18, 0.16)", invert: 0.88 },
+    // University of Jeddah: after the university app's e-card, deep navy with the
+    // next card's blue-grey edge and a lime accent
+    student: { bg: "#022855", ink: "#ffffff", soft: "rgba(255, 255, 255, 0.6)", label: "#9fb0c6", edge: "#77a6ba",
+               lime: "#c5d86d", photo: "#e8f3fa", person: "#3c424a", invert: 0 },
     // Tuwaiq Club: the club's own card, black between purple bands
     club:    { bg: "#121212", ink: "#ffffff", soft: "rgba(255, 255, 255, 0.72)", purple: "#4a2db3", name: "#f6a33b", tag: "#9ec5ff",
                invert: 0 },
     // GDG on Campus: the committee's own member card, dark slate
     gdg:     { bg: "#1e2a34", ink: "#ffffff", soft: "rgba(255, 255, 255, 0.72)", invert: 0 },
-    // EG & VR Club: the logo's navy, its blue-to-green band, green title
-    egvr:    { bg: "#14213d", ink: "#f4efe6", soft: "rgba(244, 239, 230, 0.72)", bandGrad: ["#3fa9f5", "#4fd1c5", "#79d94f"],
-               bandInk: "#14213d", title: "#79d94f", photo: "rgba(244, 239, 230, 0.08)", rule: "rgba(244, 239, 230, 0.2)", invert: 0 }
+    // EG & VR Club: light card under the club's logo, its blue-to-green gradient on the rule and the role
+    egvr:    { bg: "#f6f9fb", ink: "#0f1d3a", soft: "rgba(15, 29, 58, 0.62)", titleGrad: ["#3fa9f5", "#4fd1c5", "#79d94f"],
+               photo: "#e7eef5", person: "#b4c3d3", rule: "rgba(15, 29, 58, 0.18)", invert: 0.88 }
 };
 
 export const fontsReady = Promise.all(
@@ -45,8 +46,30 @@ export const logoReady = loadImage("assets/1st-Logo-inv-gry.svg");
 let gdgPattern = null;
 const patternReady = loadImage("assets/gdg-pattern.png").then((img) => { gdgPattern = img; });
 
+// the University of Jeddah's own logo (from uj.edu.sa), drawn white on the student card
+let ujLogo = null;
+const ujReady = loadImage("assets/uj-logo.svg").then((img) => { ujLogo = img && tint(img, "#ffffff"); });
+
+// the EG & VR club's controller mark and wordmark, cut from the club's logo
+let egMark = null, egWord = null;
+const egReady = Promise.all([loadImage("assets/eg-mark.png"), loadImage("assets/eg-word.png")])
+    .then(([m, w]) => { egMark = m; egWord = w; });
+
 // everything the fronts need before they're painted
-export const cardReady = Promise.all([fontsReady, patternReady]);
+export const cardReady = Promise.all([fontsReady, patternReady, ujReady, egReady]);
+
+// one flat colour through an image's shape, kept sharp for the 3D badge's texture
+function tint(img, color) {
+    const cv = document.createElement("canvas");
+    cv.width = img.width * 4;
+    cv.height = img.height * 4;
+    const ctx = cv.getContext("2d");
+    ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    ctx.globalCompositeOperation = "source-in";
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    return cv;
+}
 
 export function readCard(panel) {
     const d = panel.dataset;
@@ -120,7 +143,7 @@ function balance(ctx, text, max) {
 
 // ─── Layouts ─────────────────────────────────────────────────
 
-// Student, EG & VR: band, centred photo, name and role, one-line foot
+// the default: band, centred photo, name and role, one-line foot
 function paintStandard(ctx, t, card) {
     ctx.fillStyle = t.bg;
     ctx.fillRect(0, 0, CARD_W, CARD_H);
@@ -142,14 +165,102 @@ function paintStandard(ctx, t, card) {
     ctx.letterSpacing = "0px";
     ctx.textBaseline = "alphabetic";
 
-    const pw = 144, ph = 180, px = (CARD_W - pw) / 2, py = BAND_Y + BAND_H + 16;
+    paintBody(ctx, t, card, BAND_Y + BAND_H + 16, 144, 180);
+}
+
+const gradient = (ctx, colors, x0, x1) => {
+    const g = ctx.createLinearGradient(x0, 0, x1, 0);
+    colors.forEach((c, k) => g.addColorStop(k / (colors.length - 1), c));
+    return g;
+};
+
+// EG & VR: the club's mark and wordmark, a gradient rule, then the usual body
+function paintEgLogo(ctx, t, card) {
+    ctx.fillStyle = t.bg;
+    ctx.fillRect(0, 0, CARD_W, CARD_H);
+    if (egMark) ctx.drawImage(egMark, (CARD_W - 150) / 2, 32, 150, 150 * egMark.height / egMark.width);
+    if (egWord) ctx.drawImage(egWord, (CARD_W - 104) / 2, 118, 104, 104 * egWord.height / egWord.width);
+    ctx.fillStyle = gradient(ctx, t.titleGrad, 0, CARD_W);
+    ctx.fillRect(0, 152, CARD_W, 4);
+    paintBody(ctx, t, card, 168, 110, 132);
+}
+
+// University of Jeddah, after the app's e-card: white logo, faint sails behind,
+// round photo, name and role, label rows, the university's name over a lime rule
+const EDGE_W = 30;
+const ECARD_ROWS = [["Major", "Software Engineering"], ["College", "Computer Science & Eng."], ["Years", "2023 – 2027"]];
+function paintEcard(ctx, t, card) {
+    const mid = (CARD_W - EDGE_W) / 2;
+    ctx.fillStyle = t.bg;
+    ctx.fillRect(0, 0, CARD_W, CARD_H);
+    ctx.fillStyle = t.edge;
+    ctx.fillRect(CARD_W - EDGE_W, 0, EDGE_W, CARD_H);
+
+    if (ujLogo) {
+        // the sails alone (the top 134 of the logo's 194 units), very faint
+        const sh = ujLogo.height * 134 / 194.229;
+        ctx.globalAlpha = 0.07;
+        ctx.drawImage(ujLogo, 0, 0, ujLogo.width, sh, -40, 150, 340, 340 * sh / ujLogo.width);
+        ctx.globalAlpha = 1;
+        ctx.drawImage(ujLogo, 20, 26, 50 * ujLogo.width / ujLogo.height, 50);
+    }
+
+    const cy = 83, r = 43;
+    ctx.beginPath();
+    ctx.arc(mid, cy, r + 4, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.fill();
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(mid, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = t.photo;
+    ctx.fill();
+    ctx.clip();
+    drawPerson(ctx, mid - r * 0.76, cy + r * 1.08, r * 1.52, t.person);
+    ctx.restore();
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = t.ink;
+    ctx.font = `600 20px ${SANS}`;
+    ctx.fillText("Shumokh Alsharif", mid, 158);
+    ctx.fillStyle = t.soft;
+    ctx.font = `400 12.5px ${SANS}`;
+    ctx.fillText(card.role, mid, 178);
+
+    ECARD_ROWS.forEach(([label, value], k) => {
+        const y = 222 + k * 26;
+        ctx.font = `400 13.5px ${SANS}`;
+        ctx.fillStyle = t.label;
+        ctx.textAlign = "left";
+        ctx.fillText(label, 26, y);
+        ctx.font = `500 13.5px ${SANS}`;
+        ctx.fillStyle = t.ink;
+        ctx.textAlign = "right";
+        ctx.fillText(value, CARD_W - EDGE_W - 20, y);
+    });
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = t.ink;
+    ctx.font = `600 18px ${SANS}`;
+    ctx.fillText("University of Jeddah", mid, 348);
+    ctx.fillStyle = t.lime;
+    ctx.fillRect(mid - 22, 360, 44, 2);
+    ctx.fillStyle = t.soft;
+    ctx.font = `500 11.5px ${SANS}`;
+    ctx.fillText("shumokh.dev", mid, 412);
+}
+
+// photo, name and role, foot
+function paintBody(ctx, t, card, py, pw, ph) {
+    const px = (CARD_W - pw) / 2;
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(px, py, pw, ph, 8);
     ctx.clip();
     ctx.fillStyle = t.photo;
     ctx.fillRect(px, py, pw, ph);
-    drawPerson(ctx, px + pw * 0.1, py + ph, pw * 0.8, t.ink, 0.22);
+    // a theme with its own stand-in colour gets a solid one; the others stay a soft tint
+    drawPerson(ctx, px + pw * 0.1, py + ph, pw * 0.8, t.person || t.ink, t.person ? 1 : 0.22);
     ctx.restore();
 
     const footY = CARD_H - 43;
@@ -163,6 +274,7 @@ function paintStandard(ctx, t, card) {
     ctx.setLineDash([]);
     ctx.font = `400 11.5px ${SANS}`;
     ctx.fillStyle = t.soft;
+    ctx.textAlign = "center";
     ctx.fillText(`${card.footL} · ${card.footR}`, CARD_W / 2, footY + 25);
 
     // name and role sit centred between the photo and the foot
@@ -171,8 +283,11 @@ function paintStandard(ctx, t, card) {
     const lh = 24.5;
     const blockH = 16 + 27 + (lines.length - 1) * lh + 5;   // name cap height to the last descender
     const nameBase = py + ph + (footY - (py + ph) - blockH) / 2 + 16;
-    ctx.fillStyle = t.title;
-    lines.forEach((line, k) => ctx.fillText(line, CARD_W / 2, nameBase + 27 + k * lh));
+    lines.forEach((line, k) => {
+        const w = ctx.measureText(line).width;
+        ctx.fillStyle = t.titleGrad ? gradient(ctx, t.titleGrad, (CARD_W - w) / 2, (CARD_W + w) / 2) : t.title;
+        ctx.fillText(line, CARD_W / 2, nameBase + 27 + k * lh);
+    });
     ctx.font = `700 22px ${SANS}`;
     ctx.fillStyle = t.ink;
     ctx.fillText("Shumokh Alsharif", CARD_W / 2, nameBase);
@@ -335,7 +450,7 @@ function paintTuwaiq(ctx, t, card) {
     ctx.fillRect(12, 428, 10, 6);
 }
 
-const LAYOUTS = { standard: paintStandard, gdg: paintGdg, tuwaiq: paintTuwaiq };
+const LAYOUTS = { standard: paintStandard, gdg: paintGdg, tuwaiq: paintTuwaiq, ecard: paintEcard, eglogo: paintEgLogo };
 
 
 // ─── Faces ───────────────────────────────────────────────────

@@ -62,12 +62,6 @@
  
  }
 
- .card-title{
-   width: 100%;
-   display: flex;
-   justify-content: space-between;
- }
-
  .hero-cards .card span{
    font-size: 0.7rem;
 
@@ -120,6 +114,7 @@
    position: relative;
    aspect-ratio: 5/7;
    perspective: 1000px;
+   container-type: inline-size;
 }
 
 .cards-container .card .card-wrapper{
@@ -196,47 +191,83 @@
       justify-content: center;
 }
 
+/* back: title + suit index, then one row per skill. Sized in cqw (the
+   card's width) so it scales with the card instead of shrinking on phones */
 .flip-card-back{
-   padding: 1rem;
+   --suit: var(--dark);
+   padding: 7cqw 7cqw 6cqw;
    display: flex;
    flex-direction: column;
-   justify-content: space-between;
-   /* align-items: center; */
-   gap: 2rem;
+   gap: 3cqw;
    background-color: #fff;
    transform: rotateY(180deg);
-
 }
 
-.card-copy{
-   width: 100%;
-   height: 100%;
+.flip-card-back[data-ink="red"]{
+   --suit: var(--suit-red);
+}
+
+.back-head{
    display: flex;
-   flex-direction: column;
-   gap: 0.5rem;
+   justify-content: space-between;
+   align-items: center;
+   color: var(--suit);
 }
 
-.card-copy p{
+.back-title{
+   font: 400 14cqw/1 var(--font-display);
+   letter-spacing: .03em;
+}
+
+.back-idx{
+   display: flex;
+   align-items: center;
+   gap: 2cqw;
+   font: 400 8cqw/1 var(--font-display);
+}
+
+.back-suit{
+   width: 7cqw;
+   height: 7cqw;
+   fill: currentColor;
+}
+
+.back-list{
+   list-style: none;
    flex: 1;
    display: flex;
-   justify-content: center;
-   align-items: center;
-   gap: 0.4rem;
-   font-size: 0.85rem;
-   background-color: var(--light2);
-   border-radius: .3rem;
+   flex-direction: column;
 }
 
-.card-logos {
+.back-list li{
+   flex: 1;
    display: flex;
-   flex-direction: row;
-   justify-content: center;
-   gap: 0.5rem;
+   align-items: center;
+   gap: 4cqw;
+   border-top: 1px solid var(--hairline);
+   font: 600 7.2cqw/1.12 var(--font-body);
+   color: var(--dark);
 }
 
-.skill-icon {
-   font-size: 1.3rem;
+.back-ic{
+   flex: none;
+   display: block;
+   width: 1em;
+   height: 1em;
+   font-size: 9cqw;
    line-height: 1;
+   color: var(--suit);
+}
+
+/* desktop cards are big enough that the rows can sit a touch smaller */
+@media (min-width: 769px) {
+   .back-list li{
+      font-size: 6.6cqw;
+   }
+
+   .back-ic{
+      font-size: 8.4cqw;
+   }
 }
 
 #card-1{
@@ -253,18 +284,4 @@
 
 .cards-container .card{
    opacity: 0;
-}
-
-.skills-ghost-icons {
-   position: absolute;
-   inset: 0;
-   pointer-events: none;
-   overflow: hidden;
-   z-index: -1;
-}
-
-.skills-ghost-icon {
-   position: absolute;
-   color: var(--dark);
-   transform-origin: center;
 }

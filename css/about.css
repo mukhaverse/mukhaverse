@@ -611,7 +611,7 @@ html:not(.js) .id-lanyard {
     .about-section.is-pinned .id-panel {
         align-self: start;
         display: grid;
-        grid-template-columns: calc((100% + 2 * var(--gutter)) * (1 - var(--badge-share)) - var(--gutter) - 0.5rem) minmax(0, 1fr);
+        grid-template-columns: calc((100% + 2 * var(--gutter)) * (1 - var(--badge-share)) - var(--gutter)) minmax(0, 1fr);
         grid-template-rows: auto auto auto minmax(0, 1fr) auto;
         align-content: start;
     }

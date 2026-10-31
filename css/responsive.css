@@ -88,26 +88,6 @@
         height: auto;
     }
 
-    .flip-card-back {
-        gap: 0.3rem;
-        padding: 0.6rem;
-    }
-
-    .card-title span {
-        font-size: 0.6rem;
-    }
-
-    .card-copy {
-        gap: 0.25rem;
-    }
-
-    .card-copy p {
-        font-size: 0.62rem;
-        line-height: 1.15;
-        letter-spacing: 0.1px;
-        overflow-wrap: break-word;
-    }
-
 
 
     .site-nav {
