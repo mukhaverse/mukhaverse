@@ -16,10 +16,11 @@
     root.classList.add("splash-on", "splash-name");
 
     // the handoff, in ms from the moment Enter is pressed
-    const T = { caret: 100, drop: 420, fly: 700, sheetAt: 100, sheet: 500, heroAt: 380 };
+    // the fly matches hero.js's "land" ease, and the hero's own intro starts while the name is still moving
+    const T = { caret: 100, drop: 420, fly: 600, sheetAt: 0, sheet: 350, heroAt: 120 };
     const EASE = {
         io: "cubic-bezier(.65,0,.35,1)",
-        fly: "cubic-bezier(.6,0,.15,1)",
+        fly: "cubic-bezier(.4,.8,0,1)",
         in: "cubic-bezier(.55,0,1,.45)",
         draw: "cubic-bezier(.6,0,.2,1)",
     };

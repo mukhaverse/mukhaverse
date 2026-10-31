@@ -90,13 +90,6 @@
     color: var(--muted);
 }
 
-.fx-now-title {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--mid);
-}
-
 
 /* ─── The list ────────────────────────────────────────────── */
 .fx-list {
@@ -203,13 +196,6 @@
     flex-direction: column;
     gap: 0.75rem;
     min-width: 0;
-}
-
-.fx-num {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #6b6b6b;
-    font-variant-numeric: tabular-nums;
 }
 
 .fx-title {
@@ -353,28 +339,9 @@
 
 
 /* ─── Info in the section: quiet, like About ──────────────── */
-/* the number and type share the first line; the rest runs under it */
-.projects-section .fx-info {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 0.9rem;
-    row-gap: 0.7rem;
-    align-items: baseline;
-}
-
-.projects-section .fx-info > * {
-    grid-column: 1 / -1;
-}
-
-.projects-section .fx-num {
-    grid-column: 1;
-    grid-row: 1;
-    color: var(--wine);
-}
-
+/* the type leads, above the title (the carousel keeps source order) */
 .projects-section .fx-kind {
-    grid-column: 2;
-    grid-row: 1;
+    order: -1;
     font-size: 0.72rem;
 }
 
@@ -473,18 +440,21 @@
         left: auto;
         bottom: auto;
         width: auto;
-        height: 76px;
+        height: 124px;
         margin: 1.25rem calc(var(--fx-gutter) * -1) 0;
         overflow: hidden;
         background: var(--cream-2);
         border-bottom: 1px solid var(--hairline);
     }
 
+    /* fixed size so the whole tray, pulled card included, fits the strip:
+       the lines fill y 73–279 of the 400×320 drawing, so at 200px wide
+       they run from 37 to 140, and -26px lands them 11px clear of each edge */
     .fx-riffle {
         position: absolute;
-        right: -10vw;
-        top: -24px;
-        width: min(56vw, 260px);
+        right: -24px;
+        top: -26px;
+        width: 200px;
     }
 
     .fx-now {
@@ -498,7 +468,7 @@
     }
 
     .fx-count {
-        font-size: 2.6rem;
+        font-size: 3.6rem;
     }
 
     .fx-list {

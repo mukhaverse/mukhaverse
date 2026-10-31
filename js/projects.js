@@ -19,9 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const thumbs = items.map((li) => li.querySelector(".fx-thumb"));
-    const titles = items.map((li) => li.querySelector(".fx-title").textContent);
     const countNow = section.querySelector(".fx-count-now");
-    const nowTitle = section.querySelector(".fx-now-title");
     const host = section.querySelector(".fx-riffle");
     const pad = (n) => String(n + 1).padStart(2, "0");
 
@@ -99,10 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const setActive = (i) => {
         if (i === active) return;
         active = i;
-        if (i >= 0) {
-            countNow.textContent = pad(i);
-            nowTitle.textContent = titles[i];
-        }
+        if (i >= 0) countNow.textContent = pad(i);
         pull(i);
     };
 
