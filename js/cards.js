@@ -146,9 +146,14 @@ ScrollTrigger.create({
     // Pin duration = 4.5× viewport height:
     //   First 70% → card animation
     //   Last  30% → silent hold so user can read flipped cards
+    //
+    // Phones: the cards are read one at a time as they flip, so the pin
+    // is 2.3× viewport height. The animation starts 0.8× viewport before
+    // the pin and ends 1.6× into it, leaving a rest on SYSTEMS so the
+    // smoothed scroll can finish its flip before the cards are hidden.
 
-    const SKILLS_SCROLL_DIST = window.innerHeight * 4.5
-    const ANIM_DIST          = SKILLS_SCROLL_DIST * 0.70
+    const SKILLS_SCROLL_DIST = window.innerHeight * (isMobile ? 2.3 : 4.5)
+    const ANIM_DIST          = isMobile ? window.innerHeight * 2.4 : SKILLS_SCROLL_DIST * 0.70
 
     ScrollTrigger.create({
         trigger: ".skills",
@@ -170,6 +175,22 @@ ScrollTrigger.create({
             gsap.set(".cards", { opacity: smoothStep(self.progress) })
         }
     })
+
+
+    // phones: one card plus the gap, how far the column moves per card.
+    // Measured while the cards are laid out (.cards is display:none
+    // after the pin, so a refresh then keeps the last good value)
+    let mobileStep = 0
+    const measureStep = () => {
+        const card = document.querySelector("#card-1")
+        if (!card || !card.offsetHeight) return
+        const gap = parseFloat(getComputedStyle(document.querySelector(".cards-container")).rowGap) || 0
+        mobileStep = card.offsetHeight + gap
+    }
+    if (isMobile) {
+        measureStep()
+        ScrollTrigger.addEventListener("refresh", measureStep)
+    }
 
 
     // ─── SKILLS CARDS ANIMATION ───────────────────────────────────
@@ -195,38 +216,37 @@ ScrollTrigger.create({
             })
 
             if (isMobile) {
-                // ─── MOBILE: cascade drop from above, then flip ───────────
+                // ─── MOBILE: cascade drop, then walk down the column ──────
+                // The cards are too tall to fit together, so the column
+                // slides up one card at a time and each card flips once
+                // it's in the middle of the screen.
+                //   0.00–0.33  all three drop in while the section scrolls up
+                //              (the pin starts at 0.33)
+                //   then flip PLAN, move to BUILD, flip it, move to SYSTEMS, flip it
                 const spreadY = ["-130%", "-190%", "-250%"]
                 const spreadR = [-3, 0, 3]
-                const delays  = [0, 0.06, 0.12]
+                const delays  = [0, 0.03, 0.06]
+                const dropEnd = 0.33
+                const flips   = [[0.33, 0.47], [0.57, 0.70], [0.80, 0.94]]
+                const moves   = [[0.47, 0.57], [0.70, 0.80]]
+                const span    = (p, [a, b]) => smoothStep(gsap.utils.clamp(0, 1, (p - a) / (b - a)))
+
+                // the column is centred on BUILD, so card i sits mid-screen at (1 - i) steps
+                const at = moves.reduce((sum, m) => sum + span(progress, m), 0)
+                gsap.set(".cards-container", { y: (1 - at) * mobileStep })
 
                 ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {
-                    const delay     = delays[i]
-                    const cardP     = gsap.utils.clamp(0, 1, (progress - delay) / (1 - delay))
+                    const np        = span(progress, [delays[i], dropEnd])
                     const innerCard = document.querySelector(`${cardId} .flip-card-inner`)
 
-                    let y, scale, opacity, x, rotate, rotationY
-
-                    if (cardP < 0.50) {
-                        const np  = cardP / 0.50
-                        y         = gsap.utils.interpolate(spreadY[i], "0%", smoothStep(np))
-                        scale     = gsap.utils.interpolate(0.25, 1, smoothStep(np))
-                        opacity   = np < 0.4 ? smoothStep(np / 0.4) : 1
-                        x         = "0%"
-                        rotate    = gsap.utils.interpolate(spreadR[i], 0, smoothStep(np))
-                        rotationY = 0
-                    } else {
-                        const np  = (cardP - 0.50) / 0.50
-                        y         = "0%"
-                        scale     = 1
-                        opacity   = 1
-                        x         = "0%"
-                        rotate    = 0
-                        rotationY = smoothStep(np) * 180
-                    }
-
-                    gsap.set(cardId,    { opacity, y, x, rotate, scale })
-                    gsap.set(innerCard, { rotationY })
+                    gsap.set(cardId, {
+                        opacity: np < 0.4 ? smoothStep(np / 0.4) : 1,
+                        y:       gsap.utils.interpolate(spreadY[i], "0%", np),
+                        x:       "0%",
+                        rotate:  gsap.utils.interpolate(spreadR[i], 0, np),
+                        scale:   gsap.utils.interpolate(0.25, 1, np)
+                    })
+                    gsap.set(innerCard, { rotationY: span(progress, flips[i]) * 180 })
                 })
 
             } else {

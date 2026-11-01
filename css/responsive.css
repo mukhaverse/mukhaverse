@@ -65,9 +65,19 @@
 
 @media (max-width: 768px) {
 
+    /* no top padding: the card in focus sits on the screen's true middle */
     .cards {
-        padding-top: 3rem;
         box-sizing: border-box;
+    }
+
+    /* float evenly either side of the middle, not only upward */
+    .cards-container .card .card-wrapper {
+        animation-name: floating-even;
+    }
+
+    @keyframes floating-even {
+        0%, 100% { transform: translate(-50%, -47.5%); }
+        50%      { transform: translate(-50%, -52.5%); }
     }
 
     .cards-container {
@@ -75,16 +85,18 @@
         gap: 1.1rem;
     }
 
+    /* bigger than the screen holds three of, so the column scrolls a card
+       at a time (cards.js); capped so one card always fits the height */
     .cards-container .card {
         flex: none;
-        width: 40vw;
+        width: min(75vw, calc((100svh - 6rem) / 1.4));
         height: auto;
     }
 
     #card-1,
     #card-2,
     #card-3 {
-        width: 40vw;
+        width: min(75vw, calc((100svh - 6rem) / 1.4));
         height: auto;
     }
 

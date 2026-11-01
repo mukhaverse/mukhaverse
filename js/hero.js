@@ -79,23 +79,27 @@ tl.to(".hero-divider", { opacity: 1, duration: 0.2, ease: "power1.out" }, "land+
       onStart: () => document.querySelector(".hero-description").classList.add("is-visible")
   }, "land+=0.1");
 
-// the cards are dealt right to left: the last one rises into its slot, and each one before it
-// fans out from behind its neighbour, turned on edge, and squares up as it lands
-const lastBox = cards[cards.length - 1]?.getBoundingClientRect();
+// the cards are dealt sideways, right to left: the last one slides in from the right into its
+// slot, and each one before it slides out from behind its neighbour, turned on edge, and squares
+// up as it lands. Nothing moves vertically
+// the name looks settled about 0.3s into its move; the deal waits a beat past that
+const dealAt = "land+=0.55";
+const lastCard = cards[cards.length - 1];
+const lastBox = lastCard?.getBoundingClientRect();
 tl.fromTo(cards, {
     // measured on screen, so undo .hero-cards' scale to get the card's own px
     x: (i, el) => {
         const b = el.getBoundingClientRect();
-        return b.width ? (lastBox.left - b.left) * el.offsetWidth / b.width : 0;
+        if (!b.width) return 0;
+        const k = el.offsetWidth / b.width;
+        return el === lastCard ? el.offsetWidth * 0.5 : (lastBox.left - b.left) * k;
     },
-    y: 60,
     rotation: 10,
     rotationY: -60,
     transformPerspective: 900,
     transformOrigin: "50% 50%"
 }, {
     x: 0,
-    y: 0,
     rotation: 0,
     rotationY: 0,
     duration: 0.5,
@@ -103,8 +107,8 @@ tl.fromTo(cards, {
     // they're invisible until dealt; don't tilt them for reduced motion, where this never plays
     immediateRender: false,
     onComplete: () => gsap.set(cards, { clearProps: "transition,transformOrigin,willChange" })
-}, "land+=0.15")
-  .to(cards, { opacity: 1, duration: 0.15, ease: "power1.out", stagger: { each: 0.08, from: "end" } }, "land+=0.15");
+}, dealAt)
+  .to(cards, { opacity: 1, duration: 0.15, ease: "power1.out", stagger: { each: 0.08, from: "end" } }, dealAt);
 
 
 

@@ -49,6 +49,7 @@
     const RED = tok("--suit-red", "#EB1C24");
     const SLOT = "#2a2522";
     const INK = tok("--dark", "#161412");
+    const CARD = "#fff";   // every card, face and back, is plain white
     // the links come from the plain list in the markup, so they live in one place
     // each card takes its slice's colour, red suits and black suits in turn round the wheel (base.css)
     const SUITS = { email: ["E", "✉︎", "--wheel-red", "write to me"], linkedin: ["in", "◈", "--wheel-ink", "open my profile"], github: ["GH", "◆", "--wheel-red-2", "see my code"], x: ["X", "♠", "--wheel-ink-2", "follow along"] };
@@ -215,7 +216,7 @@
         const outline = band(rrect(w, h, w * .09));
         if (outline.length < 3) return;
         const alpha = o.alpha ?? 1, face = info && facing(cross(U, V));
-        cv.path(outline.map(at), o.hi ? "hi" : "", { fill: face ? info.fill : undefined, alpha });
+        cv.path(outline.map(at), o.hi ? "hi" : "", { fill: CARD, alpha });
         if (face) {
             const ink = { alpha };
             cv.text(info.v, at([w * .16, h * .11]), U, V, w * .17, "", ink);
