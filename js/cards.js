@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.ticker.lagSmoothing(0)
 
     const smoothStep = (p) => p * p * (3 - 2 * p)
+    const softEnds   = gsap.parseEase("sine.inOut")
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches
 
@@ -147,10 +148,9 @@ ScrollTrigger.create({
     //   First 70% → card animation
     //   Last  30% → silent hold so user can read flipped cards
     //
-    // Phones: the cards are read one at a time as they flip, so the pin
-    // is 2.3× viewport height. The animation starts 0.8× viewport before
-    // the pin and ends 1.6× into it, leaving a rest on SYSTEMS so the
-    // smoothed scroll can finish its flip before the cards are hidden.
+    // Phones: the pin is 2.3× viewport height. The animation starts 0.8×
+    // viewport before the pin and ends 1.6× into it, leaving a rest on
+    // SYSTEMS before the cards are hidden.
 
     const SKILLS_SCROLL_DIST = window.innerHeight * (isMobile ? 2.3 : 4.5)
     const ANIM_DIST          = isMobile ? window.innerHeight * 2.4 : SKILLS_SCROLL_DIST * 0.70
@@ -216,23 +216,27 @@ ScrollTrigger.create({
             })
 
             if (isMobile) {
-                // ─── MOBILE: cascade drop, then walk down the column ──────
+                // ─── MOBILE: cascade drop, then glide down the column ─────
                 // The cards are too tall to fit together, so the column
-                // slides up one card at a time and each card flips once
-                // it's in the middle of the screen.
+                // drifts up at a steady pace, like the page scrolling on,
+                // while the three flip over in one wave.
                 //   0.00–0.33  all three drop in while the section scrolls up
                 //              (the pin starts at 0.33)
-                //   then flip PLAN, move to BUILD, flip it, move to SYSTEMS, flip it
+                //   0.30–0.62  they flip, one just after another
+                //   0.36–0.96  the column glides from PLAN to SYSTEMS
                 const spreadY = ["-130%", "-190%", "-250%"]
                 const spreadR = [-3, 0, 3]
                 const delays  = [0, 0.03, 0.06]
                 const dropEnd = 0.33
-                const flips   = [[0.33, 0.47], [0.57, 0.70], [0.80, 0.94]]
-                const moves   = [[0.47, 0.57], [0.70, 0.80]]
+                const flips   = [[0.30, 0.48], [0.37, 0.55], [0.44, 0.62]]
+                const glide   = [0.36, 0.96]
                 const span    = (p, [a, b]) => smoothStep(gsap.utils.clamp(0, 1, (p - a) / (b - a)))
 
-                // the column is centred on BUILD, so card i sits mid-screen at (1 - i) steps
-                const at = moves.reduce((sum, m) => sum + span(progress, m), 0)
+                // the column is centred on BUILD, so card i sits mid-screen at (1 - i) steps.
+                // Eased only at its ends, so it starts and stops softly but
+                // otherwise moves with the finger
+                const g  = gsap.utils.clamp(0, 1, (progress - glide[0]) / (glide[1] - glide[0]))
+                const at = 2 * (0.7 * g + 0.3 * softEnds(g))
                 gsap.set(".cards-container", { y: (1 - at) * mobileStep })
 
                 ;["#card-1", "#card-2", "#card-3"].forEach((cardId, i) => {

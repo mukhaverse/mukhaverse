@@ -14,11 +14,12 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 // press that lands on the card grabs it. column: where the card hangs.
 // cards: one per role (readCard). parked: wait above the stage until drop().
 // fit / fitW: how much of the column's height / width the card may take
-// (whichever is tighter wins). light: phones, no drop shadow (it would
+// (whichever is tighter wins). drop: how far below the column's middle the
+// card's centre hangs, in card units (more drop, more strap). light: phones, no drop shadow (it would
 // fall across the copy just under the card, and it saves the extra pass).
 // Resolves to null when three.js can't load or WebGL is off, so the flat
 // badge stays.
-export async function createBadge3D(host, column, cards, logo, { parked = false, fit = 0.55, fitW = 0.62, light = false } = {}) {
+export async function createBadge3D(host, column, cards, logo, { parked = false, fit = 0.55, fitW = 0.62, drop = 0.7, light = false } = {}) {
     let THREE;
     try {
         THREE = await import(THREE_URL);
@@ -79,7 +80,7 @@ export async function createBadge3D(host, column, cards, logo, { parked = false,
     };
     const front = makeFace(), back = makeFace();
 
-    const CW = 1.8, CH = CW / 0.68, CLIP = 0.42, CY = -0.38;   // CY: hangs a little low, for more strap
+    const CW = 1.8, CH = CW / 0.68, CLIP = 0.42, CY = -drop;
     const card = new THREE.Group();
     card.matrixAutoUpdate = false;
     scene.add(card);

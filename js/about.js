@@ -210,7 +210,7 @@ function setupIdentities(section, panels, cards, flat) {
                     if (reverted) return;
                     const phone = ctx.conditions.phone;
                     const made = await createBadge3D(stageInner, lanyard, cards, logo,
-                        phone ? { parked: !entered, fit: 0.7, fitW: 0.92, light: true } : { parked: !entered });
+                        phone ? { parked: !entered, fit: 0.63, fitW: 0.92, drop: 0.58, light: true } : { parked: !entered });
                     if (!made) return;
                     if (reverted) { made.destroy(); return; }
                     engine = made;

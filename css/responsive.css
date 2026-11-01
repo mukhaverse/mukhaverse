@@ -85,18 +85,18 @@
         gap: 1.1rem;
     }
 
-    /* bigger than the screen holds three of, so the column scrolls a card
-       at a time (cards.js); capped so one card always fits the height */
+    /* bigger than the screen holds three of, so the column glides past
+       them (cards.js); capped so one card always fits the height */
     .cards-container .card {
         flex: none;
-        width: min(75vw, calc((100svh - 6rem) / 1.4));
+        width: min(64vw, calc((100svh - 8rem) / 1.4));
         height: auto;
     }
 
     #card-1,
     #card-2,
     #card-3 {
-        width: min(75vw, calc((100svh - 6rem) / 1.4));
+        width: min(64vw, calc((100svh - 8rem) / 1.4));
         height: auto;
     }
 

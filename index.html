@@ -653,6 +653,35 @@
             }
             setFooterSpace();
         })();
+
+        // the phone's status bar and toolbar take the page colour (theme-color, or the
+        // body behind everything on newer Safari), so both follow the section at the top
+        (function () {
+            const meta = document.querySelector('meta[name="theme-color"]');
+            const base = meta ? meta.content : '#F9F4EB';
+            let queued = false, last = '';
+
+            const opaque = (c) => {
+                const n = c.match(/[\d.]+/g);
+                return n && (n.length < 4 || +n[3] === 1);
+            };
+
+            const tint = () => {
+                queued = false;
+                let el = document.elementFromPoint(innerWidth / 2, 1);
+                while (el && el !== document.body && !opaque(getComputedStyle(el).backgroundColor)) el = el.parentElement;
+                const c = el && el !== document.body ? getComputedStyle(el).backgroundColor : base;
+                if (c === last) return;
+                last = c;
+                document.body.style.backgroundColor = c;
+                if (meta) meta.content = c;
+            };
+
+            addEventListener('scroll', () => {
+                if (!queued) { queued = true; requestAnimationFrame(tint); }
+            }, { passive: true });
+            addEventListener('load', tint);
+        })();
     </script>
 
 </body>

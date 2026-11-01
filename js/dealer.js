@@ -801,15 +801,19 @@
         target = 0;
         gsap.registerPlugin(ScrollTrigger);
         const phone = matchMedia("(max-width: 768px)");
+        const title = section.querySelector(".contact-title");
         const lead = () => phone.matches ? PIN_LEAD.phone : PIN_LEAD.wide;
         const hold = () => phone.matches ? PIN_HOLD.phone : PIN_HOLD.wide;
         ScrollTrigger.create({
             trigger: section,
             // pins with the table in the middle of the screen; a section taller than the screen pins part way
-            // in, but never so far that its end has scrolled up past the bottom of the screen
+            // in, but never so far that its end has scrolled up past the bottom of the screen. On phones the
+            // title sits right above the table, so it pins earlier if need be to keep the title in view
             start: () => {
-                const f = figEl.getBoundingClientRect(), into = f.top - section.getBoundingClientRect().top;
-                return "top+=" + clamp(into + f.height / 2 - innerHeight / 2, 0, Math.max(0, section.offsetHeight - innerHeight)) + " top";
+                const top = section.getBoundingClientRect().top, f = figEl.getBoundingClientRect();
+                let at = f.top - top + f.height / 2 - innerHeight / 2;
+                if (phone.matches && title) at = Math.min(at, title.getBoundingClientRect().top - top - 32);
+                return "top+=" + clamp(at, 0, Math.max(0, section.offsetHeight - innerHeight)) + " top";
             },
             // the move keeps its length and the lead and hold are added round it
             end: () => "+=" + innerHeight * (PIN_SCREENS[DEALER.length] || PIN_SCREENS.short) / (1 - lead() - hold()),
