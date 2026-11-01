@@ -9,7 +9,7 @@
     /* ---------- choose the dealer's setup here ---------- */
 
     const DEALER = {
-        pick: "wheel",      // how visitors pick:   "spots"  four printed spots, every card stays on the table
+        pick: "spots",      // how visitors pick:   "spots"  four printed spots, every card stays on the table
                            //                      "shoe"   press the shoe and it deals the next card onto the spots,
                            //                               every card stays on the table
                            //                      "spread" the cards are laid face down on the spots as the table
@@ -52,11 +52,13 @@
     const CARD = "#fff";   // every card, face and back, is plain white
     // the links come from the plain list in the markup, so they live in one place
     // each card takes its slice's colour, red suits and black suits in turn round the wheel (base.css)
-    const SUITS = { email: ["E", "✉︎", "--wheel-red", "write to me"], linkedin: ["in", "◈", "--wheel-ink", "open my profile"], github: ["GH", "◆", "--wheel-red-2", "see my code"], x: ["X", "♠", "--wheel-ink-2", "follow along"] };
-    const CARDS = [...root.querySelectorAll(".dealer-links a")].map(a => {
+    const SUITS = { email: ["E", "✉︎", "--wheel-red", "write to me"], linkedin: ["in", "◈︎", "--wheel-ink", "open my profile"], github: ["GH", "◆︎", "--wheel-red-2", "see my code"], x: ["X", "♠︎", "--wheel-ink-2", "follow along"] };
+    // the résumé is in the same list, but it's the dice's link, not a card
+    const CARDS = [...root.querySelectorAll('.dealer-links a:not([data-key="resume"])')].map(a => {
         const [v, s, accent, verb] = SUITS[a.dataset.key];
-        return { key: a.dataset.key, v, s, fill: tok(accent, "#eee"), label: a.dataset.label, handle: a.dataset.handle, href: a.href, external: a.target === "_blank", verb };
+        return { key: a.dataset.key, v, s, fill: tok(accent, "#eee"), red: accent.includes("red"), label: a.dataset.label, handle: a.dataset.handle, href: a.href, external: a.target === "_blank", verb };
     });
+    const RESUME = root.querySelector('.dealer-links a[data-key="resume"]');
     root.classList.add("dealer-on");
 
     /* ---------- maths ---------- */
@@ -218,10 +220,11 @@
         const alpha = o.alpha ?? 1, face = info && facing(cross(U, V));
         cv.path(outline.map(at), o.hi ? "hi" : "", { fill: CARD, alpha });
         if (face) {
-            const ink = { alpha };
-            cv.text(info.v, at([w * .16, h * .11]), U, V, w * .17, "", ink);
-            cv.text(info.s, at([w * .16, h * .21]), U, V, w * .11, "", ink);
-            cv.text(info.v, at([w / 2, h * .44]), U, V, w * .38, "", ink);
+            // the marks take the card's suit colour, the name and handle stay in ink
+            const ink = { alpha }, suit = { alpha, fill: info.red ? RED : INK };
+            cv.text(info.v, at([w * .16, h * .11]), U, V, w * .17, "", suit);
+            cv.text(info.s, at([w * .16, h * .21]), U, V, w * .11, "", suit);
+            cv.text(info.v, at([w / 2, h * .44]), U, V, w * .38, "", suit);
             cv.text(info.label.toUpperCase(), at([w / 2, h * .72]), U, V, w * .1, "card-label", ink);
             cv.text(info.handle, at([w / 2, h * .84]), U, V, w * (info.handle.length > 18 ? .06 : .085), "card-handle", ink);
         } else {
@@ -447,6 +450,54 @@
         cv.path([[x + ux * (WR - 5), y + uy * (WR - 5), WH + 2], [px - uy * 3.5, py + ux * 3.5, WH + 2], [px + uy * 3.5, py - ux * 3.5, WH + 2]], "fo", { fill: RED });
     }
 
+    // the loaded dice: a pair behind the spots that always come up C and V, the résumé's link.
+    // Only on the row layouts, where nothing else stands on that part of the felt.
+    const DIE = 22, DIE_AT = [[110, 32, .35], [148, 54, -.2]];   // x, y, and how each is turned
+    const dice = row && RESUME ? DIE_AT.map(([x, y, yaw], i) => ({ x, y, yaw, tum: 0, hop: 0, letter: "CV"[i], lift: spring(0, 220, 18) })) : [];
+    // each face: its outward direction, the two directions across it, and its pips (none for the letter)
+    const CUBE = [
+        { n: [0, 0, 1], u: [1, 0, 0], v: [0, 1, 0], pips: 0 },
+        { n: [0, 0, -1], u: [1, 0, 0], v: [0, -1, 0], pips: 6 },
+        { n: [1, 0, 0], u: [0, 1, 0], v: [0, 0, -1], pips: 3 },
+        { n: [-1, 0, 0], u: [0, -1, 0], v: [0, 0, -1], pips: 4 },
+        { n: [0, 1, 0], u: [-1, 0, 0], v: [0, 0, -1], pips: 2 },
+        { n: [0, -1, 0], u: [1, 0, 0], v: [0, 0, -1], pips: 5 },
+    ];
+    const DOTS = {
+        2: [[-1, -1], [1, 1]],
+        3: [[-1, -1], [0, 0], [1, 1]],
+        4: [[-1, -1], [1, -1], [-1, 1], [1, 1]],
+        5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]],
+        6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]],
+    };
+    // p turned by angle a about the unit axis k
+    const rot = (p, k, a) => {
+        const c = Math.cos(a), sn = Math.sin(a);
+        return add(add(mul(p, c), mul(cross(k, p), sn)), mul(k, dot(k, p) * (1 - c)));
+    };
+    // a die turned by its yaw, then tumbled about its own y axis, resting on its lowest edge
+    function dieAt(d) {
+        const A = [-Math.sin(d.yaw), Math.cos(d.yaw), 0], h = DIE / 2;
+        const turn = p => rot(rot(p, [0, 0, 1], d.yaw), A, d.tum);
+        const c = [d.x, d.y, h * (Math.abs(Math.cos(d.tum)) + Math.abs(Math.sin(d.tum))) + d.hop + d.lift.v];
+        return { turn, at: p => add(c, turn(p)) };
+    }
+    function drawDie(d) {
+        const { turn, at } = dieAt(d), h = DIE / 2, on = hover === "dice";
+        for (const f of CUBE) {
+            if (!facing(turn(f.n))) continue;
+            const U = turn(f.u), V = turn(f.v), c = at(mul(f.n, h));
+            const pt = (a, b, k = h) => add(c, add(mul(U, a * k), mul(V, b * k)));
+            cv.path([[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => pt(a, b)), on ? "hi" : "", { fill: CARD });
+            if (!f.pips) cv.text(d.letter, c, U, V, DIE * .78, "", { fill: RED });
+            else for (const [a, b] of DOTS[f.pips]) cv.path(ring(pt(a, b, h * .5), U, V, h * .13, 10), "fo", { fill: INK });
+        }
+    }
+    const diceHull = () => hull(dice.flatMap(d => {
+        const { at } = dieAt(d), h = DIE / 2;
+        return [-h, h].flatMap(a => [-h, h].flatMap(b => [-h, h].map(c => cv.view(at([a, b, c])))));
+    }));
+
     function draw() {
         n = 0;
         cv.frame();
@@ -468,12 +519,14 @@
                 if (!pile.length) cv.text("DISCARD", [DISCARD[0], DISCARD[1], 0], X, Y, 7, "faint");
             }
         }
+        if (dice.length) cv.text("RÉSUMÉ", [166, 84, 0], X, Y, 7.5, hover === "dice" ? "spot-on" : "faint");
 
         // everything standing on the felt, back to front for wherever the camera is
         const stand = [{ d: depth([28, 39, 15]), f: drawShoe }];
         if (tray) stand.push({ d: depth([118, 32, 4]), f: drawTray });
         else if (wheel) stand.push({ d: depth([...WHEEL, 4]), f: drawWheel });
         else if (!row) CHIPS.forEach((c, i) => stand.push({ d: depth([c[0], c[1], 5]), f: () => drawChips(i) }));
+        for (const d of dice) stand.push({ d: depth([d.x, d.y, DIE / 2]), f: () => drawDie(d) });
         for (const c of [...pile.slice(-8), ...dealt]) if (c) stand.push({ d: depth([c.cx, c.cy, 0]) + c.cz * 5, f: () => drawOne(c) });
         stand.sort((a, b) => a.d - b.d).forEach(x => x.f());
 
@@ -650,6 +703,42 @@
             });
     });
 
+    // the dice are the résumé's link: a click throws them, they come up C and V again, and the PDF opens
+    if (dice.length) {
+        let rolling = false;
+        const h = hit("a", `${RESUME.textContent.trim()}, opens in a new tab`, "dice", diceHull);
+        h.el.href = RESUME.href;
+        h.el.target = "_blank";
+        h.el.rel = "noopener noreferrer";
+        const lift = t => () => dice.forEach(d => { d.lift.t = t; });
+        h.el.addEventListener("pointerenter", lift(2.5));
+        h.el.addEventListener("pointerleave", lift(0));
+        h.el.addEventListener("focus", lift(2.5));
+        h.el.addEventListener("blur", lift(0));
+        const roll = async (d, i) => {
+            await new Promise(r => setTimeout(r, i * 60));
+            const spinTo = d.yaw + (i ? -1.4 : 1.2);
+            await animate(d, { hop: 16 + i * 3, tum: Math.PI, yaw: (d.yaw + spinTo) / 2 }, 260, E.out);
+            await animate(d, { hop: 0, tum: TAU, yaw: spinTo }, 240, E.in);
+            d.tum = 0;
+            await animate(d, { hop: 2 }, 90, E.out);
+            await animate(d, { hop: 0 }, 110, E.in);
+        };
+        h.el.addEventListener("click", async e => {
+            // modified clicks (new tab, new window) and reduced motion go straight through
+            if (reduce || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+            e.preventDefault();
+            if (rolling) return;
+            rolling = true;
+            say("Rolling…");
+            await Promise.all(dice.map(roll));
+            rolling = false;
+            say("C and V, every time. Opening my résumé.");
+            const w = window.open(h.el.href, "_blank");
+            if (w) w.opener = null; else location.href = h.el.href;
+        });
+    }
+
     say({
         spots: "Pick a spot on the table.",
         shoe: "Press the shoe and I'll deal you a card.",
@@ -759,6 +848,7 @@
         if (wheel && idle && !String(hover).startsWith("slice")) spin.a += dt * .25;
         if (cur.inShoe && !busy) cur.cy = FRONT - L / 2 + peek.v;
         for (const c of chipLift) c.step(dt);
+        for (const d of dice) d.lift.step(dt);
         for (const c of [cur, ...dealt, ...pile]) if (c) c.hover.step(dt);
         draw();
         placeHits();

@@ -87,3 +87,10 @@
     .contact-inner.has-dealer { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
     .dealer-fig { width: 122%; margin-left: -4%; }
 }
+/* phones: a little bigger again, nudged left so the dice stay on screen and only the table's corner
+   reaches past the left edge. The column is fixed to the screen so the percentages count once
+   (an auto column grows with the figure and they compound) */
+@media (max-width: 768px) {
+    .dealer { grid-template-columns: minmax(0, 1fr); }
+    .dealer-fig { width: 162%; margin-left: -13%; }
+}
