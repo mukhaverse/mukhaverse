@@ -87,6 +87,12 @@
 
  }
 
+ /* one screen tall, so the pin ends on the cards and the page scrolls
+    on past them before Projects comes up (cards.js) */
+ .skills {
+   height: 100svh;
+ }
+
  .cards {
    position: fixed;
    top: 0;
@@ -101,7 +107,7 @@
 
 .cards-container{
    position: relative;
-   width: 75%;
+   width: 64%;
    height: 100%;
    display: flex;
    justify-content: center;
@@ -262,11 +268,11 @@
 /* desktop cards are big enough that the rows can sit a touch smaller */
 @media (min-width: 769px) {
    .back-list li{
-      font-size: 6.6cqw;
+      font-size: 6cqw;
    }
 
    .back-ic{
-      font-size: 8.4cqw;
+      font-size: 8cqw;
    }
 }
 

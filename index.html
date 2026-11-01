@@ -43,6 +43,8 @@
             <li><a href="#contact">Contact</a></li>
         </ul> -->
         <div class="year">2026</div>
+        <!-- bottom-right: which section you're in, as a die (js/die.js) -->
+        <div class="corner-die" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </nav>
 
 
@@ -628,6 +630,7 @@
 
     <script src="js/hero.js"></script>
     <script src="js/dealer.js"></script>
+    <script src="js/die.js"></script>
     <script src="js/project-carousel.js"></script>
     <!-- modules run in order after parsing; cards.js owns the skills pin, so
          everything measured below it is created afterwards -->
@@ -654,32 +657,55 @@
             setFooterSpace();
         })();
 
-        // the phone's status bar and toolbar take the page colour (theme-color, or the
-        // body behind everything on newer Safari), so both follow the section at the top
+        // what's painted behind the top of the screen, as you scroll:
+        // - the phone's status bar and toolbar take the page colour (theme-color, or the
+        //   body behind everything on newer Safari), so both follow the section at the top
+        // - the corner labels and the die turn light over a dark section
         (function () {
             const meta = document.querySelector('meta[name="theme-color"]');
             const base = meta ? meta.content : '#F9F4EB';
+            const labels = [...document.querySelectorAll('.nav-logo, .navbar .year, .corner-die')];
             let queued = false, last = '';
 
+            const rgb = (c) => (c.match(/[\d.]+/g) || []).map(Number);
             const opaque = (c) => {
-                const n = c.match(/[\d.]+/g);
-                return n && (n.length < 4 || +n[3] === 1);
+                const n = rgb(c);
+                return n.length === 3 || (n.length === 4 && n[3] === 1);
+            };
+            const dark = (c) => {
+                const [r, g, b] = rgb(c);
+                return c !== base && (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.45;
+            };
+
+            // the first solid background under a point, looking past the labels
+            const ground = (x, y) => {
+                for (const el of document.elementsFromPoint(x, y)) {
+                    if (el === document.body || el === document.documentElement) break;
+                    if (labels.includes(el)) continue;
+                    const c = getComputedStyle(el).backgroundColor;
+                    if (opaque(c)) return c;
+                }
+                return base;
             };
 
             const tint = () => {
                 queued = false;
-                let el = document.elementFromPoint(innerWidth / 2, 1);
-                while (el && el !== document.body && !opaque(getComputedStyle(el).backgroundColor)) el = el.parentElement;
-                const c = el && el !== document.body ? getComputedStyle(el).backgroundColor : base;
+                for (const label of labels) {
+                    const r = label.getBoundingClientRect();
+                    label.classList.toggle('on-dark', dark(ground(r.left + r.width / 2, r.top + r.height / 2)));
+                }
+                const c = ground(innerWidth / 2, 1);
                 if (c === last) return;
                 last = c;
                 document.body.style.backgroundColor = c;
                 if (meta) meta.content = c;
             };
 
-            addEventListener('scroll', () => {
+            const queue = () => {
                 if (!queued) { queued = true; requestAnimationFrame(tint); }
-            }, { passive: true });
+            };
+            addEventListener('scroll', queue, { passive: true });
+            addEventListener('resize', queue);
             addEventListener('load', tint);
         })();
     </script>

@@ -89,14 +89,14 @@
        them (cards.js); capped so one card always fits the height */
     .cards-container .card {
         flex: none;
-        width: min(64vw, calc((100svh - 8rem) / 1.4));
+        width: min(54vw, calc((100svh - 10rem) / 1.4));
         height: auto;
     }
 
     #card-1,
     #card-2,
     #card-3 {
-        width: min(64vw, calc((100svh - 8rem) / 1.4));
+        width: min(54vw, calc((100svh - 10rem) / 1.4));
         height: auto;
     }
 

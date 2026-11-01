@@ -140,20 +140,28 @@ ScrollTrigger.create({
     // ─── SKILLS SECTION: pin ──────────────────────────────────────
     //
     // .cards is position:fixed so it covers the viewport during the
-    // pin. The moment the pin ends we hide it with display:none —
-    // this is the only reliable way to stop a fixed element from
-    // floating over subsequent sections.
+    // pin. The moment the pin ends it's dropped into the page right
+    // where it's showing (absolute, at the pin's end), so it scrolls
+    // away with the section instead of staying behind Projects.
     //
-    // Pin duration = 4.5× viewport height:
+    // Pin duration = 2× viewport height:
     //   First 70% → card animation
     //   Last  30% → silent hold so user can read flipped cards
     //
-    // Phones: the pin is 2.3× viewport height. The animation starts 0.8×
-    // viewport before the pin and ends 1.6× into it, leaving a rest on
-    // SYSTEMS before the cards are hidden.
+    // Phones: the pin is 1× viewport height. The animation starts 0.8×
+    // viewport before the pin and ends 0.9× into it, so the column glides
+    // about as fast as the finger and the cards scroll away soon after
+    // SYSTEMS arrives.
 
-    const SKILLS_SCROLL_DIST = window.innerHeight * (isMobile ? 2.3 : 4.5)
-    const ANIM_DIST          = isMobile ? window.innerHeight * 2.4 : SKILLS_SCROLL_DIST * 0.70
+    const SKILLS_SCROLL_DIST = window.innerHeight * (isMobile ? 1 : 2)
+    const ANIM_DIST          = isMobile ? window.innerHeight * 1.7 : SKILLS_SCROLL_DIST * 0.70
+
+    // top is measured from .page-wrapper, the layer's containing block
+    const release = (self) => gsap.set(".cards", {
+        position: "absolute",
+        top: self.end - (document.querySelector(".page-wrapper").getBoundingClientRect().top + window.scrollY)
+    })
+    const hold = () => gsap.set(".cards", { position: "fixed", top: 0, opacity: 1 })
 
     ScrollTrigger.create({
         trigger: ".skills",
@@ -161,8 +169,10 @@ ScrollTrigger.create({
         end: `+=${SKILLS_SCROLL_DIST}px`,
         pin: true,
         pinSpacing: true,
-        onLeave:     () => gsap.set(".cards", { display: "none"  }),
-        onEnterBack: () => gsap.set(".cards", { display: "flex", opacity: 1 }),
+        onLeave:     release,
+        onEnterBack: hold,
+        // a resize past the pin moves its end, so the dropped layer follows
+        onRefresh:   (self) => { if (window.scrollY > self.end) release(self) },
     })
 
     // Fade .cards in as .skills scrolls into view
@@ -177,9 +187,7 @@ ScrollTrigger.create({
     })
 
 
-    // phones: one card plus the gap, how far the column moves per card.
-    // Measured while the cards are laid out (.cards is display:none
-    // after the pin, so a refresh then keeps the last good value)
+    // phones: one card plus the gap, how far the column moves per card
     let mobileStep = 0
     const measureStep = () => {
         const card = document.querySelector("#card-1")
@@ -221,7 +229,7 @@ ScrollTrigger.create({
                 // drifts up at a steady pace, like the page scrolling on,
                 // while the three flip over in one wave.
                 //   0.00–0.33  all three drop in while the section scrolls up
-                //              (the pin starts at 0.33)
+                //              (the pin starts at 0.47)
                 //   0.30–0.62  they flip, one just after another
                 //   0.36–0.96  the column glides from PLAN to SYSTEMS
                 const spreadY = ["-130%", "-190%", "-250%"]

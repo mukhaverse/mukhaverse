@@ -434,13 +434,16 @@
     }
 
     .fx-deck {
+        /* room along the top for the corner labels (st.css) */
+        --corner-room: 30px;
+
         position: sticky;
         top: 0;
         z-index: 3;
         left: auto;
         bottom: auto;
         width: auto;
-        height: 124px;
+        height: calc(124px + var(--corner-room));
         margin: 1.25rem calc(var(--fx-gutter) * -1) 0;
         overflow: hidden;
         background: var(--cream-2);
@@ -453,12 +456,12 @@
     .fx-riffle {
         position: absolute;
         right: -24px;
-        top: -26px;
+        top: calc(-26px + var(--corner-room));
         width: 200px;
     }
 
     .fx-now {
-        top: 50%;
+        top: calc(50% + var(--corner-room) / 2);
         right: auto;
         left: var(--fx-gutter);
         translate: 0 -50%;

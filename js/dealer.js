@@ -812,7 +812,7 @@
             start: () => {
                 const top = section.getBoundingClientRect().top, f = figEl.getBoundingClientRect();
                 let at = f.top - top + f.height / 2 - innerHeight / 2;
-                if (phone.matches && title) at = Math.min(at, title.getBoundingClientRect().top - top - 32);
+                if (phone.matches && title) at = Math.min(at, title.getBoundingClientRect().top - top - 56);
                 return "top+=" + clamp(at, 0, Math.max(0, section.offsetHeight - innerHeight)) + " top";
             },
             // the move keeps its length and the lead and hold are added round it
