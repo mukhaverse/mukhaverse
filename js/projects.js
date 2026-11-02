@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ─── Video covers ────────────────────────────────────────
-    // a cover can be a muted loop: it loads once the section is close,
+    // a cover can be a muted loop: each one loads once it is a screen away
+    // (not the whole section's at once, mid-scroll through the skills),
     // and plays only while it is on screen and the carousel is shut
     const videos = thumbs.map((t) => t.querySelector("video[data-src]"));
     const carousel = document.getElementById("projectCarousel");
@@ -46,14 +47,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     if (videos.some(Boolean)) {
-        new IntersectionObserver(([entry], io) => {
-            if (!entry.isIntersecting) return;
-            videos.forEach((v) => { if (v) { v.src = v.dataset.src; v.preload = "auto"; } });
-            io.disconnect();
+        const near = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                const v = videos[thumbs.indexOf(e.target)];
+                v.src = v.dataset.src;
+                v.preload = "auto";
+                near.unobserve(e.target);
+            });
             syncVideos();
-        }, { rootMargin: "100% 0px" }).observe(section);
+        }, { rootMargin: "100% 0px" });
+        thumbs.forEach((t, i) => { if (videos[i]) near.observe(t); });
 
-        const seen = new IntersectionObserver((entries) => {
+        const seen =new IntersectionObserver((entries) => {
             entries.forEach((e) => {
                 const i = thumbs.indexOf(e.target);
                 if (e.isIntersecting) visible.add(i); else visible.delete(i);

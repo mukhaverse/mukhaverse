@@ -344,7 +344,11 @@ body {
     padding: 0;
   }
 
-  
+  /* lifted clear of the hero's divider, which sits right under them here */
+  .nav-logo,
+  .navbar .year {
+    top: calc(var(--corner-m) - 6px);
+  }
 
   .hero {
     padding: 0.5rem;

@@ -634,12 +634,6 @@ html:not(.js) .id-lanyard {
         overflow-wrap: break-word;
     }
 
-    .about-section.is-pinned .id-meta {
-        grid-column: 1;
-        grid-row: 2;
-        font-size: 0.95rem;
-    }
-
     .about-section.is-pinned .about-timeline {
         grid-column: 1;
         grid-row: 3;
@@ -653,8 +647,7 @@ html:not(.js) .id-lanyard {
     }
 
     .id-meta {
-        margin-top: 0.5rem;
-        font-size: 0.82rem;
+        display: none;
     }
 
     .id-copy {
