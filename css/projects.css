@@ -4,8 +4,8 @@
    Riffle, cropped in the bottom corner with the current project's
    number set over it (projects.js pulls a card for each project).
    On phones the panel becomes a slim strip stuck to the top.
-   Every cover opens the project's full set of shots in the carousel,
-   which reuses the .fx-* and .deck-* styles below. */
+   A project with several shots opens them in a sheet under its cover
+   (project-spread.js); a project with one shot opens nothing. */
 
 .projects-section {
     --fx-gutter: clamp(1rem, 4vw, 3rem);
@@ -117,6 +117,9 @@
     border-radius: 6px;
     overflow: hidden;
     background: #e7e1d7;
+}
+
+button.fx-thumb {
     cursor: pointer;
 }
 
@@ -129,8 +132,8 @@
     transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.fx-thumb:hover img,
-.fx-thumb:hover video {
+button.fx-thumb:hover img,
+button.fx-thumb:hover video {
     transform: scale(1.02);
 }
 
@@ -154,43 +157,129 @@
     opacity: 0;
 }
 
+/* with reduced motion the clip has its own controls */
+@media (prefers-reduced-motion: reduce) {
+    .fx-thumb.has-video::after {
+        display: none;
+    }
+}
+
 .fx-thumb:focus-visible {
     outline: 2.5px solid var(--dark);
     outline-offset: 3px;
 }
 
-.fx-pill {
+
+/* ─── Several shots: a sheet opens in the page (project-spread.js) ── */
+/* the shots share the cover, and mixed shapes sit on its ground */
+.fx-thumb .fx-shot {
     position: absolute;
-    left: 0.75rem;
-    bottom: 0.75rem;
-    padding: 0.35rem 0.8rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-transform: none;
-    color: var(--cream);
-    background: var(--dark);
-    border-radius: 999px;
+    inset: 0;
+    object-fit: contain;
     opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.fx-thumb:hover .fx-pill,
-.fx-thumb:focus-visible .fx-pill {
+.fx-thumb .fx-shot-lead {
+    object-fit: cover;
+}
+
+.fx-thumb .fx-shot.is-on {
     opacity: 1;
-    transform: none;
 }
 
-@media (hover: none) {
-    .fx-pill {
-        opacity: 1;
-        transform: none;
+/* closer to the cover than the project's usual gap */
+.fx-shots {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: -1rem;
+}
+
+.fx-sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.fx-sheet.is-open {
+    grid-template-rows: 1fr;
+}
+
+.fx-sheet > div {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.fx-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.fx-sheet-shot {
+    position: relative;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #e7e1d7;
+    cursor: pointer;
+}
+
+.fx-sheet-shot img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
+/* the same play mark as a video cover. The outlines below sit inside the
+   edge, so the sheet's own edges can't clip them and it lines up with the cover */
+.fx-sheet-shot.is-clip::after {
+    content: "";
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6 4.5v7l5.5-3.5z' fill='%23000'/%3E%3C/svg%3E") center / 10px no-repeat;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.fx-sheet-shot[aria-current] {
+    outline: 1.5px solid var(--wine);
+    outline-offset: -1.5px;
+}
+
+.fx-sheet-shot:focus-visible {
+    outline: 2.5px solid var(--dark);
+    outline-offset: -2.5px;
+}
+
+.fx-shots-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.fx-shots-count {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fx-thumb .fx-shot,
+    .fx-sheet {
+        transition: none;
     }
 }
 
 
-/* ─── Info (also copied into the carousel) ────────────────── */
+/* ─── Info ────────────────────────────────────────────────── */
 .fx-info {
     display: flex;
     flex-direction: column;
@@ -324,13 +413,6 @@
     background-color: var(--dark);
 }
 
-.fx-more-n {
-    font-size: 0.75rem;
-    text-transform: none;
-    font-variant-numeric: tabular-nums;
-    opacity: 0.6;
-}
-
 .deck-btn:focus-visible,
 .fx-more:focus-visible {
     outline: 2.5px solid var(--dark);
@@ -339,7 +421,7 @@
 
 
 /* ─── Info in the section: quiet, like About ──────────────── */
-/* the type leads, above the title (the carousel keeps source order) */
+/* the type leads, above the title */
 .projects-section .fx-kind {
     order: -1;
     font-size: 0.72rem;

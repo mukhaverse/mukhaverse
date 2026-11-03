@@ -8,8 +8,7 @@
 // The Riffle only answers its own pointer and arrow keys, so the scroll
 // drives it through those keys. Here it is a picture: it takes no
 // pointer, and it stays out of the tab order and the screen reader.
-// Clicking a cover opens every shot, with the full write-up, in the
-// carousel (project-carousel.js).
+// A project with several shots opens them in the page (project-spread.js).
 const HAIRLINE = "https://cdn.jsdelivr.net/npm/@lucasmarkes/hairline@0.5.1/+esm";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -27,13 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // ─── Video covers ────────────────────────────────────────
     // a cover can be a muted loop: each one loads once it is a screen away
     // (not the whole section's at once, mid-scroll through the skills),
-    // and plays only while it is on screen and the carousel is shut
+    // and plays only while it is on screen. With reduced motion nothing
+    // starts by itself, so the visitor gets the controls instead.
     const videos = thumbs.map((t) => t.querySelector("video[data-src]"));
-    const carousel = document.getElementById("projectCarousel");
     const visible = new Set();
 
     videos.forEach((v, i) => {
         if (!v) return;
+        v.controls = reduceMotion;
         v.addEventListener("playing", () => thumbs[i].classList.add("is-playing"));
         v.addEventListener("pause", () => thumbs[i].classList.remove("is-playing"));
     });
@@ -41,8 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const syncVideos = () => {
         videos.forEach((v, i) => {
             if (!v || !v.src) return;
-            if (visible.has(i) && !reduceMotion && (!carousel || carousel.hidden)) v.play().catch(() => {});
-            else v.pause();
+            if (!visible.has(i)) v.pause();
+            else if (!reduceMotion) v.play().catch(() => {});
         });
     };
 
@@ -67,9 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
             syncVideos();
         }, { threshold: 0.25 });
         thumbs.forEach((t, i) => { if (videos[i]) seen.observe(t); });
-
-        // resume once the carousel closes
-        if (carousel) new MutationObserver(syncVideos).observe(carousel, { attributes: true, attributeFilter: ["hidden"] });
     }
 
 

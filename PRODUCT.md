@@ -26,7 +26,7 @@ Static single page hosted on GitHub Pages with a custom domain (CNAME). Visitors
 
 - Plain static HTML/CSS/JS, no build step. GSAP + ScrollTrigger from CDN; Lenis smooth scroll.
 - Must work without JS (content visible) and respect prefers-reduced-motion.
-- Project media lightbox (videos + screenshots) and certificate lightbox are existing functions to keep.
+- Project shots (videos + screenshots) open in the page, in a sheet under each cover. The certificate lightbox is an existing function to keep.
 
 ## Brand Commitments
 
@@ -48,4 +48,4 @@ Static single page hosted on GitHub Pages with a custom domain (CNAME). Visitors
 
 ## Accessibility & Inclusion
 
-Keyboard-operable lightboxes and interactive cards, visible focus, reduced-motion fallback, readable contrast on cream and black grounds.
+Keyboard-operable project shots, certificate lightbox and interactive cards, visible focus, reduced-motion fallback, readable contrast on cream and black grounds.
