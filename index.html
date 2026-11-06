@@ -309,12 +309,43 @@
                         <div class="fx-deck" aria-hidden="true">
                             <!-- Hairline's Riffle draws in here (projects.js) -->
                             <div class="fx-riffle" tabindex="-1"></div>
-                            <p class="fx-now"><span class="fx-count"><span class="fx-count-now">01</span><span class="fx-count-of"> / 06</span></span></p>
+                            <p class="fx-now"><span class="fx-count"><span class="fx-count-now">01</span><span class="fx-count-of"> / 07</span></span></p>
                         </div>
                     </div>
                 </div>
 
                 <ol class="fx-list">
+                    <li class="fx-item" id="project-programming-track">
+                        <article class="fx-project" aria-labelledby="project-programming-track-title">
+                            <div class="fx-thumb has-video">
+                                <video muted loop playsinline preload="none" data-src="assets/programming-track-demo.mp4" aria-label="A cursor tours a club website. It restyles a member's character into a mint robot with headphones and glasses, suggests a bio, sends a build request and gets ticket #PT-008, flips through a pile of workshop Polaroids and drags stickers on the playground. In the admin panel it starts that request, publishes the bio, awards a badge, scrolls the survey's skill charts, gives a committee character sunglasses and hands an accessory to everyone, then the site reboots through its terminal splash."></video>
+                            </div>
+                            <div class="fx-info">
+                                <h3 class="fx-title" id="project-programming-track-title">Programming Track</h3>
+                                <p class="fx-tag">Earn a badge, and dress the part.</p>
+                                <p class="fx-kind">Full-stack development</p>
+                                <p class="fx-desc">The site for the Programming Track of Tuwaiq Club at the University of Jeddah, and
+                                    the admin panel that runs it. Every member has a cartoon character that anyone can
+                                    restyle from their profile, within what that member's badges unlock, and bios
+                                    suggested from a profile wait for an admin's approval. Other tracks can request a
+                                    build and get a ticket number, and the track's work runs on PT-OS, a small desktop
+                                    on a monitor. The semester journey opens each finished milestone as a pile of
+                                    Polaroids that develop, and the playground is a sticker board of every member, or of
+                                    who came to one event alongside characters for the committees that ran it.</p>
+                                <p class="fx-desc">Behind it is an admin panel, open only to an allowlisted GitHub account with one
+                                    session at a time. It edits members, badges, accessories, the journey, build
+                                    requests and the site's text, and it reads the members survey's spreadsheet export
+                                    in the browser, with no spreadsheet library, to turn it into skill stats. One
+                                    Cloudflare Worker serves the React site and a Hono API, with content in D1 and
+                                    photos in R2.</p>
+                                <ul class="deck-stack" aria-label="Tech stack"><li>React</li><li>Motion + GSAP</li><li>Cloudflare Workers</li><li>Hono</li><li>D1 + Drizzle</li><li>R2</li><li>Better Auth</li></ul>
+                                <div class="fx-actions">
+                                    <a class="deck-btn" href="https://github.com/mukhaverse/Tuwaiq-UJ-Programing" target="_blank" rel="noopener noreferrer"><i class="devicon-github-original" aria-hidden="true"></i>GitHub</a>
+                                    <a class="deck-btn" href="https://tuwaiq-uj-programing.shumokhalsharif.workers.dev" target="_blank" rel="noopener noreferrer">Live site</a>
+                                </div>
+                            </div>
+                        </article>
+                    </li>
                     <li class="fx-item" id="project-medixa">
                         <article class="fx-project" aria-labelledby="project-medixa-title">
                             <button class="fx-thumb" type="button" data-spread data-project-title="Medixa" data-media="[{&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixa_mockup.png&quot;, &quot;alt&quot;: &quot;Medixa on desktop, laptop and phone&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid1.mp4&quot;, &quot;poster&quot;: &quot;assets/medixaVid1-poster.jpg&quot;, &quot;alt&quot;: &quot;Medixa demo clip 1&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid12.mp4&quot;, &quot;poster&quot;: &quot;assets/medixaVid12-poster.jpg&quot;, &quot;alt&quot;: &quot;Medixa demo clip 2&quot;}, {&quot;type&quot;: &quot;video&quot;, &quot;src&quot;: &quot;assets/medixaVid123.mp4&quot;, &quot;poster&quot;: &quot;assets/medixaVid123-poster.jpg&quot;, &quot;alt&quot;: &quot;Medixa demo clip 3&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic2.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 1&quot;}, {&quot;type&quot;: &quot;image&quot;, &quot;src&quot;: &quot;assets/medixaPic4.png&quot;, &quot;alt&quot;: &quot;Medixa screenshot 2&quot;}]" aria-label="Show all 6 Medixa shots">
