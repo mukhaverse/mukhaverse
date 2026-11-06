@@ -29,6 +29,7 @@
     --dl-edge: #5f5750;
     --dl-mid: #a99e93;
     --dl-lo: #d9cfc2;
+    --dl-label: #857a70;   /* what each spot is for: dark enough to read at a glance */
     --dl-hi: var(--suit-red, #EB1C24);
 }
 .dealer-fig svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -50,6 +51,7 @@
 .dealer-fig .chip-line { stroke: rgba(255, 255, 255, .85); stroke-dasharray: 3 3; }
 .dealer-fig text { font-family: var(--font-display); fill: var(--dark, #161412); stroke: none; }
 .dealer-fig text.faint { fill: var(--dl-lo); letter-spacing: .08em; }
+.dealer-fig text.label { fill: var(--dl-label); letter-spacing: .08em; }
 .dealer-fig text.spot-on { fill: var(--dl-hi); letter-spacing: .08em; }
 .dealer-fig text.card-label { letter-spacing: .1em; }
 .dealer-fig text.card-handle { font-family: var(--font-body); font-weight: 500; fill: var(--mid, #3a3532); }

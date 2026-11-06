@@ -503,14 +503,14 @@
         cv.frame();
         cv.path(rrect(284, 238, 20).map(([a, b]) => [a - 28, b - 20, 0]), "nf lo");
         cv.path(rrect(272, 226, 16).map(([a, b]) => [a - 22, b - 14, 0]), "nf lo", { alpha: .6 });
-        cv.text("DEAL ME IN", [-12, 112, 0], [0, -1, 0], X, 12, "faint");
+        cv.text("PICK A CARD", [-12, 112, 0], [0, -1, 0], X, 12, "faint");
 
         // in the spread the cards cover their spots, so each name is printed in front of its card
         if (row) SPOTS.forEach(([x, y], i) => {
             const on = hover === "spot" + i && !(spread ? dealt[i]?.up : dealt[i]);
             const pulse = spots && !picked && !reduce ? .55 + .45 * Math.max(0, Math.sin(now * 2.6 - i * .9)) : 1;
             cv.path(rrect(54, 72, 5).map(([a, b]) => [x - 27 + a, y - 36 + b, 0]), on && !spread ? "nf hi" : "nf mid", { alpha: on ? 1 : pulse });
-            cv.text(CARDS[i].label.toUpperCase(), [x, spread ? y + 41 : y, 0], X, Y, spread ? 6.5 : 7.5, on ? "spot-on" : "faint", { alpha: pulse });
+            cv.text(CARDS[i].label.toUpperCase(), [x, spread ? y + 41 : y, 0], X, Y, spread ? 6.5 : 7.5, on ? "spot-on" : "label", { alpha: pulse });
         });
         else {
             cv.path(rrect(58, 76, 5).map(([a, b]) => [SINGLE[0] - 29 + a, SINGLE[1] - 38 + b, 0]), "nf lo");
@@ -519,7 +519,7 @@
                 if (!pile.length) cv.text("DISCARD", [DISCARD[0], DISCARD[1], 0], X, Y, 7, "faint");
             }
         }
-        if (dice.length) cv.text("RÉSUMÉ", [166, 84, 0], X, Y, 7.5, hover === "dice" ? "spot-on" : "faint");
+        if (dice.length) cv.text("RÉSUMÉ", [166, 84, 0], X, Y, 7.5, hover === "dice" ? "spot-on" : "label");
 
         // everything standing on the felt, back to front for wherever the camera is
         const stand = [{ d: depth([28, 39, 15]), f: drawShoe }];
