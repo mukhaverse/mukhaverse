@@ -10,13 +10,13 @@
 .projects-section {
     --fx-gutter: clamp(1rem, 4vw, 3rem);
     /* the Riffle's lines, drawn on the section's own ground */
-    --hairline-plate: var(--cream-2);
+    --hairline-plate: var(--cream);
     --hairline-hi: var(--wine);
     --hairline-edge: #4a433e;
     --hairline-mid: #a79e94;
     --hairline-lo: #dbd3c8;
     --hairline-stroke: 1;
-    background-color: var(--cream-2);
+    background-color: var(--cream);
     overflow-x: clip;
 }
 
@@ -70,7 +70,7 @@
     margin: 0;
     color: var(--dark);
     /* a cream edge so the number sits cleanly on the lines */
-    text-shadow: 0 0 6px var(--cream-2), 0 0 2px var(--cream-2);
+    text-shadow: 0 0 6px var(--cream), 0 0 2px var(--cream);
 }
 
 .fx-count {
@@ -528,7 +528,7 @@ button.fx-thumb:hover video {
         height: calc(124px + var(--corner-room));
         margin: 1.25rem calc(var(--fx-gutter) * -1) 0;
         overflow: hidden;
-        background: var(--cream-2);
+        background: var(--cream);
         border-bottom: 1px solid var(--hairline);
     }
 
